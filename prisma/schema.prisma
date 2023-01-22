@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model listings {
+  listing_id      Int        @id @default(autoincrement())
+  name            String     @db.VarChar(255)
+  host_id         Int        @default(autoincrement())
+  dates_available DateTime[] @db.Date
+  price           Decimal    @db.Decimal
+  description     String     @db.VarChar(255)
+  amenities       amenity[]
+  space_type      spacetype
+  address         String     @db.VarChar(255)
+  city            String     @db.VarChar(255)
+  zip_code        String     @db.VarChar(255)
+  state           String     @db.VarChar(255)
+  editable        Boolean
+  created_on      DateTime   @db.Date
+  space_available Int[]
+}
+
+model reservations {
+  reservation_id  Int        @id @default(autoincrement())
+  host_id         Int        @default(autoincrement())
+  stasher_id      Int        @default(autoincrement())
+  listing_id      Int        @default(autoincrement())
+  accepted        Boolean
+  accepted_on     DateTime?  @db.Date
+  requested_on    DateTime[] @db.Date
+  dates_requested DateTime[] @db.Date
+}
+
+model users {
+  user_id               Int       @id @default(autoincrement())
+  name                  String    @db.VarChar(255)
+  phone_number          Int
+  email                 String    @db.VarChar(255)
+  drivers_license_photo String    @db.VarChar(255)
+  verified              Boolean
+  verified_on           DateTime? @db.Date
+  username              String    @db.VarChar(255)
+  password              String    @db.VarChar(255)
+}
+
+enum amenity {
+  Pest_Controlled    @map("Pest Controlled")
+  Fire_Alarm_System  @map("Fire Alarm System")
+  Smoke_Free         @map("Smoke Free")
+  Pet_Free           @map("Pet Free")
+  Access_to_Elevator @map("Access to Elevator")
+  Ground_Floor       @map("Ground Floor")
+  Climate_Controlled @map("Climate Controlled")
+  Private_Storage    @map("Private Storage")
+  Party_Free         @map("Party Free")
+}
+
+enum spacetype {
+  Basement
+  Closet
+  Common_Living_Space @map("Common Living Space")
+  Bedroom
+  Cabinet
+  Unoccupied_Room     @map("Unoccupied Room")
+  Other
+}
