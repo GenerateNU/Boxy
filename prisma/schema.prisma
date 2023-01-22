@@ -52,7 +52,7 @@ model users {
   drivers_license_photo String    @db.VarChar(255)
   verified              Boolean
   verified_on           DateTime? @db.Date
-  username              String    @db.VarChar(255)
+  username              String    @db.VarChar(255) @unique
   password              String    @db.VarChar(255)
 }
 
