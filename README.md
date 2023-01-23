@@ -5,3 +5,5 @@ to run application
 4. add database to VSCode postgres extension (host: localhost, username: postgres, password: password)
 5. run "npx prisma migrate dev --name init" at <some path>/Boxy to initialize the database
 6. run "npm run dev" at <some path>/Boxy
+
+test
