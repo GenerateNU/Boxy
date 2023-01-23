@@ -1,6 +1,7 @@
 to run application
-1. npm install
-2. create and run docker postgis container on port 3001 with POSTGRES_PASSWORD=password
-3. add database in VSCode postgres extension
-4. copy and paste commands in initialize_db.sql into postgres extension query console and run to set up DB
-5. npm run dev
+1. clone repository onto your machine 
+2. run "npm install" at <some path>/Boxy to install dependencies
+3. create and run docker postgis container on port 3001 with POSTGRES_PASSWORD=password
+4. add database to VSCode postgres extension (host: localhost, username: postgres, password: password)
+5. run "npx prisma migrate dev --name init" at <some path>/Boxy to initialize the database
+6. run "npm run dev" at <some path>/Boxy
