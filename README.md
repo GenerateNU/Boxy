@@ -7,3 +7,4 @@ to run application
 6. run `npm run dev` at <some path>/Boxy
 
 test
+test
