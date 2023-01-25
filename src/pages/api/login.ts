@@ -5,14 +5,12 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 const prisma = new PrismaClient()
 
-// TODO: leave proper status codes
-
 type Message = {
     message: string,
     token?: string
 }
 
-async function getUser(username: string, password: string) {
+async function getUser(username: string) {
     try {
         const user = await prisma.users.findUniqueOrThrow({
             where: {
@@ -38,21 +36,19 @@ export default async function handler(
   res: NextApiResponse<Message>
 ) {
     if (req.method === 'POST') {
-        const { body } = req;
-        
+        const { body } = req;        
 
         // checking for required fields
         if ("username" in body && "password" in body) {
             const token  = jwt.sign(body['username'], 'secret_key_change_later');
 
             // get the user
-            const user = await getUser(body['username'], body['password'])
+            const user = await getUser(body['username'])
             
             // check the username was valid
             if (user == null) {
                 return res.status(403).send({message:'username invalid', token: token})
             }
-
 
             //TODO: hash password before comparison to match database
 

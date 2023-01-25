@@ -41,7 +41,7 @@ export default async function handler(
 
                 return res.status(200).send({message: 'user added'});
             } else {
-                return res.status(403).send({message: 'username is taken'})
+                return res.status(401).send({message: 'username is taken'})
             }
         }
 
