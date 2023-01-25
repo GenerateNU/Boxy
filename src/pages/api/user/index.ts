@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/db';
+import { PrismaClient } from '@prisma/client';
+
+const prismaClient = new PrismaClient()
 
 type Message = {
     message: string
@@ -14,21 +17,34 @@ export default async function handler(
         const { body } = req;
 
         // checking for required fields
-        if ("name" in body && "phoneNumber" in body && "email" in body && "driversLicensePhoto" in body && "username" in body && "password" in body) {
-            await prisma.users.create({
-                data : {
-                    name: body["name"],
-                    phone_number: body["phoneNumber"],
-                    email: body["email"],
-                    drivers_license_photo : body["driversLicensePhoto"],
-                    verified: false,
-                    username: body["username"],
-                    password: body["password"]
-                },
+        if ("name" in body
+         && "phoneNumber" in body
+         && "email" in body 
+         && "driversLicensePhoto" in body 
+         && "username" in body 
+         && "password" in body) {
+            const usernameCount = await prisma.users.count({
+                where: {username:body['username']}
             })
+            if(usernameCount == 0) {
+                await prisma.users.create({
+                    data : {
+                        name: body["name"],
+                        phone_number: body["phoneNumber"],
+                        email: body["email"],
+                        drivers_license_photo : body["driversLicensePhoto"],
+                        verified: false,
+                        username: body["username"],
+                        password: body["password"]
+                    },
+                })
 
-            return res.status(200).send({message: 'user added'});
+                return res.status(200).send({message: 'user added'});
+            } else {
+                return res.status(403).send({message: 'username is taken'})
+            }
         }
+
 
         return res.status(403).json({message: "name, phone number, email, username, and password required"});
     } 
