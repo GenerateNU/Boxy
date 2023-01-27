@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/db';
-import { amenity } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 
 type Listing = {
@@ -42,24 +41,31 @@ export default async function handler(
   // GET - get listings and their basic details given filters
   if (req.method === 'GET') {
     const { body } = req;
-    var filterPrice: number = body.price ? body.price : 1000000000
-    var filterAmenities: amenity[] = body.amenities ? body.amenities : []
+
+    const requestBody = [];
+    if (body.price) {
+      requestBody.push(
+        {
+          price: {
+            lte: body.price
+          }
+        }
+      )
+    }
+    if (body.amenities) {
+      requestBody.push(
+        {
+          amenities: {
+            hasEvery: body.amenities
+          }
+        }
+      )
+    }
 
     //`SELECT * FROM listings WHERE price < ${filterPrice} AND amenities @> CAST(${filterAmenities} as AMENITY[])`
     var listingResults = await prisma.listings.findMany({
       where: {
-        AND: [
-          {
-            price: {
-              lte: filterPrice
-            }
-          },
-          {
-            amenities: {
-              hasEvery: filterAmenities 
-            }
-          }
-        ]
+        AND: requestBody
       },
       select: {
         listing_id: true, 
