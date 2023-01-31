@@ -1,36 +1,30 @@
-import { PrismaClient, users } from '@prisma/client'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-
+import { PrismaClient, users } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 export default class Users {
-    constructor(private readonly prismaUser: PrismaClient['users']) { }
+  constructor(private readonly usersDB: PrismaClient["users"]) {}
 
-    // Signup a new user
-    async signup(data: any) {
-        // do some custom validation...
-        try {
-            this.defaultUser({ data })
-            this.validateUserInputData({ data })
-            await this.prismaUser.create({ data })
-        } catch (e) {
-            if (e instanceof Error) {
-                throw e
-            }
-        }
+  async signUp(data: any) {
+    try {
+      // setting required attributes
+      this.setDefaultAttributes(data);
+
+      // input validation (can add more validation methods and call them here)
+      this.validateInputData(data);
+
+      await this.usersDB.create({ data });
+    } catch (e) {
+      throw e;
     }
+  }
 
-    private defaultUser(data: any) {
-        data['verified'] = false
+  private setDefaultAttributes(data: any) {
+    data["verified"] = false;
+  }
 
+  private validateInputData(data: any) {
+    if (false) {
+      throw new Error("this is an error");
     }
-
-    private validateUserInputData(data: any) {
-        // New Method for Constraints
-        // throw new Error("not right format")
-
-    }
-    
-    private validateEmail() {
-        // val check here
-    }
-} 
+  }
+}
