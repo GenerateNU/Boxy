@@ -1,12 +1,4 @@
-import { PrismaClient, listings, prisma } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
-
-export type Listing = {
-  listing_id: Number;
-  price: Decimal;
-  name: string;
-  proximity: Number;
-};
+import { PrismaClient, listings } from "@prisma/client";
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}

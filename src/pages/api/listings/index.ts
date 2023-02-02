@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
-import { Decimal } from "@prisma/client/runtime";
 import { listings } from "@prisma/client";
 import Listings from "@/models/listings";
 
@@ -39,7 +38,7 @@ export default async function handler(
     const { body } = req;
     const listingsDB = new Listings(prisma.listings);
     let response: listings[] = [];
-    
+
     try {
       response = await listingsDB.fetch(body);
     } catch (e) {
