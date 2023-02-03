@@ -18,6 +18,46 @@ export default class Listings {
     }
   }
 
+  // fetches the listings that meet the conditions in data body
+  async fetch(data: any) {
+    try {
+      const requestBody = [];
+      if (data.price) {
+        requestBody.push({
+          price: {
+            lte: data.price,
+          },
+        });
+      }
+      if (data.amenities) {
+        requestBody.push({
+          amenities: {
+            hasEvery: data.amenities,
+          },
+        });
+      }
+
+      var listingResults = await this.listingsDB.findMany({
+        where: {
+          AND: requestBody,
+        },
+        select: {
+          listing_id: true,
+          price: true,
+          name: true,
+        },
+      });
+
+      const response: listings[] = listingResults.map((object: any) => {
+        return Object.assign({}, object, { proximity: 10 });
+      });
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   private setDefaultAttributes(data: any) {}
 
   private validateInputData(data: any) {
