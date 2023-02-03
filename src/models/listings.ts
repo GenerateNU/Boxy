@@ -18,7 +18,10 @@ export default class Listings {
     }
   }
 
-  private setDefaultAttributes(data: any) {}
+  private setDefaultAttributes(data: any) {
+    data["editable"] = false;
+    data["created_on"] = new Date();
+  }
 
   private validateInputData(data: any) {
     if (false) {
