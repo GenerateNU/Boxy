@@ -1,5 +1,8 @@
-import { PrismaClient, users } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { assert, object, string, size, refine, number, boolean } from 'superstruct'
+import isEmail from 'isemail'
+import { userAgent } from 'next/server';
+import { userInfo } from 'os';
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
@@ -23,8 +26,13 @@ export default class Users {
   }
 
   private validateInputData(data: any) {
-    if (false) {
-      throw new Error("this is an error");
-    }
+    assert(data, object({
+      name: string(),
+      phone_number: size(number(), 2000000000, 9999999999),
+      email: refine(string(), 'email', (v) => isEmail.validate(v)),
+      drivers_license_photo: string(),
+      username: string(),
+      password: string()
+    }))
   }
 }
