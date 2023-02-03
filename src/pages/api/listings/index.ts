@@ -43,7 +43,7 @@ export default async function handler(
       response = await listingsDB.fetch(body);
     } catch (e) {
       if (e instanceof Error) {
-        return res.status(405).send({ message: e.message });
+        return res.status(400).send({ message: e.message });
       }
     }
     return res.status(200).json(response);
