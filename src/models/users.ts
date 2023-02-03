@@ -1,21 +1,20 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClient, Prisma } from '@prisma/client'
 import { assert, object, string, size, refine, number, boolean } from 'superstruct'
 import isEmail from 'isemail'
-import { userAgent } from 'next/server';
-import { userInfo } from 'os';
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
 
   async signUp(data: any) {
     try {
-      // setting required attributes
-      this.setDefaultAttributes(data);
 
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
-      await this.usersDB.create({ data });
+      // setting required attributes
+      this.setDefaultAttributes(data);
+
+      this.usersDB.create({ data });
     } catch (e) {
       throw e;
     }
