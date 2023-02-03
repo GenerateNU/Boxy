@@ -19,7 +19,7 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       //extract listing info from request body
-      const { body } = req.body;
+      const { body } = req;
 
       // Check if the user is logged in
       // (To be added in the future)
