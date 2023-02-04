@@ -20,6 +20,26 @@ export default class Listings {
 
   // fetches the listings that meet the conditions in data body
   async fetch(data: any) {
+
+    const distanceFilter = (listings: any) => {
+      const lon1 = (data.longitude * Math.PI) / 180;
+      const lon2 = (data.latitude * Math.PI) / 180;
+      const lat1: number = (listings.latitude as any * Math.PI) / 180;
+      const lat2: number = (listings.longitude as any * Math.PI) / 180;
+
+      let dlon = lon2 - lon1;
+      let dlat = lat2 - lat1;
+      let a =
+        Math.pow(Math.sin(dlat / 2), 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+
+      let c = 2 * Math.asin(Math.sqrt(a));
+      let r = 3956;
+
+      console.log(c*r)
+      return c * r < data.proximity;
+    }
+    
     try {
       const requestBody = [];
       if (data.price) {
@@ -37,20 +57,15 @@ export default class Listings {
         });
       }
 
-      var listingResults = await this.listingsDB.findMany({
+      var listingResults: listings[] = await this.listingsDB.findMany({
         where: {
           AND: requestBody,
         },
-        select: {
-          listing_id: true,
-          price: true,
-          name: true,
-        },
       });
 
-      const response: listings[] = listingResults.map((object: any) => {
-        return Object.assign({}, object, { proximity: 10 });
-      });
+      const response = listingResults.filter(listing => {
+         console.log(!distanceFilter(listing))
+      }); 
 
       return response;
     } catch (e) {
