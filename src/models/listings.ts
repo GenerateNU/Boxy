@@ -7,7 +7,6 @@ import {
   array,
   date,
   boolean,
-  integer,
   refine,
 } from "superstruct";
 
