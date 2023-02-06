@@ -18,14 +18,15 @@ export default class Listings {
     }
   }
 
+
   // fetches the listings that meet the conditions in data body
   async fetch(data: any) {
 
-    const distanceFilter = (listings: any) => {
+    function distanceFilter(listing: any) {
       const lon1 = (data.longitude * Math.PI) / 180;
-      const lon2 = (data.latitude * Math.PI) / 180;
-      const lat1: number = (listings.latitude as any * Math.PI) / 180;
-      const lat2: number = (listings.longitude as any * Math.PI) / 180;
+      const lon2 = (listing.longitude * Math.PI) / 180;
+      const lat1: number = (data.latitude as any * Math.PI) / 180;
+      const lat2: number = (listing.latitude as any * Math.PI) / 180;
 
       let dlon = lon2 - lon1;
       let dlat = lat2 - lat1;
@@ -63,9 +64,10 @@ export default class Listings {
         },
       });
 
-      const response = listingResults.filter(listing => {
-         console.log(!distanceFilter(listing))
-      }); 
+      let response = listingResults; 
+      if (data.proximity) {
+          response = listingResults.filter(distanceFilter)
+      }
 
       return response;
     } catch (e) {
