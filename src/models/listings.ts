@@ -65,7 +65,7 @@ export default class Listings {
       });
 
       let response = listingResults; 
-      if (data.proximity) {
+      if (data.proximity && data.longitude && data.latitude) {
           response = listingResults.filter(distanceFilter)
       }
 
