@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
+import { PassThrough } from "stream";
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
@@ -17,11 +18,13 @@ export default class Users {
 
       // TODO: We need to encrypt the password before putting it into the database.
       await this.usersDB.create({ data });
-      console.log("no issues created user in db");
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
-          throw new Error("Unique Constraint Violation Failed.");
+          // This might break if there are multiple unique fields, no way to test right now
+          const parseErrorMessage = error.message.split("`");
+          const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
+          throw new Error("Unique Constraint Violation Failed on " + failedOn);
         }
 
         throw new Error(error.message);
@@ -29,7 +32,7 @@ export default class Users {
     }
   }
 
-  public async logIn(usernameInput: string, passwordInput: string) {
+  public async login(usernameInput: string, passwordInput: string) {
     try {
       const user = await prisma.users.findUniqueOrThrow({
         where: {
@@ -39,13 +42,11 @@ export default class Users {
 
       // check that password match
       const passwordUser = user["password"];
-      if (passwordInput === passwordUser) {
-        return;
-      } else {
-        throw new Error("Incorrect username or password");
+      if (passwordInput !== passwordUser) {
+        throw Error();
       }
     } catch (error) {
-      throw error;
+      throw new Error("Incorrect username or password");
     }
   }
 

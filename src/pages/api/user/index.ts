@@ -17,7 +17,7 @@ export default async function handler(
       await persistentUserInstance.signUp(body);
     } catch (error) {
       if (error instanceof Error) {
-        return res.status(405).send({ message: error.message });
+        return res.status(403).send({ message: error.message });
       }
     }
     return res.status(200).send({ message: "user added" });

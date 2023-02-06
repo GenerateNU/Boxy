@@ -17,7 +17,7 @@ export default async function handler(
     const token = jwt.sign(body["username"], "secret_key_change_later");
 
     try {
-      await persistentUserInstance.logIn(body["username"], body["password"]);
+      await persistentUserInstance.login(body["username"], body["password"]);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(403).send({ message: error.message });
