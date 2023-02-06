@@ -1,15 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { assert } from "console";
-import {
-  object,
-  string,
-  number,
-  array,
-  date,
-  boolean,
-  refine,
-  integer,
-} from "superstruct";
+import { object, number, refine } from "superstruct";
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -43,7 +34,7 @@ export default class Listings {
           number(),
           "price",
           (value) => value % 1 !== 0 && value > 0
-        )
+        ),
       })
     );
   }
