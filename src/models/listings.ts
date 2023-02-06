@@ -8,6 +8,7 @@ import {
   date,
   boolean,
   refine,
+  integer,
 } from "superstruct";
 
 export default class Listings {
@@ -31,6 +32,7 @@ export default class Listings {
   private setDefaultAttributes(data: any) {
     data["editable"] = false;
     data["created_on"] = new Date();
+    data["host_id"] = 4;
   }
 
   private validateInputData(data: any) {
@@ -40,7 +42,11 @@ export default class Listings {
         name: string(),
         host_id: number(),
         dates_available: array(date()),
-        price: refine(number(), "price", (value) => value % 1 !== 0),
+        price: refine(
+          number(),
+          "price",
+          (value) => value % 1 !== 0 && value > 0
+        ),
         description: string(),
         amenities: array(string()), //Not sure if this is correct, can I validate something of type amentity instead of a string?
         space_type: string(), //same here, not sure how to test space type
