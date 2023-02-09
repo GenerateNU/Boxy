@@ -24,6 +24,10 @@ export default class Listings {
   //Update listing
   async update(data: any) {
     try {
+
+      // input validation
+      this.validateInputData(data);
+      
       // update entry in database
       await this.listingsDB.update({
         where: {
