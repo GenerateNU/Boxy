@@ -1,4 +1,6 @@
 import { PrismaClient, listings } from "@prisma/client";
+import { assert } from "console";
+import { object, number, refine } from "superstruct";
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -58,12 +60,23 @@ export default class Listings {
     }
   }
 
-  private setDefaultAttributes(data: any) {}
+  private setDefaultAttributes(data: any) {
+    data["editable"] = false;
+    data["created_on"] = new Date();
+    data["host_id"] = 4;
+  }
 
   private validateInputData(data: any) {
-    if (false) {
-      throw new Error("this is an error");
-    }
+    assert(
+      data,
+      object({
+        price: refine(
+          number(),
+          "price",
+          (value) => value % 1 !== 0 && value > 0
+        ),
+      })
+    );
   }
 
   // can add more input validation methods and call them in the method
