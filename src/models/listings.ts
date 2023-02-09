@@ -5,7 +5,7 @@ import { object, number, refine } from "superstruct";
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
 
-  // Creates a new entry 
+  // Creates a new entry
   async create(data: any) {
     try {
       // setting required attributes
@@ -21,12 +21,27 @@ export default class Listings {
     }
   }
 
+  //Update listing
+  async update(data: any) {
+    try {
+      // update entry in database
+      await this.listingsDB.update({
+        where: {
+          listing_id: data["listing_id"],
+        },
+        data: data,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // Delete listing
   async delete(data: any) {
     try {
       // delete entry in database
-      await this.listingsDB.delete({ 
-        where: data 
+      await this.listingsDB.delete({
+        where: data,
       });
     } catch (e) {
       throw e;

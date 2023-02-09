@@ -51,15 +51,19 @@ export default async function handler(
     try {
       //extract listing info from request body
       const { body } = req;
-
+      const listingObject = new Listings(prisma.listings);
       //confirm all fields are entered
 
       // Check if the user is logged in
       // (To be added in the future)
 
-      // Create a new listing using Prisma
-      const newListing = new Listings(prisma.listings);
-      await newListing.create(body);
+      if (body.listing_id) {
+        // Update a current listing using Prisma
+        await listingObject.update(body);
+      } else {
+        // Create a new listing using Prisma
+        await listingObject.create(body);
+      }
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
@@ -69,8 +73,8 @@ export default async function handler(
   if (req.method === "DELETE") {
     try {
       const { body } = req;
-      const newListing = new Listings(prisma.listings);
-      await newListing.delete(body);
+      const listingBody = new Listings(prisma.listings);
+      await listingBody.delete(body);
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
