@@ -1,6 +1,7 @@
 import { PrismaClient, listings } from "@prisma/client";
 import { assert } from "console";
-import { object, number, refine } from "superstruct";
+import prisma from "lib/db";
+import { object, number, refine, string, array } from "superstruct";
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -27,7 +28,7 @@ export default class Listings {
 
       // input validation
       this.validateInputData(data);
-      
+
       // update entry in database
       await this.listingsDB.update({
         where: {
@@ -107,9 +108,38 @@ export default class Listings {
           "price",
           (value) => value % 1 !== 0 && value > 0
         ),
+        zip_code: refine( 
+          string(),
+          "zip_code",
+          (value) => /^\d{5}$/.test(value)
+        ),
+        state: refine(
+          string(),
+          "state",
+          (value) => /^[A-Z]{2}$/.test(value)
+        ),
+        address: refine(
+          string(),
+          "address",
+          (value) => /^\d+\s[A-Za-z]+\s[A-Za-z]+(\.|)$/.test(value)
+        ),
+        space_available: refine(
+          array(number()),
+          "space_available",
+          (values: number[]) => values.every(value => Number.isInteger(value) && value > 0)
+        ),        
       })
     );
   }
 
   // can add more input validation methods and call them in the method
+  async checkHostId(host_id: number) {
+    try {
+      const findUser = await prisma.users.findUnique({
+        where: {
+          user_id: number
+        }
+    })
+    } 
+  }
 }
