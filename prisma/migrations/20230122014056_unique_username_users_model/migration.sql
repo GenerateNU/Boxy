@@ -21,8 +21,6 @@ CREATE TABLE "listings" (
     "editable" BOOLEAN NOT NULL,
     "created_on" DATE NOT NULL,
     "space_available" INTEGER[],
-    "longitude" DECIMAL NOT NULL, 
-    "latitude" DECIMAL NOT NULL,
 
     CONSTRAINT "listings_pkey" PRIMARY KEY ("listing_id")
 );
