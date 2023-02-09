@@ -36,7 +36,6 @@ export default async function handler(
     const { body } = req;
     const listingsDB = new Listings(prisma.listings);
     let response: listings[] = [];
-
     try {
       response = await listingsDB.fetch(body);
     } catch (e) {
@@ -61,6 +60,17 @@ export default async function handler(
       // Create a new listing using Prisma
       const newListing = new Listings(prisma.listings);
       await newListing.create(body);
+      return res.status(201).json({ message: "Successful" });
+    } catch (error) {
+      return res.status(500).json({ message: String(error) });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    try {
+      const { body } = req;
+      const newListing = new Listings(prisma.listings);
+      await newListing.delete(body);
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
