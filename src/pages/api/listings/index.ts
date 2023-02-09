@@ -57,7 +57,7 @@ export default async function handler(
       // Check if the user is logged in
       // (To be added in the future)
 
-      if (body.listing_id) {
+      if ("listing_id" in body) {
         // Update a current listing using Prisma
         await listingObject.update(body);
       } else {
