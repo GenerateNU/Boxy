@@ -7,18 +7,13 @@
  <!-- Describe what addition you are making to the codebase in this PR. This is
  your chance to bring the reviewer through your solution. Add screenshots on the bottom -->
  
- # How did I test it?
+ # How did I test it? Document test cases here.
  
  <!-- Describe in detail steps you used to test the changes you have made.
  Key Parts
  - Link to the checklist used
  - Or, Write checklist here for small changes
  -->
- 
- Required checks:
- 
- - [ ] Did you conduct a self-review?
- - [ ] Have you written unit or integration tests?
 
  # What could go wrong in the future? What parts of your code should the reviewer pay the most attention to?
  
