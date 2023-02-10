@@ -1,5 +1,4 @@
 import { PrismaClient, Prisma } from '@prisma/client'
-import { assert, object, string, size, refine, number, boolean } from 'superstruct'
 import isEmail from 'isemail'
 
 export default class Users {
@@ -25,13 +24,19 @@ export default class Users {
   }
 
   private validateInputData(data: any) {
-    assert(data, object({
-      name: string(),
-      phone_number: size(number(), 2000000000, 9999999999),
-      email: refine(string(), 'email', (v) => isEmail.validate(v)),
-      drivers_license_photo: string(),
-      username: string(),
-      password: string()
-    }))
+    if(!data.hasOwnProperty('name') || 
+    !data.hasOwnProperty('phone_number') || 
+    !data.hasOwnProperty('email') || 
+    !data.hasOwnProperty('drivers_license_photo') || 
+    !data.hasOwnProperty('username') ||
+    !data.hasOwnProperty('password')) {
+      throw new Error("all required fields must be inputted")
+    }
+    if (!isEmail.validate(data["email"])) {
+      throw new Error("email must be in the proper format")
+    }
+    if(2000000000 > data["phone_number"] || 9999999999 < data["phone_number"]) {
+      throw new Error("phone number must be in the proper format")
+    }
   }
 }
