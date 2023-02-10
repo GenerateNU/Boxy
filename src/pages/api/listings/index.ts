@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
 import { listings } from "@prisma/client";
 import Listings from "@/models/listings";
+import { ListingResponse } from "@/models/listings";
 
 type Message = {
   message: string;
@@ -10,7 +11,7 @@ type Message = {
 // Change to async
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<listings[] | Message>
+  res: NextApiResponse<ListingResponse[] | listings[] | Message>
 ) {
 
 
@@ -18,7 +19,7 @@ export default async function handler(
   if (req.method === "GET") {
     const { body } = req;
     const listingsDB = new Listings(prisma.listings);
-    let response: listings[] = [];
+    let response: ListingResponse[] = [];
 
     try {
       response = await listingsDB.fetch(body);
@@ -35,7 +36,7 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       //extract listing info from request body
-      const {name, dates_available, price, description, amenities, space_type, address, city, state, zip_code, space_available, longitude, latitude} = req.body
+      const {name, dates_available, price, description, amenities, space_type, address, city, state, zip_code, space_available, longitude, latitude} = req.body;
 
       //confirm all fields are entered
       if (!name || !dates_available || !price || !description || !amenities || !space_type || !address || !city || !state || !zip_code || !space_available) {
