@@ -31,13 +31,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<listings[] | Message>
 ) {
+  const { body } = req;
+  const listingsObject = new Listings(prisma.listings);
+
   // GET - get listings and their basic details given filters
   if (req.method === "GET") {
-    const { body } = req;
-    const listingsDB = new Listings(prisma.listings);
     let response: listings[] = [];
     try {
-      response = await listingsDB.fetch(body);
+      response = await listingsObject.fetch(body);
     } catch (e) {
       if (e instanceof Error) {
         return res.status(400).send({ message: e.message });
@@ -49,20 +50,15 @@ export default async function handler(
   // POST - create new listing
   if (req.method === "POST") {
     try {
-      //extract listing info from request body
-      const { body } = req;
-      const listingObject = new Listings(prisma.listings);
-      //confirm all fields are entered
-
       // Check if the user is logged in
       // (To be added in the future)
 
       if ("listing_id" in body) {
         // Update a current listing using Prisma
-        await listingObject.update(body);
+        await listingsObject.update(body);
       } else {
         // Create a new listing using Prisma
-        await listingObject.create(body);
+        await listingsObject.create(body);
       }
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
@@ -72,9 +68,7 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     try {
-      const { body } = req;
-      const listingBody = new Listings(prisma.listings);
-      await listingBody.delete(body);
+      await listingsObject.delete(body);
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
