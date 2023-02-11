@@ -45,6 +45,11 @@ export default class Users {
 
       // check that password match
       const passwordUser = user["password"];
+      
+      if (passwordInput === null) {
+        throw Error()
+      }
+
       const hashPasswordInput = this.hashPassword(passwordInput);
 
       if (hashPasswordInput !== passwordUser) {
