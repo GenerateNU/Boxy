@@ -47,8 +47,6 @@ export default class Users {
       const passwordUser = user["password"];
       const hashPasswordInput = this.hashPassword(passwordInput);
 
-      console.log(hashPasswordInput);
-      console.log(passwordUser);
       if (hashPasswordInput !== passwordUser) {
         throw Error();
       }
