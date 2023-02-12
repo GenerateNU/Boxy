@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "lib/db";
+import persistentListingInstance from "lib/listingInstance";
 import { listings } from "@prisma/client";
 import Listings from "@/models/listings";
 
@@ -34,10 +34,9 @@ export default async function handler(
   // GET - get listings and their basic details given filters
   if (req.method === "GET") {
     const { body } = req;
-    const listingsDB = new Listings(prisma.listings);
     let response: listings[] = [];
     try {
-      response = await listingsDB.fetch(body);
+      response = await persistentListingInstance.fetch(body);
     } catch (e) {
       if (e instanceof Error) {
         return res.status(400).send({ message: e.message });
@@ -51,7 +50,6 @@ export default async function handler(
     try {
       //extract listing info from request body
       const { body } = req;
-      const listingObject = new Listings(prisma.listings);
       //confirm all fields are entered
 
       // Check if the user is logged in
@@ -59,10 +57,10 @@ export default async function handler(
 
       if ("listing_id" in body) {
         // Update a current listing using Prisma
-        await listingObject.update(body);
+        await persistentListingInstance.update(body);
       } else {
         // Create a new listing using Prisma
-        await listingObject.create(body);
+        await persistentListingInstance.create(body);
       }
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
@@ -73,8 +71,7 @@ export default async function handler(
   if (req.method === "DELETE") {
     try {
       const { body } = req;
-      const listingBody = new Listings(prisma.listings);
-      await listingBody.delete(body);
+      await persistentListingInstance.delete(body);
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
