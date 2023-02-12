@@ -15,9 +15,7 @@ export default async function handler(
 
     try {
       await persistentUserInstance.signUp(body);
-      console.log("successful user singup");
     } catch (error) {
-      console.log("there is some error");
       if (error instanceof Error) {
         return res.status(403).send({ message: error.message });
       }

@@ -25,7 +25,6 @@ export default class Users {
         if (error.code == "P2002") {
           // This might break if there are multiple unique fields, no way to test right now
           const parseErrorMessage = error.message.split("`");
-          console.log(parseErrorMessage);
           const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
           throw new Error("Unique Constraint Violation Failed on " + failedOn);
         }
