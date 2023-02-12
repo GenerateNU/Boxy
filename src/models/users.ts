@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
-import { PassThrough } from "stream";
+import SHA3 from "crypto-js/sha3";
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
@@ -14,9 +14,11 @@ export default class Users {
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
-      // create user
+      // encrypt user password
+      const hashedPassword: string = this.hashPassword(data["password"]);
+      this.setPassword(hashedPassword, data);
 
-      // TODO: We need to encrypt the password before putting it into the database.
+      // create user
       await this.usersDB.create({ data });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -26,8 +28,8 @@ export default class Users {
           const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
           throw new Error("Unique Constraint Violation Failed on " + failedOn);
         }
-
-        throw new Error(error.message);
+      } else {
+        throw error;
       }
     }
   }
@@ -42,7 +44,14 @@ export default class Users {
 
       // check that password match
       const passwordUser = user["password"];
-      if (passwordInput !== passwordUser) {
+      
+      if (passwordInput === null) {
+        throw Error()
+      }
+
+      const hashPasswordInput = this.hashPassword(passwordInput);
+
+      if (hashPasswordInput !== passwordUser) {
         throw Error();
       }
     } catch (error) {
@@ -58,5 +67,13 @@ export default class Users {
     if (false) {
       throw new Error("this is an error");
     }
+  }
+
+  private hashPassword(password: string) {
+    return SHA3(password).toString();
+  }
+
+  private setPassword(password: string, data: any) {
+    data["password"] = password;
   }
 }
