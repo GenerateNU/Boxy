@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "lib/db";
+import persistentListingInstance from "lib/listingInstance";
 import { listings } from "@prisma/client";
 import Listings from "@/models/listings";
 
@@ -32,13 +32,12 @@ export default async function handler(
   res: NextApiResponse<listings[] | Message>
 ) {
   const { body } = req;
-  const listingsObject = new Listings(prisma.listings);
 
   // GET - get listings and their basic details given filters
   if (req.method === "GET") {
     let response: listings[] = [];
     try {
-      response = await listingsObject.fetch(body);
+      response = await persistentListingInstance.fetch(body);
     } catch (e) {
       if (e instanceof Error) {
         return res.status(400).send({ message: e.message });
@@ -55,10 +54,10 @@ export default async function handler(
 
       if ("listing_id" in body) {
         // Update a current listing using Prisma
-        await listingsObject.update(body);
+        await persistentListingInstance.update(body);
       } else {
         // Create a new listing using Prisma
-        await listingsObject.create(body);
+        await persistentListingInstance.create(body);
       }
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
@@ -68,7 +67,7 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     try {
-      await listingsObject.delete(body);
+      await persistentListingInstance.delete(body);
       return res.status(201).json({ message: "Successful" });
     } catch (error) {
       return res.status(500).json({ message: String(error) });
