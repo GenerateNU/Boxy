@@ -31,7 +31,7 @@ model listings {
   editable        Boolean
   created_on      DateTime   @db.Date
   space_available Int[]
-  host            User       @relation(fields: [host_id], references: [id])
+  host            users      @relation(fields: [host_id], references: [user_id])
 }
 
 model reservations {
@@ -55,7 +55,8 @@ model users {
   verified_on           DateTime? @db.Date
   username              String    @db.VarChar(255) @unique
   password              String    @db.VarChar(255)
-}
+  listings              listings[]
+ }
 
 enum amenity {
   Pest_Controlled    @map("Pest Controlled")
