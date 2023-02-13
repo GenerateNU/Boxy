@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<listings | null | Message>
 ) {
-  if ("id" ! in req.query) {
+  if (!("id" in req.query)) {
     return res.status(400).json({message: "missing id query in parameter string"})
   }
 
