@@ -1,4 +1,14 @@
-import { PrismaClient, listings } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
+
+export type ListingResponse = {
+  listing_id: number,
+  price: Decimal,
+  name: string,
+  proximity?: number,
+  longitude?: Decimal,
+  latitude?: Decimal
+}
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -18,13 +28,25 @@ export default class Listings {
     }
   }
 
+  async fetchByID(id: number) {
+    try {
+      const response = await this.listingsDB.findUnique({
+        where: {
+          listing_id: id,
+        }
+      });
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
 
   // fetches the listings that meet the conditions in data body
   async fetch(data: any) {
 
-    function distanceFilter(listing: any) {
-      const lon1 = (data.longitude * Math.PI) / 180;
-      const lon2 = (listing.longitude * Math.PI) / 180;
+    const distanceFilter = (listing: any) => {
+      const lon1: number = (data.longitude * Math.PI) / 180;
+      const lon2: number = (listing.longitude * Math.PI) / 180;
       const lat1: number = (data.latitude as any * Math.PI) / 180;
       const lat2: number = (listing.latitude as any * Math.PI) / 180;
 
@@ -37,8 +59,7 @@ export default class Listings {
       let c = 2 * Math.asin(Math.sqrt(a));
       let r = 3956;
 
-      console.log(c*r)
-      return c * r < data.proximity;
+      return c * r;
     }
     
     try {
@@ -57,16 +78,39 @@ export default class Listings {
           },
         });
       }
-
-      var listingResults: listings[] = await this.listingsDB.findMany({
+      if (data.dates_available) {
+        requestBody.push({
+          dates_available: {
+            hasEvery: new Date(data.dates_available),
+          }
+        });
+      }
+      var listingResults: ListingResponse[] = await this.listingsDB.findMany({
         where: {
           AND: requestBody,
         },
+        select: {
+          listing_id: true,
+          price: true,
+          name: true,
+          longitude: true,
+          latitude: true
+        }
       });
 
-      let response = listingResults; 
-      if (data.proximity && data.longitude && data.latitude) {
-          response = listingResults.filter(distanceFilter)
+
+      let response : ListingResponse[] = listingResults.map(listing => {
+        const dist: number | undefined = distanceFilter(listing);
+        delete listing.longitude;
+        delete listing.latitude;
+        return Object.assign({}, listing, {proximity: dist});
+      }); 
+      if (data.proximity) {
+        response = response.filter((response) => {
+          if (response.proximity !== undefined) {
+            return response.proximity <= data.proximity;
+          }
+        });
       }
 
       return response;
