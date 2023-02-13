@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "lib/db";
-import Users from "src/models/users";
+import persistentUserInstance from "lib/userInstance";
 
 type Message = {
   message: string;
@@ -14,13 +13,11 @@ export default async function handler(
   if (req.method === "POST") {
     const { body } = req;
 
-    // checking for required fields
-    const users_db = new Users(prisma.users);
     try {
-      await users_db.signUp(body);
-    } catch (e) {
-      if (e instanceof Error) {
-        return res.status(405).send({ message: e.message });
+      await persistentUserInstance.signUp(body);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(403).send({ message: error.message });
       }
     }
     return res.status(200).send({ message: "user added" });
