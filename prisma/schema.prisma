@@ -31,6 +31,8 @@ model listings {
   editable        Boolean
   created_on      DateTime   @db.Date
   space_available Int[]
+  longitude       Decimal
+  latitude        Decimal
 }
 
 model reservations {

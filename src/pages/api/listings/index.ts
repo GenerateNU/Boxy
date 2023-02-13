@@ -2,34 +2,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
 import { listings } from "@prisma/client";
 import Listings from "@/models/listings";
+import { ListingResponse } from "@/models/listings";
 
 type Message = {
   message: string;
 };
 
-// Compute the distance in miles between two longitude and latitude points:
-function calculateDistance(pos1: number[], pos2: number[]) {
-  const lon1 = (pos1[0] * Math.PI) / 180;
-  const lon2 = (pos1[1] * Math.PI) / 180;
-  const lat1 = (pos2[0] * Math.PI) / 180;
-  const lat2 = (pos2[1] * Math.PI) / 180;
-
-  let dlon = lon2 - lon1;
-  let dlat = lat2 - lat1;
-  let a =
-    Math.pow(Math.sin(dlat / 2), 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
-
-  let c = 2 * Math.asin(Math.sqrt(a));
-  let r = 3956;
-
-  return c * r;
-}
-
 // Change to async
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<listings[] | Message>
+  res: NextApiResponse<ListingResponse[] | listings[] | Message>
 ) {
 
 
@@ -37,7 +19,7 @@ export default async function handler(
   if (req.method === "GET") {
     const { body } = req;
     const listingsDB = new Listings(prisma.listings);
-    let response: listings[] = [];
+    let response: ListingResponse[] = [];
 
     try {
       response = await listingsDB.fetch(body);
@@ -54,7 +36,7 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       //extract listing info from request body
-      const {name, dates_available, price, description, amenities, space_type, address, city, state, zip_code, space_available} = req.body
+      const {name, dates_available, price, description, amenities, space_type, address, city, state, zip_code, space_available, longitude, latitude} = req.body;
 
       //confirm all fields are entered
       if (!name || !dates_available || !price || !description || !amenities || !space_type || !address || !city || !state || !zip_code || !space_available) {
@@ -81,7 +63,9 @@ export default async function handler(
           zip_code: zip_code,
           space_available: space_available,
           editable: false,
-          created_on: new Date()
+          created_on: new Date(),
+          longitude: longitude,
+          latitude: latitude
         },
       })
       return res.status(201).json({message: 'Successful'})
