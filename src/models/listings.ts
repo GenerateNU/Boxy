@@ -98,21 +98,6 @@ export default class Listings {
   }
 
   private validateInputData(data: any) {
-    if(!data.hasOwnProperty("name") ||
-    !data.hasOwnProperty("dates_available") ||
-    !data.hasOwnProperty("price") ||
-    !data.hasOwnProperty("description") ||
-    !data.hasOwnProperty("amenities") ||
-    !data.hasOwnProperty("space_type") ||
-    !data.hasOwnProperty("address") ||
-    !data.hasOwnProperty("city") ||
-    !data.hasOwnProperty("zip_code") ||
-    !data.hasOwnProperty("state") ||
-    !data.hasOwnProperty("space_available")) {
-      throw new Error("all required fields must be inputted")
-    }
-
-
     if (data.price % 1 !== 0 || data.price <= 0) {
       throw new Error("price must be a positive integer");
     }
