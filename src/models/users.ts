@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from '@prisma/client'
+import isEmail from 'isemail'
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
 import SHA3 from "crypto-js/sha3";
@@ -8,18 +9,19 @@ export default class Users {
 
   public async signUp(data: any) {
     try {
-      // setting required attributes
-      this.setDefaultAttributes(data);
 
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
+
+      // setting required attributes
+      this.setDefaultAttributes(data);
 
       // encrypt user password
       const hashedPassword: string = this.hashPassword(data["password"]);
       this.setPassword(hashedPassword, data);
 
       // create user
-      await this.usersDB.create({ data });
+      this.usersDB.create({ data });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
@@ -64,8 +66,11 @@ export default class Users {
   }
 
   private validateInputData(data: any) {
-    if (false) {
-      throw new Error("this is an error");
+    if (!isEmail.validate(data["email"])) {
+      throw new Error("email must be in the proper format")
+    }
+    if(2000000000 > data["phone_number"] || 9999999999 < data["phone_number"]) {
+      throw new Error("phone number must be in the proper format")
     }
   }
 
