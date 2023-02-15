@@ -123,23 +123,6 @@ export default class Listings {
     ) {
       throw new Error("space_available must be an array of positive integers");
     }
-    this.checkHostId(data.host_id);
-  }
-
-  // can add more input validation methods and call them in the method
-  async checkHostId(host_id: number) {
-    try {
-      const findUser = await prisma.users.findUnique({
-        where: {
-          user_id: host_id,
-        },
-      });
-
-      if (!findUser) {
-        throw new Error("Host ID not found in users table");
-      }
-    } catch (e) {
-      throw e;
-    }
+    
   }
 }
