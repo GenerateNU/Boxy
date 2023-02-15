@@ -9,18 +9,26 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
-  // POST - register new user
-  if (req.method === "POST") {
-    const { body } = req;
+  const supportedRequestMethods: { [key: string]: Function } = {
+    POST: registerUser,
+  };
 
-    try {
-      await persistentUserInstance.signUp(body);
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(403).send({ message: error.message });
-      }
-    }
-    return res.status(200).send({ message: "user added" });
+  if (req.method) {
+    return supportedRequestMethods[req.method](req, res);
   }
-  return res.status(405).send({ message: "Only POST request allowed" });
+
+  return res.status(405).send({ message: "request method not supported" });
+}
+
+async function registerUser(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await persistentUserInstance.signUp(req.body);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
+  }
+
+  return res.status(200).send({ message: "user added" });
 }

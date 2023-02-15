@@ -32,6 +32,8 @@ model listings {
   created_on      DateTime   @db.Date
   space_available Int[]
   host            users      @relation(fields: [host_id], references: [user_id])
+  longitude       Decimal
+  latitude        Decimal
 }
 
 model reservations {
@@ -48,8 +50,8 @@ model reservations {
 model users {
   user_id               Int       @id @default(autoincrement())
   name                  String    @db.VarChar(255)
-  phone_number          Int
-  email                 String    @db.VarChar(255)
+  phone_number          Int       @unique
+  email                 String    @db.VarChar(255) @unique
   drivers_license_photo String    @db.VarChar(255)
   verified              Boolean
   verified_on           DateTime? @db.Date
