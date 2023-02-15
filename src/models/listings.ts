@@ -1,4 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, listings } from "@prisma/client";
+import { assert } from "console";
+import prisma from "lib/db";
 import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
@@ -10,9 +12,11 @@ export type ListingResponse = {
   latitude?: Decimal
 }
 
+
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
 
+  // Creates a new entry
   async create(data: any) {
     try {
       // setting required attributes
@@ -24,6 +28,36 @@ export default class Listings {
       // add entry to database
       await this.listingsDB.create({ data });
     } catch (e) {
+      throw e;
+    }
+  }
+
+  //Update listing
+  async update(data: any) {
+    try {
+      // input validation
+      this.validateInputData(data);
+
+      // update entry in database
+      await this.listingsDB.update({
+        where: {
+          listing_id: data["listing_id"],
+        },
+        data: data,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Delete listing
+  async delete(data: any) {
+    try {
+      // delete entry in database
+      await this.listingsDB.delete({
+        where: data,
+      });
+     } catch (e) {
       throw e;
     }
   }
@@ -119,13 +153,37 @@ export default class Listings {
     }
   }
 
-  private setDefaultAttributes(data: any) {}
-
-  private validateInputData(data: any) {
-    if (false) {
-      throw new Error("this is an error");
-    }
+  private setDefaultAttributes(data: any) {
+    data["editable"] = false;
+    data["created_on"] = new Date();
+    data["host_id"] = 4;
   }
 
-  // can add more input validation methods and call them in the method
+  private validateInputData(data: any) {
+    if (data.price % 1 !== 0 || data.price <= 0) {
+      throw new Error("price must be a positive integer");
+    }
+
+    if (!/^\d{5}$/.test(data.zip_code)) {
+      throw new Error("zip_code must be a string of exactly 5 digits");
+    }
+
+    if (!/^[A-Z]{2}$/.test(data.state)) {
+      throw new Error("state must be a string of exactly 2 uppercase letters");
+    }
+
+    if (!/^\d+\s[A-Za-z]+\s[A-Za-z]+(\.|)$/.test(data.address)) {
+      throw new Error(
+        "address must match the pattern 'number street_name street_type'"
+      );
+    }
+
+    if (
+      !data.space_available.every((value: any) => {
+        return Number.isInteger(value) && value > 0;
+      })
+    ) {
+      throw new Error("space_available must be an array of positive integers");
+    }
+  }
 }

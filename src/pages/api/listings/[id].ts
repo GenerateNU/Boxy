@@ -1,11 +1,11 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from 'lib/db';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import Listings from "@/models/listings";
 import { listings } from '@prisma/client';
 
 type Message = {
-  message: string
-}
+  message: string;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,14 +30,12 @@ export default async function handler(
   }
 
   // POST - edit listing given ID
-  if (req.method === 'POST') {
-
+  if (req.method === "POST") {
   }
 
   // DELETE - delete listing given ID
-  if (req.method === 'DELETE') {
-
+  if (req.method === "DELETE") {
   }
 
-  return res.status(405).send({message: 'method not supported'})
+  return res.status(405).send({ message: "method not supported" });
 }
