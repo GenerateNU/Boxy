@@ -123,6 +123,5 @@ export default class Listings {
     ) {
       throw new Error("space_available must be an array of positive integers");
     }
-    
   }
 }
