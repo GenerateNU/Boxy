@@ -10,10 +10,13 @@ type Message = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<listings | null | Message>
+  res: NextApiResponse<Message>
 ) {
-  let response: listings | null = null;
-  const listingsDB = new Listings(prisma.listings);
+  const supportedRequestMethods: { [key: string]: Function } = {
+    GET: listingDetail,
+    PUT: updateListing,
+    DELETE: deleteListing
+  };
 
   if (!("id" in req.query)) {
     return res
@@ -21,50 +24,48 @@ export default async function handler(
       .json({ message: "missing id query in parameter string" });
   }
 
-  // GET - get listing details given ID
-  if (req.method === "GET") {
-    try {
-      response = await persistentListingInstance.fetchByID(req.body.id);
-    } catch (e) {
-      if (e instanceof Error) {
-        return res.status(400).send({ message: e.message });
-      }
-    }
-    return res.status(200).json(response);
+  if (req.method) {
+    return supportedRequestMethods[req.method](req, res);
   }
 
-  // POST - create a new listing
-  if (req.method === "POST") {
-    try {
-      // Create a new listing using Prisma
-      await persistentListingInstance.create(req.body);
+  return res.status(405).send({ message: "request method not supported" });
+}
 
-      return res.status(201).json({ message: "Successful" });
-    } catch (error) {
-      return res.status(500).json({ message: String(error) });
-    }
+async function listingDetail(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await persistentListingInstance.fetchByID(req.body.id);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
   }
 
-  // PUT - edit an existing listing
-  if (req.method === "PUT") {
-    try {
-      // Update a current listing using Prisma
-      await persistentListingInstance.update(req.body);
+  return res.status(200).send({ message: "user added" });
+}
 
-      return res.status(201).json({ message: "Successful" });
-    } catch (error) {
-      return res.status(500).json({ message: String(error) });
-    }
+async function updateListing(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await persistentListingInstance.update(req.body);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
   }
 
-  // DELETE - delete listing given ID
-  if (req.method === "DELETE") {
-    try {
-      await persistentListingInstance.delete(req.body);
-      return res.status(201).json({ message: "Successful" });
-    } catch (error) {
-      return res.status(500).json({ message: String(error) });
-    }
+  return res.status(200).send({ message: "user added" });
+}
+
+async function deleteListing(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await persistentListingInstance.delete(req.body);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
   }
-  return res.status(405).send({ message: "method not supported" });
+
+  return res.status(200).send({ message: "user added" });
 }

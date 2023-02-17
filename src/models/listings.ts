@@ -1,7 +1,6 @@
 import { PrismaClient, listings } from "@prisma/client";
 import { assert } from "console";
 import prisma from "lib/db";
-import { object, number, refine } from "superstruct";
 import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
