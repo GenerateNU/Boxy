@@ -41,7 +41,7 @@ async function listingDetail(
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user added" });
+  return res.status(200).send({ message: "returned listing information" });
 }
 
 async function updateListing(
@@ -54,7 +54,7 @@ async function updateListing(
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user added" });
+  return res.status(200).send({ message: "updated listing" });
 }
 
 async function deleteListing(
@@ -67,5 +67,5 @@ async function deleteListing(
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user added" });
+  return res.status(200).send({ message: "deleted listing" });
 }

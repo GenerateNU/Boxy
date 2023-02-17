@@ -33,7 +33,7 @@ async function filteredListings(
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user added" });
+  return res.status(200).send({ message: "returned filtered listings" });
 }
 
 async function createListing(
@@ -46,5 +46,5 @@ async function createListing(
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user added" });
+  return res.status(200).send({ message: "created listing" });
 }
