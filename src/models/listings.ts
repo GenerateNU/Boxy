@@ -1,17 +1,17 @@
 import { PrismaClient, listings } from "@prisma/client";
 import { assert } from "console";
 import prisma from "lib/db";
+import { object, number, refine } from "superstruct";
 import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
-  listing_id: number,
-  price: Decimal,
-  name: string,
-  proximity?: number,
-  longitude?: Decimal,
-  latitude?: Decimal
-}
-
+  listing_id: number;
+  price: Decimal;
+  name: string;
+  proximity?: number;
+  longitude?: Decimal;
+  latitude?: Decimal;
+};
 
 export default class Listings {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -57,7 +57,7 @@ export default class Listings {
       await this.listingsDB.delete({
         where: data,
       });
-     } catch (e) {
+    } catch (e) {
       throw e;
     }
   }
@@ -67,7 +67,7 @@ export default class Listings {
       const response = await this.listingsDB.findUnique({
         where: {
           listing_id: id,
-        }
+        },
       });
       return response;
     } catch (e) {
@@ -77,12 +77,11 @@ export default class Listings {
 
   // fetches the listings that meet the conditions in data body
   async fetch(data: any) {
-
     const distanceFilter = (listing: any) => {
       const lon1: number = (data.longitude * Math.PI) / 180;
       const lon2: number = (listing.longitude * Math.PI) / 180;
-      const lat1: number = (data.latitude as any * Math.PI) / 180;
-      const lat2: number = (listing.latitude as any * Math.PI) / 180;
+      const lat1: number = ((data.latitude as any) * Math.PI) / 180;
+      const lat2: number = ((listing.latitude as any) * Math.PI) / 180;
 
       let dlon = lon2 - lon1;
       let dlat = lat2 - lat1;
@@ -94,8 +93,8 @@ export default class Listings {
       let r = 3956;
 
       return c * r;
-    }
-    
+    };
+
     try {
       const requestBody = [];
       if (data.price) {
@@ -116,7 +115,7 @@ export default class Listings {
         requestBody.push({
           dates_available: {
             hasEvery: new Date(data.dates_available),
-          }
+          },
         });
       }
       var listingResults: ListingResponse[] = await this.listingsDB.findMany({
@@ -128,17 +127,16 @@ export default class Listings {
           price: true,
           name: true,
           longitude: true,
-          latitude: true
-        }
+          latitude: true,
+        },
       });
 
-
-      let response : ListingResponse[] = listingResults.map(listing => {
+      let response: ListingResponse[] = listingResults.map((listing) => {
         const dist: number | undefined = distanceFilter(listing);
         delete listing.longitude;
         delete listing.latitude;
-        return Object.assign({}, listing, {proximity: dist});
-      }); 
+        return Object.assign({}, listing, { proximity: dist });
+      });
       if (data.proximity) {
         response = response.filter((response) => {
           if (response.proximity !== undefined) {
