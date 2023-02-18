@@ -13,9 +13,9 @@ export default async function handler(
   res: NextApiResponse<Message>
 ) {
   const supportedRequestMethods: { [key: string]: Function } = {
-    GET: listingDetail,
+    GET: getListingDetails,
     PUT: updateListing,
-    DELETE: deleteListing
+    DELETE: deleteListing,
   };
 
   if (!("id" in req.query)) {
@@ -31,7 +31,7 @@ export default async function handler(
   return res.status(405).send({ message: "request method not supported" });
 }
 
-async function listingDetail(
+async function getListingDetails(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {

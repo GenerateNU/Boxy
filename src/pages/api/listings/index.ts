@@ -12,7 +12,7 @@ export default async function handler(
   res: NextApiResponse<Message>
 ) {
   const supportedRequestMethods: { [key: string]: Function } = {
-    GET: filteredListings,
+    GET: getListingsGivenFilters,
     POST: createListing,
   };
 
@@ -23,7 +23,7 @@ export default async function handler(
   return res.status(405).send({ message: "request method not supported" });
 }
 
-async function filteredListings(
+async function getListingsGivenFilters(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
