@@ -3,6 +3,8 @@ import isEmail from 'isemail'
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
 import SHA3 from "crypto-js/sha3";
+import jwt from "jsonwebtoken";
+
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
@@ -61,6 +63,24 @@ export default class Users {
     }
   }
 
+  async delete(headers: any) {
+
+    this.validateTokenHeader(headers)
+
+    const tokenPayload: any = jwt.decode(headers["login_token"])
+
+    try {
+      await prisma.users.delete({
+        where: {
+          username: tokenPayload
+        }
+      })
+    }
+    catch (error) {
+      throw new Error("Failed to delete user!")
+    }
+  }
+
   private setDefaultAttributes(data: any) {
     data["verified"] = false;
   }
@@ -71,6 +91,17 @@ export default class Users {
     }
     if(2000000000 > data["phone_number"] || 9999999999 < data["phone_number"]) {
       throw new Error("phone number must be in the proper format")
+    }
+  }
+
+  private validateTokenHeader(data: any) {
+    let token = data["login_token"]
+    if (token == null) {
+      throw new Error("no token provided!")
+    }
+    const tokenPayload = jwt.decode(token) 
+    if (tokenPayload == null) {
+      throw new Error("invalid token!")
     }
   }
 
