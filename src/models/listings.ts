@@ -153,7 +153,7 @@ export default class Listings {
   private setDefaultAttributes(data: any) {
     data["editable"] = false;
     data["created_on"] = new Date();
-    data["host_id"] = 4;
+    data["host_id"] = 1;
   }
 
   private validateInputData(data: any) {
