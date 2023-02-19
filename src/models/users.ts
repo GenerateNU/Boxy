@@ -1,17 +1,16 @@
-import { PrismaClient, Prisma } from '@prisma/client'
-import isEmail from 'isemail'
+import { PrismaClient, Prisma } from "@prisma/client";
+import isEmail from "isemail";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
 import SHA3 from "crypto-js/sha3";
-import jwt from "jsonwebtoken";
-
+import jwt, { JwtPayload } from "jsonwebtoken";
+import Utils from "@/utils";
 
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
 
   public async signUp(data: any) {
     try {
-
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
@@ -23,7 +22,7 @@ export default class Users {
       this.setPassword(hashedPassword, data);
 
       // create user
-      this.usersDB.create({ data });
+      await this.usersDB.create({ data });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
@@ -39,6 +38,12 @@ export default class Users {
   }
 
   public async login(usernameInput: string, passwordInput: string) {
+    if (passwordInput === null || usernameInput === null) {
+      throw Error();
+    }
+
+    const hashPasswordInput = this.hashPassword(passwordInput);
+
     try {
       const user = await prisma.users.findUniqueOrThrow({
         where: {
@@ -48,12 +53,6 @@ export default class Users {
 
       // check that password match
       const passwordUser = user["password"];
-      
-      if (passwordInput === null) {
-        throw Error()
-      }
-
-      const hashPasswordInput = this.hashPassword(passwordInput);
 
       if (hashPasswordInput !== passwordUser) {
         throw Error();
@@ -64,20 +63,27 @@ export default class Users {
   }
 
   async delete(headers: any) {
-
-    this.validateTokenHeader(headers)
-
-    const tokenPayload: any = jwt.decode(headers["login_token"])
-
+    console.log(headers)
     try {
+      this.validateTokenHeader(headers);
+      
+      const tokenPayload: any = jwt.decode(headers["login_token"]);
+      console.log(tokenPayload)
       await prisma.users.delete({
         where: {
-          username: tokenPayload
-        }
-      })
-    }
-    catch (error) {
-      throw new Error("Failed to delete user!")
+          username: tokenPayload.sub,
+        },
+      });
+
+
+      // TODO: Delete corresponding reservations
+      // query reservations database findMany where host is username
+      // filter through that for pedning reservations
+      // if one is active/pending fail
+
+    } catch (error) {
+      console.log(error)
+      throw new Error("Failed to delete user!");
     }
   }
 
@@ -87,21 +93,26 @@ export default class Users {
 
   private validateInputData(data: any) {
     if (!isEmail.validate(data["email"])) {
-      throw new Error("email must be in the proper format")
+      throw new Error("email must be in the proper format");
     }
-    if(2000000000 > data["phone_number"] || 9999999999 < data["phone_number"]) {
-      throw new Error("phone number must be in the proper format")
+    if (
+      2000000000 > data["phone_number"] ||
+      9999999999 < data["phone_number"]
+    ) {
+      throw new Error("phone number must be in the proper format");
     }
   }
 
   private validateTokenHeader(data: any) {
-    let token = data["login_token"]
+    let token = data["login_token"];
     if (token == null) {
-      throw new Error("no token provided!")
+      throw new Error("no token provided!");
     }
-    const tokenPayload = jwt.decode(token) 
-    if (tokenPayload == null) {
-      throw new Error("invalid token!")
+
+    const verifiedPayload = Utils.verifyToken(token);
+
+    if (verifiedPayload.exp === undefined || verifiedPayload.exp < Math.floor(Date.now()/1000)) {
+      throw new Error("Token Expired or Invalid!");
     }
   }
 
