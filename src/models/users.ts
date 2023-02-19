@@ -21,7 +21,7 @@ export default class Users {
       this.setPassword(hashedPassword, data);
 
       // create user
-      this.usersDB.create({ data });
+      await this.usersDB.create({ data });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
@@ -71,6 +71,9 @@ export default class Users {
     }
     if(2000000000 > data["phone_number"] || 9999999999 < data["phone_number"]) {
       throw new Error("phone number must be in the proper format")
+    }
+    if(!/^[A-Za-z0-9]*$/.test(data["username"])) {
+      throw new Error("username must be only numbers and letters")
     }
   }
 
