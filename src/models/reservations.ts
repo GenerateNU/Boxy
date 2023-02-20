@@ -1,4 +1,4 @@
-import { PrismaClient, reservations } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import persistentListingInstance from "lib/listingInstance";
 
 export default class Reservations {
@@ -23,7 +23,9 @@ export default class Reservations {
     data["accepted"] = false;
     data["requested_on"] = new Date();
     data["host_id"] = 1;
-    data.dates_requested = data.dates_requested.map((date: string | number | Date) => new Date(date));
+    data.dates_requested = data.dates_requested.map(
+      (date: string | number | Date) => new Date(date)
+    );
   }
 
   private async validateInputData(data: any) {
@@ -32,7 +34,7 @@ export default class Reservations {
     if (
       dates_available === undefined ||
       !data.dates_requested.every((date: Date) => {
-        dates_available.includes(new Date(date))
+        dates_available.includes(new Date(date));
       })
     ) {
       throw new Error("Listing is not available during requested dates");

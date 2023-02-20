@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "lib/db";
 import { reservations } from "@prisma/client";
 import persistentReservationInstance from "lib/reservationInstance";
 
