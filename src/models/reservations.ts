@@ -18,13 +18,18 @@ export default class Reservations {
     }
   }
 
-  private setDefaultAttributes(data: any) {}
-
-  private validateInputData(data: any) {
-    if (false) {
-      throw new Error("this is an error");
-    }
+  private setDefaultAttributes(data: any) {
+    data['accepted'] = false;
+    data['requested_on'] = new Date();
+    data['host_id'] = 1;
   }
 
-  // can add more input validation methods and call them in the method
+  private validateInputData(data: any) {
+    // fetch by ID here
+
+    const dates_available = fetch(data.listing_id);
+    if (!data.dates_requested.every(date => dates_available.includes(date))) {
+      throw new Error("Listing is not available during requested dates");
+    }
+  }
 }
