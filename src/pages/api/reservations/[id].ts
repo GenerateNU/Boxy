@@ -15,17 +15,17 @@ export default async function handler(
     return res.status(400).json({message: "missing id query in parameter string"})
   }
 
-  // GET - get listing details given ID
+  // GET - get reservation details given ID
   if (req.method === 'GET') {
     throw new Error("not implementeed");
   }
 
-  // POST - edit listing given ID
+  // POST - edit reservation given ID
   if (req.method === "POST") {
     throw new Error("not implemented");
   }
 
-  // DELETE - delete listing given ID
+  // DELETE - delete reservation given ID
   if (req.method === "DELETE") {
   }
 

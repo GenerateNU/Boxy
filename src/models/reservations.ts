@@ -1,4 +1,5 @@
 import { PrismaClient, reservations } from "@prisma/client";
+import persistentListingInstance from "lib/listingInstance";
 
 export default class Reservations {
   constructor(private readonly reservationsDB: PrismaClient["reservations"]) {}
@@ -9,7 +10,7 @@ export default class Reservations {
       this.setDefaultAttributes(data);
 
       // input validation
-      this.validateInputData(data);
+      await this.validateInputData(data);
 
       // add entry to database
       await this.reservationsDB.create({ data });
@@ -19,16 +20,21 @@ export default class Reservations {
   }
 
   private setDefaultAttributes(data: any) {
-    data['accepted'] = false;
-    data['requested_on'] = new Date();
-    data['host_id'] = 1;
+    data["accepted"] = false;
+    data["requested_on"] = new Date();
+    data["host_id"] = 1;
+    data.dates_requested = data.dates_requested.map((date: string | number | Date) => new Date(date));
   }
 
-  private validateInputData(data: any) {
-    // fetch by ID here
-
-    const dates_available = fetch(data.listing_id);
-    if (!data.dates_requested.every(date => dates_available.includes(date))) {
+  private async validateInputData(data: any) {
+    const response = await persistentListingInstance.fetchByID(data.listing_id);
+    const dates_available = response?.dates_available;
+    if (
+      dates_available === undefined ||
+      !data.dates_requested.every((date: Date) => {
+        dates_available.includes(new Date(date))
+      })
+    ) {
       throw new Error("Listing is not available during requested dates");
     }
   }

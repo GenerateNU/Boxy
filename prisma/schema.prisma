@@ -39,9 +39,9 @@ model listings {
 
 model reservations {
   reservation_id  Int        @id @default(autoincrement())
-  host_id         Int        @default(autoincrement())
-  stasher_id      Int        @default(autoincrement())
-  listing_id      Int        @default(autoincrement())
+  host_id         Int        
+  stasher_id      Int        
+  listing_id      Int        
   accepted        Boolean
   accepted_on     DateTime?  @db.Date
   requested_on    DateTime   @db.Date
