@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { GetServerSideProps } from "next/types";
 
 type Listing = {
   name: string;
@@ -10,7 +9,7 @@ type Listing = {
 export default function ListingsPage({ listings }) {
   return (
     <>
-      {listings.map((listing: any) => {
+      {listings.map((listing: Listing) => {
         return (
           <h1>
             {"$" + listing.price + " " + listing.name + " " + listing.proximity}
@@ -22,7 +21,7 @@ export default function ListingsPage({ listings }) {
   );
 }
 
-export async function getServerSideProps(context: GetServerSideProps) {
+export async function getServerSideProps() {
   return {
     props: {
       listings: await (
