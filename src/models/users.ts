@@ -63,26 +63,24 @@ export default class Users {
   }
 
   async delete(headers: any) {
-    console.log(headers)
+    console.log(headers);
     try {
       this.validateTokenHeader(headers);
-      
+
       const tokenPayload: any = jwt.decode(headers["login_token"]);
-      console.log(tokenPayload)
+      console.log(tokenPayload);
       await prisma.users.delete({
         where: {
           username: tokenPayload.sub,
         },
       });
 
-
       // TODO: Delete corresponding reservations
       // query reservations database findMany where host is username
       // filter through that for pedning reservations
       // if one is active/pending fail
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error("Failed to delete user!");
     }
   }
@@ -91,15 +89,24 @@ export default class Users {
     data["verified"] = false;
   }
 
-  private validateInputData(data: any) {
-    if (!isEmail.validate(data["email"])) {
+  private validateEmail(email: string) {
+    if (!isEmail.validate(email)) {
       throw new Error("email must be in the proper format");
     }
-    if (
-      2000000000 > data["phone_number"] ||
-      9999999999 < data["phone_number"]
-    ) {
+  }
+
+  private validatePhoneNumber(phone_number: Number) {
+    if (2000000000 > phone_number || 9999999999 < phone_number) {
       throw new Error("phone number must be in the proper format");
+    }
+  }
+
+  private validateInputData(data: any) {
+    try {
+      this.validateEmail(data["email"]);
+      this.validatePhoneNumber(data["phone_number"]);
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -111,11 +118,14 @@ export default class Users {
 
     const verifiedPayload = Utils.verifyToken(token);
 
-    if (verifiedPayload.exp === undefined || verifiedPayload.exp < Math.floor(Date.now()/1000)) {
+    if (
+      verifiedPayload.exp === undefined ||
+      verifiedPayload.exp < Math.floor(Date.now() / 1000)
+    ) {
       throw new Error("Token Expired or Invalid!");
     }
-    if(!/^[A-Za-z0-9]*$/.test(data["username"])) {
-      throw new Error("username must be only numbers and letters")
+    if (!/^[A-Za-z0-9]*$/.test(data["username"])) {
+      throw new Error("username must be only numbers and letters");
     }
   }
 
