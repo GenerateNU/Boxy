@@ -37,20 +37,19 @@ export default class Users {
     }
   }
 
-  public async updateUser(req: any, headers: any) {
+  public async updateUser(body: any, headers: any) {
     try {
-      this.validateInputData(req.data);
+      this.validateInputData(body);
 
       // encrypt changed user password
-      if (req.data.password) {
-        const hashedPassword: string = this.hashPassword(req.data["password"]);
-        this.setPassword(hashedPassword, req.data);
+      if (body.password) {
+        const hashedPassword: string = this.hashPassword(body["password"]);
+        this.setPassword(hashedPassword, body);
       }
 
       //decode user id from the request headers
-      const token = headers;
-      const decoded = jwt_decode(token) as { user_id: number };
-      const userId = decoded.user_id;
+      const token = headers["login_token"];
+      const decoded: any = Utils.decodeToken(token);
 
       //Will use this to decode in the future
       //const decoded = Utils.decodeToken(token);
@@ -58,9 +57,9 @@ export default class Users {
       // update user
       await this.usersDB.update({
         where: {
-          user_id: userId,
+          username: decoded,
         },
-        data: req.data,
+        data: body,
       });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -105,6 +104,7 @@ export default class Users {
   }
 
   private validateInputData(data: any) {
+    console.log(data);
     if (!isEmail.validate(data["email"])) {
       throw new Error("email must be in the proper format");
     }

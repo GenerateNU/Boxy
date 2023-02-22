@@ -23,7 +23,7 @@ export default async function handler(
 
 async function updateUser(req: NextApiRequest, res: NextApiResponse<Message>) {
   try {
-    await persistentUserInstance.updateUser(req, req.headers);
+    await persistentUserInstance.updateUser(req.body, req.headers);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
