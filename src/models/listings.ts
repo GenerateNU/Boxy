@@ -1,6 +1,4 @@
 import { PrismaClient, listings } from "@prisma/client";
-import { assert } from "console";
-import prisma from "lib/db";
 import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
@@ -12,32 +10,24 @@ export type ListingResponse = {
   latitude?: Decimal;
 };
 
-export default class Listings {
+export default class ListingsDataTable {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
 
-  // Creates a new entry
-  async create(data: any) {
+  async createListing(data: any) {
     try {
-      // setting required attributes
       this.setDefaultAttributes(data);
-
-      // input validation
       this.validateInputData(data);
 
-      // add entry to database
       await this.listingsDB.create({ data });
     } catch (e) {
       throw e;
     }
   }
 
-  //Update listing
-  async update(data: any) {
+  async updateListing(data: any) {
     try {
-      // input validation
       this.validateInputData(data);
 
-      // update entry in database
       await this.listingsDB.update({
         where: {
           listing_id: data["listing_id"],
@@ -49,10 +39,8 @@ export default class Listings {
     }
   }
 
-  // Delete listing
-  async delete(data: any) {
+  async deleteListing(data: any) {
     try {
-      // delete entry in database
       await this.listingsDB.delete({
         where: data,
       });
@@ -61,7 +49,7 @@ export default class Listings {
     }
   }
 
-  async fetchByID(id: number) {
+  async getListing(id: number) {
     try {
       const response = await this.listingsDB.findUnique({
         where: {
@@ -74,8 +62,7 @@ export default class Listings {
     }
   }
 
-  // fetches the listings that meet the conditions in data body
-  async fetch(data: any) {
+  async getListings(data: any) {
     const distanceFilter = (listing: any) => {
       const lon1: number = (data.longitude * Math.PI) / 180;
       const lon2: number = (listing.longitude * Math.PI) / 180;
@@ -153,34 +140,58 @@ export default class Listings {
   private setDefaultAttributes(data: any) {
     data["editable"] = false;
     data["created_on"] = new Date();
-    data["host_id"] = 1;
+    data["host_id"] = 1; // TODO get host_id from request headers
   }
 
-  private validateInputData(data: any) {
-    if (data.price % 1 !== 0 || data.price <= 0) {
+  private validatePrice(price: number) {
+    if (price % 1 !== 0 || price <= 0) {
       throw new Error("price must be a positive integer");
     }
+  }
 
-    if (!/^\d{5}$/.test(data.zip_code)) {
+  private validateZipCode(zipCode: string) {
+    // TODO should this be type int?
+    if (!/^\d{5}$/.test(zipCode)) {
       throw new Error("zip_code must be a string of exactly 5 digits");
     }
+  }
 
-    if (!/^[A-Z]{2}$/.test(data.state)) {
+  private validateState(state: string) {
+    if (!/^[A-Z]{2}$/.test(state)) {
+      // TODO import list of all state abbreviations
       throw new Error("state must be a string of exactly 2 uppercase letters");
     }
+  }
 
-    if (!/^\d+\s[A-Za-z]+\s[A-Za-z]+(\.|)$/.test(data.address)) {
+  private validateAddress(address: string) {
+    if (!/^\d+\s[A-Za-z]+\s[A-Za-z]+(\.|)$/.test(address)) {
       throw new Error(
         "address must match the pattern 'number street_name street_type'"
       );
     }
+  }
 
+  private validateSpaceAvailable(spaceAvailable: number[]) {
+    // TODO figure out how to represent space available
     if (
-      !data.space_available.every((value: any) => {
+      !spaceAvailable.every((value: any) => {
         return Number.isInteger(value) && value > 0;
       })
     ) {
       throw new Error("space_available must be an array of positive integers");
+    }
+  }
+
+  private validateInputData(data: any) {
+    try {
+      // TODO do that thing - const {price, zip_code ...} = data?
+      this.validatePrice(data.price);
+      this.validateZipCode(data.zip_code);
+      this.validateState(data.state);
+      this.validateAddress(data.address);
+      this.validateSpaceAvailable(data.space_available);
+    } catch (e) {
+      throw e;
     }
   }
 }
