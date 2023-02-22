@@ -11,15 +11,9 @@ export default class Users {
 
   public async signUp(data: any) {
     try {
-      // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
-      // setting required attributes
       this.setDefaultAttributes(data);
-
-      // encrypt user password
-      const hashedPassword: string = this.hashPassword(data["password"]);
-      this.setPassword(hashedPassword, data);
 
       // create user
       await this.usersDB.create({ data });
@@ -85,8 +79,13 @@ export default class Users {
     }
   }
 
+  private hashPassword(password: string) {
+    return SHA3(password).toString();
+  }
+
   private setDefaultAttributes(data: any) {
     data["verified"] = false;
+    data["password"] = this.hashPassword(data["password"]);
   }
 
   private validateEmail(email: string) {
@@ -127,13 +126,5 @@ export default class Users {
     if (!/^[A-Za-z0-9]*$/.test(data["username"])) {
       throw new Error("username must be only numbers and letters");
     }
-  }
-
-  private hashPassword(password: string) {
-    return SHA3(password).toString();
-  }
-
-  private setPassword(password: string, data: any) {
-    data["password"] = password;
   }
 }
