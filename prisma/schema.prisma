@@ -15,6 +15,19 @@ model spatial_ref_sys {
   proj4text String? @db.VarChar(2048)
 }
 
+model users {
+  user_id               Int       @id @default(autoincrement())
+  name                  String    @db.VarChar(255)
+  phone_number          BigInt       @unique
+  email                 String    @db.VarChar(255) @unique
+  drivers_license_photo String    @db.VarChar(255)
+  verified              Boolean
+  verified_on           DateTime? @db.Date
+  username              String    @db.VarChar(255) @unique
+  password              String    @db.VarChar(255)
+  listings              listings[]
+ }
+
 model listings {
   listing_id      Int        @id @default(autoincrement())
   name            String     @db.VarChar(255)
@@ -31,7 +44,7 @@ model listings {
   editable        Boolean
   created_on      DateTime   @db.Date
   space_available Int[]
-  host            users      @relation(fields: [host_id], references: [user_id])
+  host            users      @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal
   latitude        Decimal
 }
@@ -43,22 +56,10 @@ model reservations {
   listing_id      Int        @default(autoincrement())
   accepted        Boolean
   accepted_on     DateTime?  @db.Date
-  requested_on    DateTime @db.Date
+  requested_on    DateTime   @db.Date
   dates_requested DateTime[] @db.Date
 }
 
-model users {
-  user_id               Int       @id @default(autoincrement())
-  name                  String    @db.VarChar(255)
-  phone_number          BigInt    @unique
-  email                 String    @db.VarChar(255) @unique
-  drivers_license_photo String    @db.VarChar(255)
-  verified              Boolean
-  verified_on           DateTime? @db.Date
-  username              String    @db.VarChar(255) @unique
-  password              String    @db.VarChar(255)
-  listings              listings[]
- }
 
 enum amenity {
   Pest_Controlled    @map("Pest Controlled")
