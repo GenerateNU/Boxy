@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn, signOut } from "next-auth/react";
 
 type Listing = {
   listing_id: string;
@@ -13,12 +13,15 @@ export default function ListingsPage({ listings }) {
     <div>
       {listings.map((listing: Listing) => {
         return (
-          <h1 key={listing.listing_id}>
-            {"$" + listing.price + " " + listing.name + " " + listing.proximity}
-          </h1>
+          <div>
+            <h1>{"listing id: " + listing.listing_id}</h1>
+            <h1>{"listing price: $" + listing.price}</h1>
+            <h1>{"listing name: " + listing.name}</h1>
+            <h1>{"listing proximity: " + listing.proximity}</h1>
+          </div>
         );
       })}
-      <Link href="/login">Login</Link>
+      <Link href="/login">this is a link to the login page</Link>
     </div>
   );
 }

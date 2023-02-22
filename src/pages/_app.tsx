@@ -10,7 +10,7 @@ export default function App({
   return (
     <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
-      <button onClick={() => signIn()}>test</button>
+      <button onClick={() => signIn()}>click here to login</button>
     </SessionProvider>
   );
 }
