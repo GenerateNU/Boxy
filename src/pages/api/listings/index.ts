@@ -25,15 +25,14 @@ export default async function handler(
 
 async function getListingsGivenFilters(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<ListingResponse[] | Message>
 ) {
   try {
-    await persistentListingInstance.fetch(req.body);
+    const response = await persistentListingInstance.fetch(req.body);
+    return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
-
-  return res.status(200).send({ message: "returned filtered listings" });
 }
 
 async function createListing(

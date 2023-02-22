@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react"
 
 type Listing = {
+  listing_id: string;
   name: string;
   price: string;
   proximity: string;
@@ -9,16 +10,16 @@ type Listing = {
 
 export default function ListingsPage({ listings }) {
   return (
-    <>
+    <div>
       {listings.map((listing: Listing) => {
         return (
-          <h1>
+          <h1 key={listing.listing_id}>
             {"$" + listing.price + " " + listing.name + " " + listing.proximity}
           </h1>
         );
       })}
       <Link href="/login">Login</Link>
-    </>
+    </div>
   );
 }
 
