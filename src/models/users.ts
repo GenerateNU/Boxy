@@ -51,9 +51,6 @@ export default class Users {
       const token = headers["login_token"];
       const decoded: any = Utils.decodeToken(token);
 
-      //Will use this to decode in the future
-      //const decoded = Utils.decodeToken(token);
-
       // update user
       await this.usersDB.update({
         where: {
