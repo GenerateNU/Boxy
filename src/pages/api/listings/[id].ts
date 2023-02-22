@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
 import ListingsDataTable from "@/models/listings";
 import { listings } from "@prisma/client";
-import persistentListingInstance from "lib/listingInstance";
+import listingDataTable from "lib/listingInstance";
 
 type Message = {
   message: string;
@@ -36,7 +36,7 @@ async function getListingDetails(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentListingInstance.getListing(req.body.id);
+    await listingDataTable.getListing(req.body.id);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
@@ -49,7 +49,7 @@ async function updateListing(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentListingInstance.updateListing(req.body);
+    await listingDataTable.updateListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
@@ -62,7 +62,7 @@ async function deleteListing(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentListingInstance.deleteListing(req.body);
+    await listingDataTable.deleteListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
