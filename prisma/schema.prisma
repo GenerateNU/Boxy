@@ -18,7 +18,7 @@ model spatial_ref_sys {
 model users {
   user_id               Int       @id @default(autoincrement())
   name                  String    @db.VarChar(255)
-  phone_number          Int       @unique
+  phone_number          BigInt       @unique
   email                 String    @db.VarChar(255) @unique
   drivers_license_photo String    @db.VarChar(255)
   verified              Boolean
