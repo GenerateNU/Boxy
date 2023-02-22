@@ -114,6 +114,9 @@ export default class Users {
     if (verifiedPayload.exp === undefined || verifiedPayload.exp < Math.floor(Date.now()/1000)) {
       throw new Error("Token Expired or Invalid!");
     }
+    if(!/^[A-Za-z0-9]*$/.test(data["username"])) {
+      throw new Error("username must be only numbers and letters")
+    }
   }
 
   private hashPassword(password: string) {
