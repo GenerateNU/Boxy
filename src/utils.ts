@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload}  from "jsonwebtoken";
 
 export default class Utils {
   public static decodeToken(token: string) {
@@ -7,7 +7,11 @@ export default class Utils {
     });
   }
 
-  public static encodeValue(value: string) {
+  public static verifyToken(token: string): JwtPayload {
+    return jwt.verify(token, "secret_key_change_later") as JwtPayload;
+  }
+
+  public static encodeValue(value: JwtPayload) {
     return jwt.sign(value, "secret_key_change_later");
   }
 }

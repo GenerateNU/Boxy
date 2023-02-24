@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from 'lib/db';
-import Listings from "@/models/listings";
-import { listings } from '@prisma/client';
+import prisma from "lib/db";
+import ListingsDataTable from "@/models/listings";
+import { listings } from "@prisma/client";
+import listingDataTable from "lib/listingInstance";
 
 type Message = {
   message: string;
@@ -9,33 +10,62 @@ type Message = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<listings | null | Message>
+  res: NextApiResponse<Message>
 ) {
+  const supportedRequestMethods: { [key: string]: Function } = {
+    GET: getListingDetails,
+    PUT: updateListing,
+    DELETE: deleteListing,
+  };
+
   if (!("id" in req.query)) {
-    return res.status(400).json({message: "missing id query in parameter string"})
+    return res
+      .status(400)
+      .json({ message: "missing id query in parameter string" });
   }
 
-  // GET - get listing details given ID
-  if (req.method === 'GET') {
-    let response: listings | null = null;
-    const listingsDB = new Listings(prisma.listings);
-    try {
-      response = await listingsDB.fetchByID(req.body.id);
-    } catch (e) {
-      if (e instanceof Error) {
-        return res.status(400).send({ message: e.message });
-      }
-    }
-    return res.status(200).json(response);
+  if (req.method) {
+    return supportedRequestMethods[req.method](req, res);
   }
 
-  // POST - edit listing given ID
-  if (req.method === "POST") {
+  return res.status(405).send({ message: "request method not supported" });
+}
+
+async function getListingDetails(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await listingDataTable.getListing(req.body.id);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
   }
 
-  // DELETE - delete listing given ID
-  if (req.method === "DELETE") {
+  return res.status(200).send({ message: "returned listing information" });
+}
+
+async function updateListing(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await listingDataTable.updateListing(req.body);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(405).send({ message: "method not supported" });
+  return res.status(200).send({ message: "updated listing" });
+}
+
+async function deleteListing(
+  req: NextApiRequest,
+  res: NextApiResponse<Message>
+) {
+  try {
+    await listingDataTable.deleteListing(req.body);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
+  }
+
+  return res.status(200).send({ message: "deleted listing" });
 }
