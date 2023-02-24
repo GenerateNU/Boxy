@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import persistentUserInstance from "lib/userInstance";
 
-
 type Message = {
   message: string;
 };
@@ -45,15 +44,12 @@ async function registerUser(
   return res.status(200).send({ message: "user added" });
 }
 
-async function deleteUser(
-  req: NextApiRequest,
-  res: NextApiResponse<Message>
-) {
+async function deleteUser(req: NextApiRequest, res: NextApiResponse<Message>) {
   try {
-    await persistentUserInstance.delete(req.headers); 
+    await persistentUserInstance.delete(req.headers);
   } catch (error) {
-    return res.status(403).send({ message: String(error ) }); 
+    return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "user deleted" }); 
+  return res.status(200).send({ message: "user deleted" });
 }
