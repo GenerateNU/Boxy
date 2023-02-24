@@ -31,7 +31,7 @@ model listings {
   editable        Boolean
   created_on      DateTime       @db.Date
   space_available Int[]
-  host            users      @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
+  host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal
   latitude        Decimal
   reservations    reservations[]
