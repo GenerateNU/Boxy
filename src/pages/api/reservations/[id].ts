@@ -1,6 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from 'lib/db';
-import Reservations from "@/models/reservations";
 import { reservations } from '@prisma/client';
 
 type Message = {
