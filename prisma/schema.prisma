@@ -15,51 +15,56 @@ model spatial_ref_sys {
   proj4text String? @db.VarChar(2048)
 }
 
-model users {
-  user_id               Int       @id @default(autoincrement())
-  name                  String    @db.VarChar(255)
-  phone_number          BigInt       @unique
-  email                 String    @db.VarChar(255) @unique
-  drivers_license_photo String    @db.VarChar(255)
-  verified              Boolean
-  verified_on           DateTime? @db.Date
-  username              String    @db.VarChar(255) @unique
-  password              String    @db.VarChar(255)
-  listings              listings[]
- }
-
 model listings {
-  listing_id      Int        @id @default(autoincrement())
-  name            String     @db.VarChar(255)
-  host_id         Int        
-  dates_available DateTime[] @db.Date
-  price           Decimal    @db.Decimal
-  description     String     @db.VarChar(255)
+  listing_id      Int            @id @default(autoincrement())
+  name            String         @db.VarChar(255)
+  host_id         Int
+  dates_available DateTime[]     @db.Date
+  price           Decimal        @db.Decimal
+  description     String         @db.VarChar(255)
   amenities       amenity[]
   space_type      spacetype
-  address         String     @db.VarChar(255)
-  city            String     @db.VarChar(255)
-  zip_code        String     @db.VarChar(255)
-  state           String     @db.VarChar(255)
+  address         String         @db.VarChar(255)
+  city            String         @db.VarChar(255)
+  zip_code        String         @db.VarChar(255)
+  state           String         @db.VarChar(255)
   editable        Boolean
-  created_on      DateTime   @db.Date
+  created_on      DateTime       @db.Date
   space_available Int[]
-  host            users      @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
+  host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal
   latitude        Decimal
+  reservations    reservations[]
 }
 
 model reservations {
   reservation_id  Int        @id @default(autoincrement())
-  host_id         Int        @default(autoincrement())
-  stasher_id      Int        @default(autoincrement())
-  listing_id      Int        @default(autoincrement())
+  host_id         Int        
+  stasher_id      Int        
+  listing_id      Int        
   accepted        Boolean
   accepted_on     DateTime?  @db.Date
   requested_on    DateTime   @db.Date
   dates_requested DateTime[] @db.Date
+  host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
+  stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
+  listing         listings   @relation(fields: [listing_id], references: [listing_id])
 }
 
+model users {
+  user_id               Int            @id @default(autoincrement())
+  name                  String         @db.VarChar(255)
+  phone_number          Int            @unique
+  email                 String         @unique @db.VarChar(255)
+  drivers_license_photo String         @db.VarChar(255)
+  verified              Boolean
+  verified_on           DateTime?      @db.Date
+  username              String         @unique @db.VarChar(255)
+  password              String         @db.VarChar(255)
+  listings              listings[]
+  host_reservations     reservations[] @relation("host_reservations")
+  stash_reservations    reservations[] @relation("stash_reservations")
+}
 
 enum amenity {
   Pest_Controlled    @map("Pest Controlled")
