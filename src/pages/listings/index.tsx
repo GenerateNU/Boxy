@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Listing from "./listing";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 type Listing = {
   listing_id: string;
