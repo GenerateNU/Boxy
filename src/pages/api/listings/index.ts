@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { listings } from "@prisma/client";
 import { ListingResponse } from "@/models/listings";
-import persistentListingInstance from "lib/listingInstance";
+import listingDataTable from "lib/listingInstance";
 
 type Message = {
   message: string;
@@ -28,7 +28,7 @@ async function getListingsGivenFilters(
   res: NextApiResponse<ListingResponse[] | Message>
 ) {
   try {
-    const response = await persistentListingInstance.fetch(req.body);
+    const response = await listingDataTable.getListings(req.body);
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -40,7 +40,7 @@ async function createListing(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentListingInstance.create(req.body);
+    await listingDataTable.createListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }

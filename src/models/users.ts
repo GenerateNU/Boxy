@@ -14,12 +14,7 @@ export default class Users {
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
-      // setting required attributes
       this.setDefaultAttributes(data);
-
-      // encrypt user password
-      const hashedPassword: string = this.hashPassword(data["password"]);
-      this.setPassword(hashedPassword, data);
 
       // create user
       await this.usersDB.create({ data });
@@ -27,6 +22,39 @@ export default class Users {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
           // This might break if there are multiple unique fields, no way to test right now
+          const parseErrorMessage = error.message.split("`");
+          const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
+          throw new Error("Unique Constraint Violation Failed on " + failedOn);
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  public async updateUser(body: any, headers: any) {
+    try {
+      this.validateInputData(body);
+
+      // encrypt changed user password
+      if (body.password) {
+        body["password"] = this.hashPassword(body["password"]);
+      }
+
+      //decode user id from the request headers
+      const token = headers["login_token"];
+      const decoded: any = Utils.decodeToken(token);
+
+      // update user
+      await this.usersDB.update({
+        where: {
+          username: decoded,
+        },
+        data: body,
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code == "P2002") {
           const parseErrorMessage = error.message.split("`");
           const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
           throw new Error("Unique Constraint Violation Failed on " + failedOn);
@@ -54,6 +82,12 @@ export default class Users {
       // check that password match
       const passwordUser = user["password"];
 
+      if (passwordInput === null) {
+        throw Error();
+      }
+
+      const hashPasswordInput = this.hashPassword(passwordInput);
+
       if (hashPasswordInput !== passwordUser) {
         throw Error();
       }
@@ -63,43 +97,55 @@ export default class Users {
   }
 
   async delete(headers: any) {
-    console.log(headers)
+    console.log(headers);
     try {
       this.validateTokenHeader(headers);
-      
+
       const tokenPayload: any = jwt.decode(headers["login_token"]);
-      console.log(tokenPayload)
+      console.log(tokenPayload);
       await prisma.users.delete({
         where: {
           username: tokenPayload.sub,
         },
       });
 
-
       // TODO: Delete corresponding reservations
       // query reservations database findMany where host is username
       // filter through that for pedning reservations
       // if one is active/pending fail
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error("Failed to delete user!");
     }
   }
 
+  private hashPassword(password: string) {
+    return SHA3(password).toString();
+  }
+
   private setDefaultAttributes(data: any) {
     data["verified"] = false;
+    data["password"] = this.hashPassword(data["password"]);
+  }
+
+  private validateEmail(email: string) {
+    if (!isEmail.validate(email)) {
+      throw new Error("email must be in the proper format");
+    }
+  }
+
+  private validatePhoneNumber(phone_number: Number) {
+    if (2000000000 > phone_number || 9999999999 < phone_number) {
+      throw new Error("phone number must be in the proper format");
+    }
   }
 
   private validateInputData(data: any) {
-    if (!isEmail.validate(data["email"])) {
-      throw new Error("email must be in the proper format");
-    }
-    if (
-      2000000000 > data["phone_number"] ||
-      9999999999 < data["phone_number"]
-    ) {
-      throw new Error("phone number must be in the proper format");
+    try {
+      this.validateEmail(data["email"]);
+      this.validatePhoneNumber(data["phone_number"]);
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -111,19 +157,14 @@ export default class Users {
 
     const verifiedPayload = Utils.verifyToken(token);
 
-    if (verifiedPayload.exp === undefined || verifiedPayload.exp < Math.floor(Date.now()/1000)) {
+    if (
+      verifiedPayload.exp === undefined ||
+      verifiedPayload.exp < Math.floor(Date.now() / 1000)
+    ) {
       throw new Error("Token Expired or Invalid!");
     }
-    if(!/^[A-Za-z0-9]*$/.test(data["username"])) {
-      throw new Error("username must be only numbers and letters")
+    if (!/^[A-Za-z0-9]*$/.test(data["username"])) {
+      throw new Error("username must be only numbers and letters");
     }
-  }
-
-  private hashPassword(password: string) {
-    return SHA3(password).toString();
-  }
-
-  private setPassword(password: string, data: any) {
-    data["password"] = password;
   }
 }

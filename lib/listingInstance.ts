@@ -1,6 +1,6 @@
-import Listings from "@/models/listings";
+import ListingsDataTable from "@/models/listings";
 import prisma from "lib/db";
 
-const persistentListingInstance = new Listings(prisma.listings);
+const listingDataTable = new ListingsDataTable(prisma.listings);
 
-export default persistentListingInstance;
+export default listingDataTable;
