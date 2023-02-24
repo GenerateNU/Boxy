@@ -3,7 +3,7 @@ import isEmail from "isemail";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import prisma from "lib/db";
 import SHA3 from "crypto-js/sha3";
-import jwt_decode from "jwt-decode";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import Utils from "@/utils";
 
 export default class Users {
@@ -14,12 +14,7 @@ export default class Users {
       // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
-      // setting required attributes
       this.setDefaultAttributes(data);
-
-      // encrypt user password
-      const hashedPassword: string = this.hashPassword(data["password"]);
-      this.setPassword(hashedPassword, data);
 
       // create user
       await this.usersDB.create({ data });
@@ -43,8 +38,7 @@ export default class Users {
 
       // encrypt changed user password
       if (body.password) {
-        const hashedPassword: string = this.hashPassword(body["password"]);
-        this.setPassword(hashedPassword, body);
+        body["password"] = this.hashPassword(body["password"]);
       }
 
       //decode user id from the request headers
@@ -72,6 +66,12 @@ export default class Users {
   }
 
   public async login(usernameInput: string, passwordInput: string) {
+    if (passwordInput === null || usernameInput === null) {
+      throw Error();
+    }
+
+    const hashPasswordInput = this.hashPassword(passwordInput);
+
     try {
       const user = await prisma.users.findUniqueOrThrow({
         where: {
@@ -96,20 +96,26 @@ export default class Users {
     }
   }
 
-  private setDefaultAttributes(data: any) {
-    data["verified"] = false;
-  }
+  async delete(headers: any) {
+    console.log(headers);
+    try {
+      this.validateTokenHeader(headers);
 
-  private validateInputData(data: any) {
-    console.log(data);
-    if (!isEmail.validate(data["email"])) {
-      throw new Error("email must be in the proper format");
-    }
-    if (
-      2000000000 > data["phone_number"] ||
-      9999999999 < data["phone_number"]
-    ) {
-      throw new Error("phone number must be in the proper format");
+      const tokenPayload: any = jwt.decode(headers["login_token"]);
+      console.log(tokenPayload);
+      await prisma.users.delete({
+        where: {
+          username: tokenPayload.sub,
+        },
+      });
+
+      // TODO: Delete corresponding reservations
+      // query reservations database findMany where host is username
+      // filter through that for pedning reservations
+      // if one is active/pending fail
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to delete user!");
     }
   }
 
@@ -117,7 +123,48 @@ export default class Users {
     return SHA3(password).toString();
   }
 
-  private setPassword(password: string, data: any) {
-    data["password"] = password;
+  private setDefaultAttributes(data: any) {
+    data["verified"] = false;
+    data["password"] = this.hashPassword(data["password"]);
+  }
+
+  private validateEmail(email: string) {
+    if (!isEmail.validate(email)) {
+      throw new Error("email must be in the proper format");
+    }
+  }
+
+  private validatePhoneNumber(phone_number: Number) {
+    if (2000000000 > phone_number || 9999999999 < phone_number) {
+      throw new Error("phone number must be in the proper format");
+    }
+  }
+
+  private validateInputData(data: any) {
+    try {
+      this.validateEmail(data["email"]);
+      this.validatePhoneNumber(data["phone_number"]);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private validateTokenHeader(data: any) {
+    let token = data["login_token"];
+    if (token == null) {
+      throw new Error("no token provided!");
+    }
+
+    const verifiedPayload = Utils.verifyToken(token);
+
+    if (
+      verifiedPayload.exp === undefined ||
+      verifiedPayload.exp < Math.floor(Date.now() / 1000)
+    ) {
+      throw new Error("Token Expired or Invalid!");
+    }
+    if (!/^[A-Za-z0-9]*$/.test(data["username"])) {
+      throw new Error("username must be only numbers and letters");
+    }
   }
 }
