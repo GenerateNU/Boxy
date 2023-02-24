@@ -11,6 +11,7 @@ export default class Users {
 
   public async signUp(data: any) {
     try {
+      // input validation (can add more validation methods and call them here)
       this.validateInputData(data);
 
       this.setDefaultAttributes(data);
@@ -21,6 +22,39 @@ export default class Users {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
           // This might break if there are multiple unique fields, no way to test right now
+          const parseErrorMessage = error.message.split("`");
+          const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
+          throw new Error("Unique Constraint Violation Failed on " + failedOn);
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  public async updateUser(body: any, headers: any) {
+    try {
+      this.validateInputData(body);
+
+      // encrypt changed user password
+      if (body.password) {
+        body["password"] = this.hashPassword(body["password"]);
+      }
+
+      //decode user id from the request headers
+      const token = headers["login_token"];
+      const decoded: any = Utils.decodeToken(token);
+
+      // update user
+      await this.usersDB.update({
+        where: {
+          username: decoded,
+        },
+        data: body,
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code == "P2002") {
           const parseErrorMessage = error.message.split("`");
           const failedOn = parseErrorMessage[parseErrorMessage.length - 2];
           throw new Error("Unique Constraint Violation Failed on " + failedOn);
@@ -47,6 +81,12 @@ export default class Users {
 
       // check that password match
       const passwordUser = user["password"];
+
+      if (passwordInput === null) {
+        throw Error();
+      }
+
+      const hashPasswordInput = this.hashPassword(passwordInput);
 
       if (hashPasswordInput !== passwordUser) {
         throw Error();

@@ -32,8 +32,8 @@ model listings {
   created_on      DateTime       @db.Date
   space_available Int[]
   host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
-  longitude       Decimal
-  latitude        Decimal
+  longitude       Decimal        @db.Decimal
+  latitude        Decimal        @db.Decimal
   reservations    reservations[]
 }
 

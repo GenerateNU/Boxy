@@ -140,7 +140,7 @@ export default class ListingsDataTable {
   private setDefaultAttributes(data: any) {
     data["editable"] = false;
     data["created_on"] = new Date();
-    data["host_id"] = 1; // TODO get host_id from request headers
+    data["host_id"] = 1;
   }
 
   private validatePrice(price: number) {

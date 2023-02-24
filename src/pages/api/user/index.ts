@@ -12,7 +12,8 @@ export default async function handler(
 ) {
   const supportedRequestMethods: { [key: string]: Function } = {
     POST: registerUser,
-    DELETE: deleteUser
+    DELETE: deleteUser,
+    PUT: updateUser,
   };
 
   if (req.method) {
@@ -20,6 +21,15 @@ export default async function handler(
   }
 
   return res.status(405).send({ message: "request method not supported" });
+}
+
+async function updateUser(req: NextApiRequest, res: NextApiResponse<Message>) {
+  try {
+    await persistentUserInstance.updateUser(req.body, req.headers);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
+  }
+  return res.status(200).send({ message: "user updated" });
 }
 
 async function registerUser(
