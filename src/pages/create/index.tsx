@@ -34,7 +34,9 @@ export default function CreateListingPage({}: any) {
         return <></>;
       case "space type":
         return <></>;
-      default: // review details before submit page
+      case "submit": // review details before submit page
+        return <></>;
+      default: // "listing creation success page"
         return <></>;
     }
   }
