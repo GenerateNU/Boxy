@@ -3,7 +3,7 @@ export default function AddressForm
     return (
         <div>
             <form>
-                <input onChange={(event) => props.setAddress(event.target.value)} placeholder="Address goes here" type="text"></input>
+                <input onChange={(event) => props.updateListingAttribute("address", event.target.value)} placeholder="Address goes here" type="text"></input>
             </form>
         </div>
     )

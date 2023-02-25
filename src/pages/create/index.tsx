@@ -6,13 +6,28 @@ export default function CreateListingPage({}: any) {
   const [address, setAddress] = useState();
   const [name, setName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
+  const [listingDetails, setListingDetails] = useState({});
+
   const [currentForm, setCurrentForm] = useState("address");
-  const forms = ["address", "dates", "amenities", "space type", "submit"];
+  const forms = ["address", "dates", "submit"];
+
+  function updateListingAttribute(
+    listingAttribute: string,
+    listingAttributeValue: any
+  ) {
+    if (listingAttribute === "address") {
+      setAddress(listingAttributeValue);
+    }
+  }
 
   function renderCurrentForm() {
     switch (currentForm) {
       case "address":
-        return <AddressForm setAddress={setAddress}></AddressForm>;
+        return (
+          <AddressForm
+            updateListingAttribute={updateListingAttribute}
+          ></AddressForm>
+        );
       case "dates":
         return <DatesForm></DatesForm>;
       case "amenities":
@@ -25,6 +40,7 @@ export default function CreateListingPage({}: any) {
   }
 
   function createListing() {
+    console.log(address);
     // get all inputs stored in state and post to create listing endpoint
   }
 
