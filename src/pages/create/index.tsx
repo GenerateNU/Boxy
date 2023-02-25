@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AddressForm from "src/components/AddressForm";
 import DatesForm from "src/components/DatesForm";
+import IdentificationForm from "src/components/IdentificationForm";
 
 export default function CreateListingPage({}: any) {
   const [address, setAddress] = useState();
@@ -9,7 +10,7 @@ export default function CreateListingPage({}: any) {
   const [listingDetails, setListingDetails] = useState({});
 
   const [currentForm, setCurrentForm] = useState("address");
-  const forms = ["address", "dates", "submit"];
+  const forms = ["address", "dates", "identification", "submit"];
 
   function updateListingAttribute(
     listingAttribute: string,
@@ -32,6 +33,8 @@ export default function CreateListingPage({}: any) {
         return <DatesForm></DatesForm>;
       case "amenities":
         return <></>;
+      case "identification":
+        return <IdentificationForm></IdentificationForm>;
       case "space type":
         return <></>;
       default: // review details before submit page
