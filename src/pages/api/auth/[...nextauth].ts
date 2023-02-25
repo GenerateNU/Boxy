@@ -1,42 +1,34 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import persistentUserInstance from "lib/userInstance";
+import GoogleProvider from "next-auth/providers/google";
+import Utils from "src/utils";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.JWT_SECRET,
   providers: [
-    CredentialsProvider({
-      type: "credentials",
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "string", placeholder: "john" },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "secret",
-        },
-      },
-      async authorize(credentials, req) {
-        console.log("we're authroizing");
-        const { username, password } = credentials as {
-          username: string;
-          password: string;
-        };
-
-        try {
-          await persistentUserInstance.login(username, password);
-          // ID is the only required field
-          return { id: "1", name: "J Smith", email: "jsmith@example.com" };
-        } catch (e) {
-          throw new Error("invalid credentials");
-        }
-      },
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  // pages: {
-  //   // signIn: "/auth/signin",
-  //   // error: '/auth/error',
-  //   // signOut: '/auth/signout'
-  // },
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      const { exists, verified } = await Utils.checkForUser(user.email);
+
+      // case 1: user is in database and verified -> send them back to page they came from
+      if (exists && verified) {
+      }
+
+      // case 2: user is in database but not verified -> send them to page to upload DL photo
+      if (exists && !verified) {
+      }
+
+      // case 3: user is not in database -> send to account creatin page
+      if (!exists && !verified) {
+      }
+
+      return true;
+    },
+  },
 };
 
 export default NextAuth(authOptions);

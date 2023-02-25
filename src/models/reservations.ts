@@ -29,7 +29,9 @@ export default class Reservations {
   }
 
   private async validateInputData(data: any) {
-    const response = await persistentListingInstance.fetchByID(data.listing_id);
+    const response = await persistentListingInstance.getListing(
+      data.listing_id
+    );
     const dates_available = response?.dates_available;
     if (
       dates_available === undefined ||
