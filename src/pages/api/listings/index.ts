@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { listings } from "@prisma/client";
 import { ListingResponse } from "@/models/listings";
 import listingDataTable from "lib/listingInstance";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 type Message = {
   message: string;
@@ -11,6 +13,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
+  const session = await getServerSession(req, res, authOptions);
+
   const supportedRequestMethods: { [key: string]: Function } = {
     GET: getListingsGivenFilters,
     POST: createListing,

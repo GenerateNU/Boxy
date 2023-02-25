@@ -1,4 +1,4 @@
-import jwt, {JwtPayload}  from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export default class Utils {
   public static decodeToken(token: string) {
@@ -13,5 +13,9 @@ export default class Utils {
 
   public static encodeValue(value: JwtPayload) {
     return jwt.sign(value, "secret_key_change_later");
+  }
+
+  public static async checkForUser(email: any) {
+    return { exists: true, verified: true };
   }
 }

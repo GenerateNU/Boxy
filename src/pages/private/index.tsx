@@ -6,7 +6,6 @@ export default function Page() {
   const { data, status } = useSession();
 
   if (data) {
-    console.log(data, status);
     return (
       <>
         <h1>Protected Page</h1>
