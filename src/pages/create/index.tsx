@@ -65,17 +65,17 @@ export default function CreateListingPage({}: any) {
   );
 }
 
-export function CreateSubmitPage() {
+export function CreateSubmitPage(Data: any) {
   const info_grid = (category: string, info: any) => {
-    function handleClick(): void {
-      throw new Error("Function not implemented.");
-    }
+    const handleClick = (category: string) => {
+      //go back to one of the forms
+    };
 
     return (
       <div className="grid grid-cols-2 w-full place-content-between h-30 g-2">
         <div> {category} </div>
         <div className="flex justify-end">
-          <button onClick={() => handleClick()}>
+          <button onClick={() => handleClick(category)}>
             <BiPencil size={20} />
           </button>
         </div>
