@@ -28,7 +28,7 @@ export default function ListingsPage({ listings }: any) {
           {listing_tab('unlisted', 'Unlisted')}
           {listing_tab('progress', 'In Progress')}
         </div>
-        {listings.map((listing: Listing) => {
+        {[].map((listing: Listing) => {
           return (
             <Listing listing={listing}/>
           );
