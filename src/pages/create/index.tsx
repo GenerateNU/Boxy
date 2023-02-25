@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BiPencil } from "react-icons/bi";
 import AddressForm from "src/components/AddressForm";
 import DatesForm from "src/components/DatesForm";
 
@@ -35,7 +36,7 @@ export default function CreateListingPage({}: any) {
       case "space type":
         return <></>;
       case "submit": // review details before submit page
-        return <></>;
+        return <CreateSubmitPage></CreateSubmitPage>;
       default: // "listing creation success page"
         return <></>;
     }
@@ -47,10 +48,12 @@ export default function CreateListingPage({}: any) {
   }
 
   return (
-    <div className="container flex justify-center min-w-full pt-20">
+    <div className="flex-col min-w-full pt-10">
       {renderCurrentForm()}
       {currentForm === "submit" ? (
-        <button onClick={createListing}>Submit</button>
+        <button onClick={createListing} className="">
+          Submit
+        </button>
       ) : (
         <button
           onClick={() => setCurrentForm(forms[forms.indexOf(currentForm) + 1])}
@@ -58,6 +61,43 @@ export default function CreateListingPage({}: any) {
           Next
         </button>
       )}
+    </div>
+  );
+}
+
+export function CreateSubmitPage() {
+  const info_grid = (category: string, info: any) => {
+    function handleClick(): void {
+      throw new Error("Function not implemented.");
+    }
+
+    return (
+      <div className="grid grid-cols-2 w-full place-content-between h-30 g-2">
+        <div> {category} </div>
+        <div className="flex justify-end">
+          <button onClick={() => handleClick()}>
+            <BiPencil size={20} />
+          </button>
+        </div>
+        <div> {info}</div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="container h-full w-1/3 font-Inter mb-2">
+      <div className="h-6 text-xl mb-8">Review Responses</div>
+      <div className="d flex flex-col justify-between items-center gap-8">
+        {info_grid("Address", "ASD")}
+        {info_grid("Name", "ASD")}
+        {info_grid("Dates", "ASD")}
+        {info_grid("Amentities", "ASD")}
+        {info_grid("Storage Space Description", "ASD")}
+        {info_grid("Item Description", "ASD")}
+        {info_grid("Size Description", "ASD")}
+        {info_grid("Images", "ASD")}
+        {info_grid("Identification", "ASD")}
+      </div>
     </div>
   );
 }
