@@ -17,7 +17,7 @@ export default function NavBar() {
       else if (state == "reservations")
         window.location.replace("http://localhost:3000/reservations");
       else if (state == "myListings")
-        window.location.replace("http://localhost:3000/search/results");
+        window.location.replace("http://localhost:3000/listings");
       else if (state == "userIcon")
         if (status === "unauthenticated") {
           signIn();

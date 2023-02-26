@@ -15,7 +15,7 @@ export default function ListingCreate({}: any) {
   const forms = ["address", "dates", "submit"];
 
   if (status === "unauthenticated") {
-    return <button onClick={() => signIn()}>click here to login</button>;
+    signIn();
   }
 
   function updateListingAttribute(
