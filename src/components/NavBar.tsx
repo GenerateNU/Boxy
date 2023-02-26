@@ -1,5 +1,5 @@
 import { sign } from "crypto";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
@@ -22,8 +22,8 @@ export default function NavBar() {
         if (status === "unauthenticated") {
           signIn();
         } else {
-          // window.location.replace("http://localhost:3000/account");
-          alert("signed in");
+          signOut();
+          alert("signed out");
         }
     };
 

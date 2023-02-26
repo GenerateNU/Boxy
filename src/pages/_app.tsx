@@ -9,8 +9,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session}>
       <NavBar />
       <Component {...pageProps} />
-      <button onClick={() => signIn()}>click here to login</button>
-      <button onClick={() => signOut()}>click here to logout</button>
     </SessionProvider>
   );
 }
