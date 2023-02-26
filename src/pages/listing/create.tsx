@@ -54,11 +54,29 @@ export default function ListingCreate({}: any) {
 
   async function createListing() {
     console.log(address);
-    await fetch("http://localhost:3000/api/listings", {
+    const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
-      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "test",
+        dates_available: [],
+        price: 1,
+        description: "",
+        amenities: [],
+        space_type: "Basement",
+        address: "1234 Huntington Ave",
+        city: "boston",
+        zip_code: "02115",
+        state: "CA",
+        space_available: [1, 2, 3],
+        longitude: 2,
+        latitude: 1,
+      }),
     });
-    // get all inputs stored in state and post to create listing endpoint
+
+    res.status == 200 && alert("listing created");
   }
 
   return (
