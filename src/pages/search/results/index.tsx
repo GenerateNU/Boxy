@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-export default function SearchResultsPage() {
+export default function SearchResultsPage({ listings }: any) {
   const display_listing = (
     description: string,
     cost: string,
@@ -57,14 +57,64 @@ export default function SearchResultsPage() {
       <section className="bg-white dark:bg-gray-900">
         <div className="container mx-auto">
           <div className="grid grid-cols-4 gap-2 mt-2 md:mt-4 md:grid-cols-4 mb-4">
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
-            {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
+            {listings.map((listing: any) => {
+              {
+                return display_listing(
+                  listing.name,
+                  listing.price,
+                  listing.proximity,
+                  ""
+                );
+              }
+            })}
+            {/* {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )}
+            {display_listing(
+              "5 x 5 Closet",
+              "$50/month",
+              "Boston, MA",
+              "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+            )} */}
           </div>
         </div>
       </section>
@@ -75,4 +125,14 @@ export default function SearchResultsPage() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      listings: await (
+        await fetch("http://localhost:3000/api/listings")
+      ).json(),
+    },
+  };
 }
