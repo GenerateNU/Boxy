@@ -54,7 +54,7 @@ export default function SearchResultsPage() {
           </div>
         </div>
       </div>
-      <section className="bg-white dark:bg-gray-900">
+      <section className="bg-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-4 gap-2 mt-2 md:mt-4 md:grid-cols-4 mb-4">
             {display_listing("5 x 5 Closet", "$50/month", "Boston, MA", "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=")}
