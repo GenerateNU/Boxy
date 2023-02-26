@@ -36,7 +36,19 @@ export default function CreateListingPage({}: any) {
       case "space type":
         return <></>;
       case "submit": // review details before submit page
-        return <CreateSubmitPage></CreateSubmitPage>;
+        return (
+          <CreateSubmitPage
+            address={address}
+            name={name}
+            datesAvailable={datesAvailable}
+            amenities={""}
+            spaceDescription={""}
+            itemDescription={""}
+            sizeDescription={""}
+            images={[]}
+            identification={""}
+          ></CreateSubmitPage>
+        );
       default: // "listing creation success page"
         return <></>;
     }
@@ -65,7 +77,29 @@ export default function CreateListingPage({}: any) {
   );
 }
 
-export function CreateSubmitPage(Data: any) {
+export function CreateSubmitPage({
+  address,
+  name,
+  datesAvailable,
+  amenities,
+  spaceDescription,
+  itemDescription,
+  sizeDescription,
+  images,
+  identification,
+}: //onEdit,
+{
+  address: any;
+  name: any;
+  datesAvailable: any;
+  amenities: string;
+  spaceDescription: string;
+  itemDescription: string;
+  sizeDescription: string;
+  images: string[];
+  identification: string;
+  //onEdit: (formName: string) => void;
+}) {
   const info_grid = (category: string, info: any) => {
     const handleClick = (category: string) => {
       //go back to one of the forms
@@ -73,7 +107,7 @@ export function CreateSubmitPage(Data: any) {
 
     return (
       <div className="grid grid-cols-2 w-full place-content-between h-30 g-2">
-        <div> {category} </div>
+        <div className="font-bold font-Inter"> {category} </div>
         <div className="flex justify-end">
           <button onClick={() => handleClick(category)}>
             <BiPencil size={20} />
@@ -85,18 +119,20 @@ export function CreateSubmitPage(Data: any) {
   };
 
   return (
-    <div className="container h-full w-1/3 font-Inter mb-2">
-      <div className="h-6 text-xl mb-8">Review Responses</div>
-      <div className="d flex flex-col justify-between items-center gap-8">
-        {info_grid("Address", "ASD")}
-        {info_grid("Name", "ASD")}
-        {info_grid("Dates", "ASD")}
-        {info_grid("Amentities", "ASD")}
-        {info_grid("Storage Space Description", "ASD")}
-        {info_grid("Item Description", "ASD")}
-        {info_grid("Size Description", "ASD")}
-        {info_grid("Images", "ASD")}
-        {info_grid("Identification", "ASD")}
+    <div className="flex justify-center">
+      <div className="container h-full w-1/3 font-Inter mb-2">
+        <div className="h-6 text-xl mb-8 font-bold">Review Responses</div>
+        <div className="d flex flex-col justify-between items-center gap-8">
+          {info_grid("Address", address)}
+          {info_grid("Name", name)}
+          {info_grid("Dates", datesAvailable)}
+          {info_grid("Amentities", amenities)}
+          {info_grid("Storage Space Description", spaceDescription)}
+          {info_grid("Item Description", itemDescription)}
+          {info_grid("Size Description", sizeDescription)}
+          {info_grid("Images", images)}
+          {info_grid("Identification", identification)}
+        </div>
       </div>
     </div>
   );
