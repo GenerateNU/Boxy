@@ -13,7 +13,7 @@ export default function NavBar() {
       setNavState(state);
       if (state == "browse")
         // window.location.replace("http://localhost:3000/browse");
-        window.location.replace("http://localhost:3000/search/results");
+        window.location.replace("http://localhost:3000/listings/browse");
       else if (state == "reservations")
         window.location.replace("http://localhost:3000/reservations");
       else if (state == "myListings")

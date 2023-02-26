@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
 
-export default function SearchResultsPage({ listings }: any) {
+export default function BrowseListingsPage({ listings }: any) {
   const display_listing = (
     description: string,
     cost: string,
