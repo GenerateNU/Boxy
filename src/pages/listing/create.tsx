@@ -3,7 +3,7 @@ import AddressForm from "src/components/AddressForm";
 import DatesForm from "src/components/DatesForm";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-export default function CreateListingPage({}: any) {
+export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
   const [address, setAddress] = useState();
