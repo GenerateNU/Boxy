@@ -1,7 +1,7 @@
 import { useState } from "react";
-import DatesForm from "src/components/DatesForm";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ListingAddressForm from "@/components/ListingAddressForm";
+import ListingDatesForm from "@/components/ListingDatesForm";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
@@ -36,7 +36,11 @@ export default function ListingCreate({}: any) {
           ></ListingAddressForm>
         );
       case "dates":
-        return <DatesForm></DatesForm>;
+        return (
+          <ListingDatesForm
+            updateListingAttribute={updateListingAttribute}
+          ></ListingDatesForm>
+        );
       case "amenities":
         return <></>;
       case "space type":
