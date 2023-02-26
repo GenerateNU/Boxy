@@ -25,6 +25,9 @@ export default function NavBar() {
           signOut();
           alert("signed out");
         }
+      else if (state === "createListing") {
+        window.location.replace("http://localhost:3000/listing/create");
+      }
     };
 
     return (
@@ -55,6 +58,7 @@ export default function NavBar() {
             {nav_bar_button("browse", "Browse")}
             {nav_bar_button("reservations", "Reservations")}
             {nav_bar_button("myListings", "My Listings")}
+            {nav_bar_button("createListing", "Create Listing")}
             {nav_bar_button("userIcon", <BiUserCircle size={30} />)}
           </div>
         </div>
