@@ -2,20 +2,26 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
-export default function NavBar() {
-  const nav_bar_button = (state: string, text: any) => {
-    const [navState, setNavState] = useState("");
-    const { data, status } = useSession();
+import { useRouter } from "next/router";
 
+export default function NavBar() {
+  const router = useRouter();
+  const { data, status } = useSession();
+  const [navState, setNavState] = useState("");
+
+  const nav_bar_button = (state: string, text: any) => {
     const handleClick = (state: string) => {
       setNavState(state);
-      if (state == "userIcon")
+      if (state == "userIcon") {
         if (status === "unauthenticated") {
           signIn();
         } else {
-          signOut();
-          alert("signed out");
+          router.push("http://localhost:3000/user/account");
         }
+      } else if (state == "sign out") {
+        signOut();
+        alert("signed out");
+      }
     };
 
     return (
@@ -63,11 +69,9 @@ export default function NavBar() {
                 Create Listing
               </Link>
             )}
-            {nav_bar_button(
-              "",
-              <Link href="http://localhost:3000/user/account">Account</Link>
-            )}
             {nav_bar_button("userIcon", <BiUserCircle size={30} />)}
+            {status === "authenticated" &&
+              nav_bar_button("sign out", "sign out")}
           </div>
         </div>
       </nav>
