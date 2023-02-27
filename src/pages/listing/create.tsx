@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import ListingAddressForm from "@/components/ListingAddressForm";
+import ListingDatesForm from "@/components/ListingDatesForm";
 import { BiPencil } from "react-icons/bi";
-import AddressForm from "src/components/AddressForm";
-import DatesForm from "src/components/DatesForm";
 
-export default function CreateListingPage({}: any) {
+export default function ListingCreate({}: any) {
+  const { data, status } = useSession();
+
   const [address, setAddress] = useState();
   const [name, setName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
@@ -11,6 +14,10 @@ export default function CreateListingPage({}: any) {
 
   const [currentForm, setCurrentForm] = useState("address");
   const forms = ["address", "dates", "submit"];
+
+  if (status === "unauthenticated") {
+    signIn();
+  }
 
   function updateListingAttribute(
     listingAttribute: string,
@@ -25,12 +32,16 @@ export default function CreateListingPage({}: any) {
     switch (currentForm) {
       case "address":
         return (
-          <AddressForm
+          <ListingAddressForm
             updateListingAttribute={updateListingAttribute}
-          ></AddressForm>
+          ></ListingAddressForm>
         );
       case "dates":
-        return <DatesForm></DatesForm>;
+        return (
+          <ListingDatesForm
+            updateListingAttribute={updateListingAttribute}
+          ></ListingDatesForm>
+        );
       case "amenities":
         return <></>;
       case "space type":
@@ -54,9 +65,31 @@ export default function CreateListingPage({}: any) {
     }
   }
 
-  function createListing() {
+  async function createListing() {
     console.log(address);
-    // get all inputs stored in state and post to create listing endpoint
+    const res = await fetch("http://localhost:3000/api/listings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "test",
+        dates_available: [],
+        price: 1,
+        description: "",
+        amenities: [],
+        space_type: "Basement",
+        address: "1234 Huntington Ave",
+        city: "boston",
+        zip_code: "02115",
+        state: "CA",
+        space_available: [1, 2, 3],
+        longitude: 2,
+        latitude: 1,
+      }),
+    });
+
+    res.status == 200 && alert("listing created");
   }
 
   return (
@@ -104,7 +137,7 @@ export function CreateSubmitPage({
     const handleClick = (category: string) => {
       //go back to one of the forms
     };
-
+    console.log(address);
     return (
       <div className="grid grid-cols-2 w-full place-content-between gap-4 rounded-md bg-[#F8F8F8]">
         <div className="font-bold font-Satoshi p-1"> {category} </div>
