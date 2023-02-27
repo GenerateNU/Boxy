@@ -7,7 +7,7 @@ export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
   const [address, setAddress] = useState();
-  const [name, setName] = useState();
+  const [listingName, setListingName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
   const [listingDetails, setListingDetails] = useState({});
 
@@ -24,6 +24,8 @@ export default function ListingCreate({}: any) {
   ) {
     if (listingAttribute === "address") {
       setAddress(listingAttributeValue);
+    } else if (listingAttribute === "name") {
+      setListingName(listingAttributeValue);
     }
   }
 
@@ -60,7 +62,7 @@ export default function ListingCreate({}: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "test",
+        name: listingName,
         dates_available: [],
         price: 1,
         description: "",
@@ -76,7 +78,8 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && alert("listing created");
+    res.status == 200 &&
+      alert("listing created (will eventually redirect to my listings)");
   }
 
   return (

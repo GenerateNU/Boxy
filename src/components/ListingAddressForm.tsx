@@ -1,9 +1,9 @@
 export default function ListingAddressForm(props: any) {
-  const create_input = (placeholder: string) => {
+  const create_input = (placeholder: string, listingAttributeName: string) => {
     return (
       <input
         onChange={(event) =>
-          props.updateListingAttribute(placeholder, event.target.value)
+          props.updateListingAttribute(listingAttributeName, event.target.value)
         }
         className="h-[7.5vh] pl-5 bg-bxBoxLight rounded-3xl mb-3"
         placeholder={placeholder}
@@ -16,12 +16,12 @@ export default function ListingAddressForm(props: any) {
       <div className="w-3/6 flex flex-col ">
         <h1 className="text-3xl pb-2">Address</h1>
         <h3 className="pb-5">Please provide the Storage Host full address.</h3>
-        {create_input("Street Address")}
-        {create_input("Apt, Suite, Building Number (Optional)")}
-        {create_input("City")}
-        {create_input("Postal Code")}
+        {create_input("Street Address", "")}
+        {create_input("Apt, Suite, Building Number (Optional)", "")}
+        {create_input("City", "")}
+        {create_input("Postal Code", "")}
         <h3 className="pt-5 pb-5">Enter a name for this Listing.</h3>
-        {create_input("Name")}
+        {create_input("Name", "name")}
       </div>
       {/* <div className="absolute bottom-10 w-[80%]">
         <div className="flex justify-between">
