@@ -3,6 +3,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import ListingAddressForm from "@/components/ListingAddressForm";
 import ListingDatesForm from "@/components/ListingDatesForm";
 import ListingSpaceTypeForm from "@/components/ListingSpaceTypeForm";
+import { useRouter } from "next/router";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
@@ -14,6 +15,8 @@ export default function ListingCreate({}: any) {
 
   const [currentForm, setCurrentForm] = useState("address");
   const forms = ["address", "dates", "space type", "submit"];
+
+  const router = useRouter();
 
   if (status === "unauthenticated") {
     signIn();
@@ -79,8 +82,7 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 &&
-      alert("listing created (will eventually redirect to my listings)");
+    res.status == 200 && router.push("http://localhost:3000/listings");
   }
 
   return (
