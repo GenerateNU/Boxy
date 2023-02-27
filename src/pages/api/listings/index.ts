@@ -28,7 +28,7 @@ async function getListingsGivenFilters(
   res: NextApiResponse<ListingResponse[] | Message>
 ) {
   try {
-    const response = await listingDataTable.getListings(req.body);
+    const response = await listingDataTable.getListings(req.query);
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
