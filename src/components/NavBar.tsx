@@ -63,6 +63,10 @@ export default function NavBar() {
                 Create Listing
               </Link>
             )}
+            {nav_bar_button(
+              "",
+              <Link href="http://localhost:3000/user/account">Account</Link>
+            )}
             {nav_bar_button("userIcon", <BiUserCircle size={30} />)}
           </div>
         </div>
