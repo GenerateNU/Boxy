@@ -1,9 +1,7 @@
-import { sign } from "crypto";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 export default function NavBar() {
   const nav_bar_button = (state: string, text: any) => {
     const [navState, setNavState] = useState("");
