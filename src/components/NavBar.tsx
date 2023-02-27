@@ -1,0 +1,72 @@
+import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useState } from "react";
+import { BiUserCircle } from "react-icons/bi";
+export default function NavBar() {
+  const nav_bar_button = (state: string, text: any) => {
+    const [navState, setNavState] = useState("");
+    const { data, status } = useSession();
+
+    const handleClick = (state: string) => {
+      setNavState(state);
+      if (state == "userIcon")
+        if (status === "unauthenticated") {
+          signIn();
+        } else {
+          signOut();
+          alert("signed out");
+        }
+    };
+
+    return (
+      <button
+        onClick={() => handleClick(state)}
+        className={
+          navState == state
+            ? "flex justify-center text-black"
+            : "flex justify-center hover:text-black"
+        }
+      >
+        {text}
+      </button>
+    );
+  };
+
+  return (
+    <div>
+      <nav className="relative container min-w-full h-16 border-b-2 border-gray">
+        <div className="flex justify-between items-center container mx-auto h-full ">
+          <Link
+            href={"http://localhost:3000/"}
+            className="text-center font-Inter font-semibold text-xl text-[#097275]"
+          >
+            BOXY
+          </Link>
+          <div className="flex items-center gap-10 text-[#C4C4C4]">
+            {nav_bar_button(
+              "browse",
+              <Link href="http://localhost:3000/listings/browse">Browse</Link>
+            )}
+            {nav_bar_button(
+              "reservations",
+              <Link href="http://localhost:3000/reservations">
+                Reservations
+              </Link>
+            )}
+            {nav_bar_button(
+              "myListings",
+              <Link href="http://localhost:3000/listings">My Listing</Link>
+            )}
+            {nav_bar_button(
+              "createListing",
+              <Link href="http://localhost:3000/listing/create">
+                Create Listing
+              </Link>
+            )}
+            {nav_bar_button("userIcon", <BiUserCircle size={30} />)}
+          </div>
+        </div>
+      </nav>
+    </div>
+  );
+}

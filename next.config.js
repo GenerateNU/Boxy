@@ -9,7 +9,7 @@ module.exports = {
     return [
       {
         source: "/",
-        destination: "/listings",
+        destination: "/listings/browse",
         permanent: true,
       },
     ];
