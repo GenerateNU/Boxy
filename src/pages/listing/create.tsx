@@ -86,7 +86,7 @@ export default function ListingCreate({}: any) {
   return (
     <div className="container flex justify-center min-w-full pt-20">
       {renderCurrentForm()}
-      {currentForm === "submit" ? (
+      {/* {currentForm === "submit" ? (
         <button onClick={createListing}>Submit</button>
       ) : (
         <button
@@ -94,7 +94,48 @@ export default function ListingCreate({}: any) {
         >
           Next
         </button>
-      )}
+      )} */}
+      <div className="absolute bottom-10 w-[80%]">
+        <div className="flex justify-between">
+          {currentForm === "submit" ? (
+            <button
+              className="bg-[#7C7C7C] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
+              onClick={createListing}
+            >
+              Submit
+            </button>
+          ) : (
+            <>
+              <div className="">
+                <button
+                  className="border border-solid border-black h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-black"
+                  onClick={() =>
+                    setCurrentForm(forms[forms.indexOf(currentForm) - 1])
+                  }
+                >
+                  Back
+                </button>
+              </div>
+              <div className="">
+                <button
+                  className="bg-[#7C7C7C] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
+                  onClick={() =>
+                    setCurrentForm(forms[forms.indexOf(currentForm) + 1])
+                  }
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+        <div
+          id="progress-bar"
+          className="h-[6px] bg-bxBoxLight grid grid-cols-8"
+        >
+          <div className="bg-[#B3B3B3]"></div>
+        </div>
+      </div>
     </div>
   );
 }

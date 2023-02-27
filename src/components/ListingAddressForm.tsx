@@ -12,17 +12,17 @@ export default function ListingAddressForm(props: any) {
   };
 
   return (
-    <div className="container min-w-full flex flex-col items-center mt-[10vh] ">
-      <div className="w-3/6 flex flex-col ">
-        <h1 className="text-3xl pb-2">Address</h1>
-        <h3 className="pb-5">Please provide the Storage Host full address.</h3>
-        {create_input("Street Address", "")}
-        {create_input("Apt, Suite, Building Number (Optional)", "")}
-        {create_input("City", "")}
-        {create_input("Postal Code", "")}
-        <h3 className="pt-5 pb-5">Enter a name for this Listing.</h3>
-        {create_input("Name", "name")}
-      </div>
+    // <div className="container min-w-full flex flex-col items-center mt-[10vh] ">
+    <div className="w-3/6 flex flex-col ">
+      <h1 className="text-3xl pb-2">Address</h1>
+      <h3 className="pb-5">Please provide the Storage Host full address.</h3>
+      {create_input("Street Address", "")}
+      {create_input("Apt, Suite, Building Number (Optional)", "")}
+      {create_input("City", "")}
+      {create_input("Postal Code", "")}
+      <h3 className="pt-5 pb-5">Enter a name for this Listing.</h3>
+      {create_input("Name", "name")}
+      {/* </div> */}
       {/* <div className="absolute bottom-10 w-[80%]">
         <div className="flex justify-between">
           <div className="">
