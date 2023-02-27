@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ListingAddressForm from "@/components/ListingAddressForm";
 import ListingDatesForm from "@/components/ListingDatesForm";
+import ListingSpaceTypeForm from "@/components/ListingSpaceTypeForm";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
@@ -12,7 +13,7 @@ export default function ListingCreate({}: any) {
   const [listingDetails, setListingDetails] = useState({});
 
   const [currentForm, setCurrentForm] = useState("address");
-  const forms = ["address", "dates", "submit"];
+  const forms = ["address", "dates", "space type", "submit"];
 
   if (status === "unauthenticated") {
     signIn();
@@ -46,7 +47,7 @@ export default function ListingCreate({}: any) {
       case "amenities":
         return <></>;
       case "space type":
-        return <></>;
+        return <ListingSpaceTypeForm></ListingSpaceTypeForm>;
       case "submit": // review details before submit page
         return <></>;
       default: // "listing creation success page"
