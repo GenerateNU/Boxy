@@ -80,7 +80,7 @@ export default function ListingCreate({}: any) {
                 case "space type":
                   setCurrentForm("space type");
                   break;
-                default:
+                default: //add more forms when we make them
                   break;
               }
             }}
@@ -118,51 +118,51 @@ export default function ListingCreate({}: any) {
   }
 
   return (
-    <div className="flex-col min-w-full pt-10">
+    <div className="container flex justify-center min-w-full pt-20">
       {renderCurrentForm()}
-      {currentForm === "submit" ? (
-        <div className="flex justify-center pt-4">
-          <div className="flex justify-between w-2/3">
+      <div className="absolute bottom-10 w-[80%]">
+        <div className="flex justify-between">
+          {currentForm === "submit" ? (
             <button
-              className="border rounded-2xl h-10 w-28 text-sm"
-              onClick={() =>
-                setCurrentForm(forms[forms.indexOf(currentForm) - 1])
-              }
-            >
-              Back
-            </button>
-            <button
+              className="bg-[#7C7C7C] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
               onClick={createListing}
-              className="border rounded-2xl bg-[#097275] text-white h-10 w-28 text-sm"
             >
               Submit
             </button>
-          </div>
+          ) : (
+            <>
+              <div className="">
+                <button
+                  className="border border-solid border-black h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-black"
+                  onClick={() => {
+                    if (forms.indexOf(currentForm) - 1 >= 0) {
+                      setCurrentForm(forms[forms.indexOf(currentForm) - 1]);
+                    }
+                  }}
+                >
+                  Back
+                </button>
+              </div>
+              <div className="">
+                <button
+                  className="bg-[#097275] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
+                  onClick={() =>
+                    setCurrentForm(forms[forms.indexOf(currentForm) + 1])
+                  }
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
         </div>
-      ) : (
-        <div className="flex justify-center pt-4">
-          <div className="flex justify-between w-2/3">
-            <button
-              className="border rounded-2xl h-10 w-28 text-sm"
-              onClick={() => {
-                if (forms.indexOf(currentForm) - 1 >= 0) {
-                  setCurrentForm(forms[forms.indexOf(currentForm) - 1]);
-                }
-              }}
-            >
-              Back
-            </button>
-            <button
-              className="border rounded-2xl bg-[#097275] text-white h-10 w-28 text-sm"
-              onClick={() =>
-                setCurrentForm(forms[forms.indexOf(currentForm) + 1])
-              }
-            >
-              Next
-            </button>
-          </div>
+        <div
+          id="progress-bar"
+          className="h-[6px] bg-bxBoxLight grid grid-cols-8"
+        >
+          <div className="bg-[#B3B3B3]"></div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -210,9 +210,9 @@ export function CreateSubmitPage({
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="container h-full w-1/3 font-Inter mb-2">
-        <div className="h-6 text-xl mb-6 font-bold">Review Responses</div>
+    <div className="w-1/2 flex justify-center">
+      <div className="container h-full font-Inter mb-2">
+        <div className="h-6 text-3xl mb-6">Review Responses</div>
         <div className="flex flex-col justify-between items-center gap-1">
           {info_grid("Address", "address", address)}
           {info_grid("Dates", "dates", datesAvailable)}
