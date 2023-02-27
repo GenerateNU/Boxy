@@ -106,14 +106,14 @@ export function CreateSubmitPage({
     };
 
     return (
-      <div className="grid grid-cols-2 w-full place-content-between h-30 g-2">
-        <div className="font-bold font-Inter"> {category} </div>
-        <div className="flex justify-end">
+      <div className="grid grid-cols-2 w-full place-content-between gap-4 rounded-md bg-[#F8F8F8]">
+        <div className="font-bold font-Satoshi p-1"> {category} </div>
+        <div className="flex justify-end p-1">
           <button onClick={() => handleClick(category)}>
             <BiPencil size={20} />
           </button>
         </div>
-        <div> {info}</div>
+        <div className="text-sm p-1"> {info}</div>
       </div>
     );
   };
@@ -122,7 +122,7 @@ export function CreateSubmitPage({
     <div className="flex justify-center">
       <div className="container h-full w-1/3 font-Inter mb-2">
         <div className="h-6 text-xl mb-8 font-bold">Review Responses</div>
-        <div className="d flex flex-col justify-between items-center gap-8">
+        <div className="d flex flex-col justify-between items-center gap-3">
           {info_grid("Address", address)}
           {info_grid("Name", name)}
           {info_grid("Dates", datesAvailable)}
