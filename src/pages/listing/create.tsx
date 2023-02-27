@@ -3,16 +3,21 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import ListingAddressForm from "@/components/ListingAddressForm";
 import ListingDatesForm from "@/components/ListingDatesForm";
 import { BiPencil } from "react-icons/bi";
+import ListingSpaceTypeForm from "@/components/ListingSpaceTypeForm";
+import { useRouter } from "next/router";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState();
+  const [listingName, setListingName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
   const [listingDetails, setListingDetails] = useState({});
 
   const [currentForm, setCurrentForm] = useState("address");
-  const forms = ["address", "dates", "submit"];
+  const forms = ["address", "dates", "space type", "submit"];
+
+  const router = useRouter();
 
   if (status === "unauthenticated") {
     signIn();
@@ -24,6 +29,8 @@ export default function ListingCreate({}: any) {
   ) {
     if (listingAttribute === "address") {
       setAddress(listingAttributeValue);
+    } else if (listingAttribute === "name") {
+      setListingName(listingAttributeValue);
     }
   }
 
@@ -44,7 +51,7 @@ export default function ListingCreate({}: any) {
       case "amenities":
         return <></>;
       case "space type":
-        return <></>;
+        return <ListingSpaceTypeForm></ListingSpaceTypeForm>;
       case "submit": // review details before submit page
         return (
           <CreateSubmitPage
@@ -91,7 +98,7 @@ export default function ListingCreate({}: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "test",
+        name: listingName,
         dates_available: [],
         price: 1,
         description: "",
@@ -107,7 +114,7 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && alert("listing created");
+    res.status == 200 && router.push("http://localhost:3000/listings");
   }
 
   return (

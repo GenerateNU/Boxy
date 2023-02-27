@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function BrowseListingsPage({ listings }: any) {
   const display_listing = (
-    description: string,
+    name: string,
     cost: string,
     location: string,
     image: string
@@ -19,12 +19,14 @@ export default function BrowseListingsPage({ listings }: any) {
         <div className="flex flex-col justify-between ml-2 mb-2 mt-2">
           <div className="flex flex-row">
             <div className="flex flex-row w-full justify-left">
-              <span className="text-sm font-sm text-black hover:underline hover:font-semibold dark:text-white cursor-pointer">
-                {description}
+              <span className="text-sm font-sm text-black hover:underline hover:font-semibold dark:text-black cursor-pointer">
+                {name}
               </span>
             </div>
             <div className="flex flex-row w-full justify-end mr-2">
-              <span className="text-sm text-black dark:text-black">{cost}</span>
+              <span className="text-sm text-black dark:text-black">
+                ${cost}/month
+              </span>
             </div>
           </div>
           <span className="text-sm text-black dark:text-black">{location}</span>
@@ -52,7 +54,7 @@ export default function BrowseListingsPage({ listings }: any) {
           </div>
         </div>
       </div>
-      <section className="bg-white dark:bg-gray-900">
+      <section className="bg-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-4 gap-2 mt-2 md:mt-4 md:grid-cols-4 mb-4">
             {listings.map((listing: any) => {

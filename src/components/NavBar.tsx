@@ -1,32 +1,26 @@
-import { sign } from "crypto";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
+import { useRouter } from "next/router";
 
 export default function NavBar() {
-  const nav_bar_button = (state: string, text: any) => {
-    const [navState, setNavState] = useState("");
-    const { data, status } = useSession();
+  const router = useRouter();
+  const { data, status } = useSession();
+  const [navState, setNavState] = useState("");
 
+  const nav_bar_button = (state: string, text: any) => {
     const handleClick = (state: string) => {
       setNavState(state);
-      if (state == "browse")
-        // window.location.replace("http://localhost:3000/browse");
-        window.location.replace("http://localhost:3000/listings/browse");
-      else if (state == "reservations")
-        window.location.replace("http://localhost:3000/reservations");
-      else if (state == "myListings")
-        window.location.replace("http://localhost:3000/listings");
-      else if (state == "userIcon")
+      if (state == "userIcon") {
         if (status === "unauthenticated") {
           signIn();
         } else {
-          signOut();
-          alert("signed out");
+          router.push("http://localhost:3000/user/account");
         }
-      else if (state === "createListing") {
-        window.location.replace("http://localhost:3000/listing/create");
+      } else if (state == "sign out") {
+        signOut();
+        alert("signed out");
       }
     };
 
@@ -55,11 +49,29 @@ export default function NavBar() {
             BOXY
           </Link>
           <div className="flex items-center gap-10 text-[#C4C4C4]">
-            {nav_bar_button("browse", "Browse")}
-            {nav_bar_button("reservations", "Reservations")}
-            {nav_bar_button("myListings", "My Listings")}
-            {nav_bar_button("createListing", "Create Listing")}
+            {nav_bar_button(
+              "browse",
+              <Link href="http://localhost:3000/listings/browse">Browse</Link>
+            )}
+            {nav_bar_button(
+              "reservations",
+              <Link href="http://localhost:3000/reservations">
+                Reservations
+              </Link>
+            )}
+            {nav_bar_button(
+              "myListings",
+              <Link href="http://localhost:3000/listings">My Listings</Link>
+            )}
+            {nav_bar_button(
+              "createListing",
+              <Link href="http://localhost:3000/listing/create">
+                Create Listing
+              </Link>
+            )}
             {nav_bar_button("userIcon", <BiUserCircle size={30} />)}
+            {status === "authenticated" &&
+              nav_bar_button("sign out", "sign out")}
           </div>
         </div>
       </nav>
