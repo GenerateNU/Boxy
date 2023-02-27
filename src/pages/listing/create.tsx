@@ -7,8 +7,7 @@ import { BiPencil } from "react-icons/bi";
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
-  const [address, setAddress] = useState();
-  const [name, setName] = useState();
+  const [address, setAddress] = useState<string>();
   const [datesAvailable, setDatesAvailable] = useState();
   const [listingDetails, setListingDetails] = useState({});
 
@@ -50,7 +49,6 @@ export default function ListingCreate({}: any) {
         return (
           <CreateSubmitPage
             address={address}
-            name={name}
             datesAvailable={datesAvailable}
             amenities={""}
             spaceDescription={""}
@@ -58,6 +56,27 @@ export default function ListingCreate({}: any) {
             sizeDescription={""}
             images={[]}
             identification={""}
+            onEdit={(formName: string) => {
+              switch (formName) {
+                case "address":
+                  setCurrentForm("address");
+                  break;
+                case "name":
+                  setCurrentForm("name");
+                  break;
+                case "dates":
+                  setCurrentForm("dates");
+                  break;
+                case "amenities":
+                  setCurrentForm("amenities");
+                  break;
+                case "space type":
+                  setCurrentForm("space type");
+                  break;
+                default:
+                  break;
+              }
+            }}
           ></CreateSubmitPage>
         );
       default: // "listing creation success page"
@@ -66,7 +85,6 @@ export default function ListingCreate({}: any) {
   }
 
   async function createListing() {
-    console.log(address);
     const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
       headers: {
@@ -96,15 +114,47 @@ export default function ListingCreate({}: any) {
     <div className="flex-col min-w-full pt-10">
       {renderCurrentForm()}
       {currentForm === "submit" ? (
-        <button onClick={createListing} className="">
-          Submit
-        </button>
+        <div className="flex justify-center pt-4">
+          <div className="flex justify-between w-2/3">
+            <button
+              className="border rounded-2xl h-10 w-28 text-sm"
+              onClick={() =>
+                setCurrentForm(forms[forms.indexOf(currentForm) - 1])
+              }
+            >
+              Back
+            </button>
+            <button
+              onClick={createListing}
+              className="border rounded-2xl bg-[#097275] text-white h-10 w-28 text-sm"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       ) : (
-        <button
-          onClick={() => setCurrentForm(forms[forms.indexOf(currentForm) + 1])}
-        >
-          Next
-        </button>
+        <div className="flex justify-center pt-4">
+          <div className="flex justify-between w-2/3">
+            <button
+              className="border rounded-2xl h-10 w-28 text-sm"
+              onClick={() => {
+                if (forms.indexOf(currentForm) - 1 >= 0) {
+                  setCurrentForm(forms[forms.indexOf(currentForm) - 1]);
+                }
+              }}
+            >
+              Back
+            </button>
+            <button
+              className="border rounded-2xl bg-[#097275] text-white h-10 w-28 text-sm"
+              onClick={() =>
+                setCurrentForm(forms[forms.indexOf(currentForm) + 1])
+              }
+            >
+              Next
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -112,7 +162,6 @@ export default function ListingCreate({}: any) {
 
 export function CreateSubmitPage({
   address,
-  name,
   datesAvailable,
   amenities,
   spaceDescription,
@@ -120,10 +169,9 @@ export function CreateSubmitPage({
   sizeDescription,
   images,
   identification,
-}: //onEdit,
-{
+  onEdit,
+}: {
   address: any;
-  name: any;
   datesAvailable: any;
   amenities: string;
   spaceDescription: string;
@@ -131,22 +179,25 @@ export function CreateSubmitPage({
   sizeDescription: string;
   images: string[];
   identification: string;
-  //onEdit: (formName: string) => void;
+  onEdit: (formName: string) => void;
 }) {
-  const info_grid = (category: string, info: any) => {
-    const handleClick = (category: string) => {
+  const [editingForm, setEditingForm] = useState("");
+
+  const info_grid = (category: string, formName: string, info: any) => {
+    const handleClick = (formName: string) => {
       //go back to one of the forms
+      setEditingForm(formName);
+      onEdit(formName);
     };
-    console.log(address);
     return (
       <div className="grid grid-cols-2 w-full place-content-between gap-4 rounded-md bg-[#F8F8F8]">
-        <div className="font-bold font-Satoshi p-1"> {category} </div>
+        <div className=" font-Satoshi p-1"> {category} </div>
         <div className="flex justify-end p-1">
-          <button onClick={() => handleClick(category)}>
+          <button onClick={() => handleClick(formName)}>
             <BiPencil size={20} />
           </button>
         </div>
-        <div className="text-sm p-1"> {info}</div>
+        <div className="text-sm p-1 font-thin col-span-2"> {info}</div>
       </div>
     );
   };
@@ -154,17 +205,20 @@ export function CreateSubmitPage({
   return (
     <div className="flex justify-center">
       <div className="container h-full w-1/3 font-Inter mb-2">
-        <div className="h-6 text-xl mb-8 font-bold">Review Responses</div>
-        <div className="d flex flex-col justify-between items-center gap-3">
-          {info_grid("Address", address)}
-          {info_grid("Name", name)}
-          {info_grid("Dates", datesAvailable)}
-          {info_grid("Amentities", amenities)}
-          {info_grid("Storage Space Description", spaceDescription)}
-          {info_grid("Item Description", itemDescription)}
-          {info_grid("Size Description", sizeDescription)}
-          {info_grid("Images", images)}
-          {info_grid("Identification", identification)}
+        <div className="h-6 text-xl mb-6 font-bold">Review Responses</div>
+        <div className="flex flex-col justify-between items-center gap-1">
+          {info_grid("Address", "address", address)}
+          {info_grid("Dates", "dates", datesAvailable)}
+          {info_grid("Amentities", "amentities", amenities)}
+          {info_grid(
+            "Storage Space Description",
+            "NEEDTOCHANGE",
+            spaceDescription
+          )}
+          {info_grid("Item Description", "NEEDTOCHANGE", itemDescription)}
+          {info_grid("Size Description", "NEEDTOCHANGE", sizeDescription)}
+          {info_grid("Images", "NEEDTOCHANGE", images)}
+          {info_grid("Identification", "NEEDTOCHANGE", identification)}
         </div>
       </div>
     </div>
