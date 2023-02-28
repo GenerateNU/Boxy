@@ -73,9 +73,9 @@ export default function ListingCreate({}: any) {
   }
 
   return (
-    <div className="container flex justify-center min-w-full pt-20">
+    <div className="container flex flex-col items-center min-w-full h-screen pt-14">
       {forms[currentForm]}
-      <div className="absolute bottom-0 pb-10 w-[80%] bg-white">
+      <div className="absolute bottom-0 pb-10 w-[80%] ">
         <div className="flex justify-between">
           <div>
             {currentForm !== 0 ? (
@@ -96,14 +96,14 @@ export default function ListingCreate({}: any) {
           <div>
             {currentForm === 5 ? (
               <button
-                className="bg-[#7C7C7C] h-[5vh] w-[8vw] mb-7 ml-auto right-2 rounded-full text-white"
+                className="bg-[#7C7C7C] hover:bg-[#097275] transition:color h-[40px] w-[8vw] mb-7 ml-auto right-2 rounded-full text-white"
                 onClick={createListing}
               >
                 Submit
               </button>
             ) : (
               <button
-                className="bg-[#097275] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
+                className="bg-[#097275] h-[40px] w-[8vw] mb-7 right-2 rounded-full text-white"
                 onClick={() => 
                   setCurrentForm(
                     currentForm !== 5 ? currentForm + 1 : currentForm

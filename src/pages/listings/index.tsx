@@ -20,6 +20,7 @@ export default function ListingsPage({
   const [tabState, setTabState] = useState("all");
 
   const renderListingElements = (listings: []) => {
+    console.log(listings)
     if (listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
@@ -63,8 +64,8 @@ export default function ListingsPage({
   };
 
   return (
-    <div className="container flex justify-center min-w-full pt-20">
-      <div className="w-[50vw] flex-col">
+    <div className="container flex justify-center min-w-full pt-16">
+      <div className="w-[50vw] flex-col pt-[5vh]">
         <h1 className="text-3xl pb-10">My Listings</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
           {listing_tab("all", "All")}
@@ -93,7 +94,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "22",
+              price: "1000",
             })
         )
       ).json(),
@@ -101,7 +102,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "100",
+              price: "25",
             })
         )
       ).json(),
@@ -109,7 +110,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "200",
+              price: "100",
             })
         )
       ).json(),
