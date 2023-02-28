@@ -2,16 +2,16 @@
 export default function ItemsForm() {
     const create_item = (placeholder: string) => {
         return(
-            <button className="h-[9vh] w-[18vh] bg-[#F8F8F8] hover:bg-gray-400 rounded-3xl mb-3 mr-3">{placeholder}</button>
+            <button className="h-[80px] w-[100%] bg-[#F8F8F8] hover:bg-gray-400 rounded-md">{placeholder}</button>
         )
     }
     
     return (
-        <div className='container min-w-full flex flex-col items-center mt-[10vh]'>
+        <div className='container min-w-full flex flex-col items-center pt-[5vh]'>
             <div className="w-3/6 flex flex-col">
                 <h1 className='text-3xl pb-2'>Item and Size Description</h1>
                 <h3 className='mb-5'>Please Describe The Type of Items You are Able to Store. Select all that apply.</h3>
-                <div className = "grid gap-y-1 gap-x-20 grid-cols-3">
+                <div className = "grid gap-y-5 gap-x-5 grid-cols-3">
                     {create_item("Boxes Only")}
                     {create_item("Furniture Only")}
                     {create_item("Boxes and Furnitures")}

@@ -28,7 +28,7 @@ export default function SubmitForm({
   ];
 
   return (
-    <div className="w-1/2 flex justify-center">
+    <div className="w-1/2 flex justify-center pt-[5vh]">
       <div className="container h-full font-Inter mb-2">
         <div className="h-6 text-3xl mb-6">Review Responses</div>
         <div className="flex flex-col justify-between items-center gap-1">

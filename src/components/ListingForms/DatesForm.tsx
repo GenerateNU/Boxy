@@ -17,7 +17,7 @@ export default function DatesForm() {
   const create_input = (placeholder: string, type: string) => {
     return (
       <input
-        className="h-[7.5vh] pl-5 pr-5 bg-bxBoxLight rounded-3xl mb-3 placeholder-[#B3B3B3]"
+        className="h-[60px] pl-5 pr-5 bg-bxBoxLight rounded-3xl mb-3 placeholder-[#B3B3B3]"
         type={type}
       ></input>
     );
@@ -29,7 +29,7 @@ export default function DatesForm() {
         <h3 className="mb-5">
           Please provide the Start Date and End Date for location availability.
         </h3>
-        <div className="grid grid-cols-2 mb-5 h-[7.5vh] bg-[#D9D9D9] rounded-3xl">
+        <div className="grid grid-cols-2 mb-5 h-[60px] bg-[#D9D9D9] rounded-3xl">
           {date_button("Start", "start")}
           {date_button("End", "end")}
         </div>

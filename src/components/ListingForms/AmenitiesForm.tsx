@@ -16,16 +16,16 @@ export default function AmenitiesForm() {
     
     const create_amenity = (placeholder:any , state: string) => {
         return(
-            <button onClick = {() => [updateAmenitiesList(placeholder), setButtonState(state)]} className={buttonState === state ? "h-[9vh] w-[18vh] bg-[#F8F8F8]  hover:bg-gray-400 rounded-3xl mb-3 mr-3 " : "h-[9vh] w-[18vh] bg-gray-400  hover:bg-gray-400 rounded-3xl mb-3 mr-3"} >{placeholder}</button>
+            <button onClick = {() => [updateAmenitiesList(placeholder), setButtonState(state)]} className={buttonState === state ? "h-[80px] w-[100%] bg-[#F8F8F8]  hover:bg-gray-400 rounded-md " : "h-[100%] w-[100%] bg-gray-400  hover:bg-gray-400 rounded-md"} >{placeholder}</button>
         )
     }
     
     return (
-        <div className='container min-w-full flex flex-col items-center mt-[10vh]'>
+        <div className='container min-w-full flex flex-col items-center pt-[5vh]'>
             <div className="w-3/6 flex flex-col ">
-                <h1 className='text-3xl pb-2 ml-3'>Amenities</h1>
-                <h3 className='pb-5 ml-3'>Please list your amenities if applicable. Select all that apply.</h3>
-                <div className = "grid gap-y-1 gap-x-20 grid-cols-3 ml-1 mt-1 ">
+                <h1 className='text-3xl pb-2'>Amenities</h1>
+                <h3 className='pb-5'>Please list your amenities if applicable. Select all that apply.</h3>
+                <div className = "grid gap-y-5 gap-x-5 grid-cols-3">
                     {create_amenity("Pest Controlled", "not_clicked")}
                     {create_amenity("Fire Alarm System", "not_clicked")}
                     {create_amenity("Smoke Free", "not_clicked")}
