@@ -1,5 +1,5 @@
 import { useState } from "react";
-export default function ListingDatesForm(props: any) {
+export default function DatesForm() {
   const [dateState, useDateState] = useState("start");
 
   const date_button = (name: string, state: string) => {
