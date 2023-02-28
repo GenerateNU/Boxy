@@ -24,7 +24,7 @@ export default function ListingCreate({}: any) {
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
-    <AddressForm changeAddress={setAddress} changeName={setName}/>,
+    <AddressForm changeAddress={setAddress} changeName={setListingName}/>,
     <DatesForm/>,
     <AmenitiesForm/>,
     <SpaceTypeForm />,
