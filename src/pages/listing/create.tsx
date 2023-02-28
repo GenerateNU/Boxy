@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ListingAddressForm from "@/components/ListingAddressForm";
 import ListingDatesForm from "@/components/ListingDatesForm";
+import ListingAmenitiesForm from "@/components/ListingAmenitiesForm"
+import ListingItemsForm from "@/components/ListingItemsForm"
 import { BiPencil } from "react-icons/bi";
 import ListingSpaceTypeForm from "@/components/ListingSpaceTypeForm";
 import { useRouter } from "next/router";
@@ -15,7 +17,7 @@ export default function ListingCreate({}: any) {
   const [listingDetails, setListingDetails] = useState({});
 
   const [currentForm, setCurrentForm] = useState("address");
-  const forms = ["address", "dates", "space type", "submit"];
+  const forms = ["address", "dates", "amenities","items", "space type", "submit"];
 
   const router = useRouter();
 
@@ -49,7 +51,13 @@ export default function ListingCreate({}: any) {
           ></ListingDatesForm>
         );
       case "amenities":
-        return <></>;
+        return (
+          <ListingAmenitiesForm></ListingAmenitiesForm>
+        );
+      case "items":
+        return (
+          <ListingItemsForm></ListingItemsForm>
+        );
       case "space type":
         return <ListingSpaceTypeForm></ListingSpaceTypeForm>;
       case "submit": // review details before submit page
@@ -76,6 +84,9 @@ export default function ListingCreate({}: any) {
                   break;
                 case "amenities":
                   setCurrentForm("amenities");
+                  break;
+                case "items":
+                  setCurrentForm("items");
                   break;
                 case "space type":
                   setCurrentForm("space type");
@@ -137,6 +148,9 @@ export default function ListingCreate({}: any) {
                   onClick={() => {
                     if (forms.indexOf(currentForm) - 1 >= 0) {
                       setCurrentForm(forms[forms.indexOf(currentForm) - 1]);
+                    } else {
+                      // need to redirect form back to home page here
+                      
                     }
                   }}
                 >
