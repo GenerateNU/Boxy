@@ -24,29 +24,6 @@ export default function ListingSpaceTypeForm() {
           {create_space("Other")}
         </div>
       </div>
-      {/* <div className="absolute bottom-10 w-[80%]">
-        <div className="flex justify-between">
-          <div className="">
-            <button className="border border-black h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-black hover:border-none hover:bg-gray-400">
-              Back
-            </button>
-          </div>
-          <div className="">
-            <button className="bg-[#7C7C7C] h-[6vh] w-[8vw] mb-7 right-2 rounded-full text-white hover:bg-gray-400">
-              Next
-            </button>
-          </div>
-        </div>
-        <div
-          id="progress-bar"
-          className="h-[6px] bg-bxBoxLight grid grid-cols-8"
-        >
-          <div className="bg-[#B3B3B3]"></div>
-          <div className="bg-[#B3B3B3]"></div>
-          <div className="bg-[#B3B3B3]"></div>
-          <div className="bg-[#B3B3B3]"></div>
-        </div>
-      </div> */}
     </div>
   );
 }
