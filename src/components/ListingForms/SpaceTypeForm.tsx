@@ -1,4 +1,4 @@
-export default function ListingSpaceTypeForm() {
+export default function SpaceTypeForm( { callback } : { callback: Function }) {
   const create_space = (placeholder: string) => {
     return (
       <button className="h-[9vh] w-[18vh] bg-[#F8F8F8] hover:bg-gray-400 rounded-3xl mb-3 mr-3">
