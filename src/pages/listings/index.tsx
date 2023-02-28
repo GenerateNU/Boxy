@@ -63,8 +63,8 @@ export default function ListingsPage({
   };
 
   return (
-    <div className="container flex justify-center min-w-full pt-20">
-      <div className="w-[50vw] flex-col">
+    <div className="container flex justify-center min-w-full pt-16">
+      <div className="w-[50vw] flex-col pt-[5vh]">
         <h1 className="text-3xl pb-10">My Listings</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
           {listing_tab("all", "All")}
