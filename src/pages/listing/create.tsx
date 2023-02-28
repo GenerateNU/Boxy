@@ -12,7 +12,6 @@ export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
   const [address, setAddress] = useState("");
-  const [name, setName] = useState("");
   const [listingName, setListingName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
   const [price, setPrice] = useState();
@@ -24,7 +23,7 @@ export default function ListingCreate({}: any) {
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
-    <AddressForm changeAddress={setAddress} changeName={setName}/>,
+    <AddressForm changeAddress={setAddress} changeName={setListingName}/>,
     <DatesForm/>,
     <AmenitiesForm/>,
     <SpaceTypeForm />,
@@ -46,8 +45,8 @@ export default function ListingCreate({}: any) {
     signIn();
   }
 
-  async function createListing() {
-    const res = await fetch("http://localhost:3000/api/listings", {
+  const createListing = () => {
+    fetch("http://localhost:3000/api/listings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,9 +66,12 @@ export default function ListingCreate({}: any) {
         longitude: 2,
         latitude: 1,
       }),
+    }).then(response => {
+      response.status == 200 && router.push("http://localhost:3000/listings");
+    }).catch(error => {
+      console.log(error.toString());
+      console.log("failed");
     });
-
-    res.status == 200 && router.push("http://localhost:3000/listings");
   }
 
   return (

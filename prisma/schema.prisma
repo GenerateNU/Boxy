@@ -31,7 +31,7 @@ model listings {
   editable        Boolean
   created_on      DateTime       @db.Date
   space_available Int[]
-  host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
+  // host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal        @db.Decimal
   latitude        Decimal        @db.Decimal
   reservations    reservations[]
@@ -61,7 +61,7 @@ model users {
   verified_on           DateTime?      @db.Date
   username              String         @unique @db.VarChar(255)
   password              String         @db.VarChar(255)
-  listings              listings[]
+  // listings              listings[]
   host_reservations     reservations[] @relation("host_reservations")
   stash_reservations    reservations[] @relation("stash_reservations")
 }
