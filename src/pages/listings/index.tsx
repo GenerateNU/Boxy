@@ -20,6 +20,7 @@ export default function ListingsPage({
   const [tabState, setTabState] = useState("all");
 
   const renderListingElements = (listings: []) => {
+    console.log(listings)
     if (listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
@@ -93,7 +94,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "22",
+              price: "1000",
             })
         )
       ).json(),
@@ -101,7 +102,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "100",
+              price: "25",
             })
         )
       ).json(),
@@ -109,7 +110,7 @@ export async function getServerSideProps() {
         await fetch(
           "http://localhost:3000/api/listings?" +
             new URLSearchParams({
-              price: "200",
+              price: "100",
             })
         )
       ).json(),
