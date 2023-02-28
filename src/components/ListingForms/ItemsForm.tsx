@@ -1,4 +1,5 @@
-export default function ListingItemsForm() {
+
+export default function ItemsForm() {
     const create_item = (placeholder: string) => {
         return(
             <button className="h-[9vh] w-[18vh] bg-[#F8F8F8] hover:bg-gray-400 rounded-3xl mb-3 mr-3">{placeholder}</button>

@@ -3,25 +3,41 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import AddressForm from "@/components/ListingForms/AddressForm";
 import DatesForm from "@/components/ListingForms/DatesForm";
 import SpaceTypeForm from "@/components/ListingForms/SpaceTypeForm";
+import AmenitiesForm from "@/components/ListingForms/AmenitiesForm";
+import ItemsForm from "@/components/ListingForms/ItemsForm";
+import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
-import { SubmitForm, SubmitFormProps } from "@/components/ListingForms/SubmitForm";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
   const [listingName, setListingName] = useState();
   const [datesAvailable, setDatesAvailable] = useState();
   const [price, setPrice] = useState();
+  const [spaceType, setSpaceType] = useState("");
   const [listingDetails, setListingDetails] = useState({});
+  const [amenities, setAmenities] = useState();
+  const [items, setItems] = useState();
 
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
-    <AddressForm callback={setAddress}/>,
-    <DatesForm callback={setDatesAvailable}/>,
+    <AddressForm changeAddress={setAddress} changeName={setName}/>,
+    <DatesForm/>,
+    <AmenitiesForm/>,
     <SpaceTypeForm />,
-    <SubmitForm />,
+    <ItemsForm/>,
+    <SubmitForm fields={[
+        address,
+        datesAvailable,
+        amenities,
+        spaceType,
+        items,
+      ]} 
+      changeForm={setCurrentForm}
+    />,
   ];
 
   const router = useRouter();
@@ -74,10 +90,11 @@ export default function ListingCreate({}: any) {
                 Back
               </button>
             ) : (
-              <div />)}
+              <div />
+            )}
           </div>
           <div>
-            {currentForm === 3 ? (
+            {currentForm === 5 ? (
               <button
                 className="bg-[#7C7C7C] h-[5vh] w-[8vw] mb-7 ml-auto right-2 rounded-full text-white"
                 onClick={createListing}
@@ -87,9 +104,9 @@ export default function ListingCreate({}: any) {
             ) : (
               <button
                 className="bg-[#097275] h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-white"
-                onClick={() =>
+                onClick={() => 
                   setCurrentForm(
-                    currentForm !== 3 ? currentForm + 1 : currentForm
+                    currentForm !== 5 ? currentForm + 1 : currentForm
                   )
                 }
               >
@@ -100,10 +117,10 @@ export default function ListingCreate({}: any) {
         </div>
         <div
           id="progress-bar"
-          className="h-[6px] bg-bxBoxLight grid grid-cols-5"
+          className="h-[6px] bg-bxBoxLight grid grid-cols-6"
         >
-          {forms.slice(0, currentForm + 1).map(() => {
-            return <div className="bg-[#B3B3B3] " />;
+          {forms.slice(0, currentForm + 1).map((_, i) => {
+            return <div className="bg-[#B3B3B3]" key={i}/>;
           })}
         </div>
       </div>

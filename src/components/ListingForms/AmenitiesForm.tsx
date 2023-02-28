@@ -1,6 +1,6 @@
 import { MouseEvent, useState } from "react";
 
-export default function ListingAmenitiesForm() {
+export default function AmenitiesForm() {
     let amenitiesList = new Set<String>;
     const [buttonState, setButtonState] = useState("not_clicked")
 
