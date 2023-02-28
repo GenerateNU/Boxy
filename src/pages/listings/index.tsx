@@ -9,38 +9,39 @@ type Listing = {
   name: string;
   price: string;
   proximity: string;
-}
+};
 
-
-export default function ListingsPage({ listingsAll, listingsListed, listingsUnlisted, listingsInProgress }: any) {
+export default function ListingsPage({
+  listingsAll,
+  listingsListed,
+  listingsUnlisted,
+  listingsInProgress,
+}: any) {
   const [tabState, setTabState] = useState("all");
-
 
   const renderListingElements = (listings: []) => {
     if (listings.length == 0) {
+      return <h1>You have no listings!</h1>;
+    } else {
       return (
-        <h1>You have no listings!</h1>
-      )
-    }
-    else {
-      return (
-        listings && listings.map((listing: Listing) => {
+        listings &&
+        listings.map((listing: Listing) => {
           return <Listing listing={listing} />;
         })
-      )
+      );
     }
-  }
+  };
 
   function renderCurrentForm() {
     switch (tabState) {
       case "all":
-        return renderListingElements(listingsAll)
+        return renderListingElements(listingsAll);
       case "listed":
-        return renderListingElements(listingsListed)
+        return renderListingElements(listingsListed);
       case "unlisted":
-        return renderListingElements(listingsUnlisted)
+        return renderListingElements(listingsUnlisted);
       case "progress":
-        return renderListingElements(listingsInProgress)
+        return renderListingElements(listingsInProgress);
     }
   }
 
@@ -54,7 +55,7 @@ export default function ListingsPage({ listingsAll, listingsListed, listingsUnli
             : "flex justify-center border-b-2 col-span-1 text-gray-500"
         }
       >
-        <div className='h-2/3 flex justify-center items-center'>
+        <div className="h-2/3 flex justify-center items-center">
           <h3>{text}</h3>
         </div>
       </button>
@@ -70,11 +71,11 @@ export default function ListingsPage({ listingsAll, listingsListed, listingsUnli
           {listing_tab("listed", "Listed")}
           {listing_tab("unlisted", "Unlisted")}
           {listing_tab("progress", "In Progress")}
-          <div className='col-span-2 flex justify-end border-b-2'>
-            <Link href='/listings/create' className='h-2/3 w-[55%]'>
-              <button className='flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black'>
-                <AiOutlinePlus/>
-                <h3 className='ml-1'>New Listing</h3>
+          <div className="col-span-2 flex justify-end border-b-2">
+            <Link href="/listing/create" className="h-2/3 w-[55%]">
+              <button className="flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black">
+                <AiOutlinePlus />
+                <h3 className="ml-1">New Listing</h3>
               </button>
             </Link>
           </div>
@@ -89,24 +90,36 @@ export async function getServerSideProps() {
   return {
     props: {
       listingsAll: await (
-        await fetch("http://localhost:3000/api/listings?" + new URLSearchParams({
-          price: '22'
-        }))
+        await fetch(
+          "http://localhost:3000/api/listings?" +
+            new URLSearchParams({
+              price: "22",
+            })
+        )
       ).json(),
       listingsListed: await (
-        await fetch("http://localhost:3000/api/listings?" + new URLSearchParams({
-          price: '100'
-        }))
+        await fetch(
+          "http://localhost:3000/api/listings?" +
+            new URLSearchParams({
+              price: "100",
+            })
+        )
       ).json(),
       listingsUnlisted: await (
-        await fetch("http://localhost:3000/api/listings?" + new URLSearchParams({
-          price: '200'
-        }))
+        await fetch(
+          "http://localhost:3000/api/listings?" +
+            new URLSearchParams({
+              price: "200",
+            })
+        )
       ).json(),
       listingsInProgress: await (
-        await fetch("http://localhost:3000/api/listings?" + new URLSearchParams({
-          price: '10'
-        }))
+        await fetch(
+          "http://localhost:3000/api/listings?" +
+            new URLSearchParams({
+              price: "10",
+            })
+        )
       ).json(),
     },
   };
