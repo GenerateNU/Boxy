@@ -1,6 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import persistentListingInstance from "lib/listingInstance";
 
+export type ViewResponse = {
+  "my reservation requests"?: number[];
+  "my accepted reservations"?: number[];
+  "my approved reservations"?: number[];
+};
+
 export default class Reservations {
   constructor(private readonly reservationsDB: PrismaClient["reservations"]) {}
 
@@ -14,6 +20,48 @@ export default class Reservations {
 
       // add entry to database
       await this.reservationsDB.create({ data });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getHostReservations(userID: any) {
+    try {
+      const reservationResponse = await this.reservationsDB.findMany({
+        where: {
+          host_id: userID,
+        },
+      });
+
+      const reservation_ids = new Array();
+      reservationResponse.forEach(function (value) {
+        reservation_ids.push(value["reservation_id"]);
+      });
+
+      let response: ViewResponse = { "my reservation requests": reservation_ids };
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getStasherReservations(userID: any) {
+    try {
+      const reservationResponse = await this.reservationsDB.findMany({
+        where: {
+          stasher_id: userID,
+        },
+      });
+
+      const reservation_ids = new Array();
+      reservationResponse.forEach(function (value) {
+        reservation_ids.push(value["reservation_id"]);
+      });
+
+      let response: ViewResponse = {"my reservation requests": reservation_ids};
+
+      return response;
     } catch (e) {
       throw e;
     }
