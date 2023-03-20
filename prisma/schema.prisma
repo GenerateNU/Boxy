@@ -31,7 +31,7 @@ model listings {
   editable        Boolean
   created_on      DateTime       @db.Date
   space_available Int[]
-  host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
+  // host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal        @db.Decimal
   latitude        Decimal        @db.Decimal
   reservations    reservations[]
@@ -46,8 +46,8 @@ model reservations {
   accepted_on     DateTime?  @db.Date
   requested_on    DateTime   @db.Date
   dates_requested DateTime[] @db.Date
-  host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
-  stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
+  // host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
+  // stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
   listing         listings   @relation(fields: [listing_id], references: [listing_id])
 }
 
@@ -61,9 +61,9 @@ model users {
   verified_on           DateTime?      @db.Date
   username              String         @unique @db.VarChar(255)
   password              String         @db.VarChar(255)
-  listings              listings[]
-  host_reservations     reservations[] @relation("host_reservations")
-  stash_reservations    reservations[] @relation("stash_reservations")
+  // listings              listings[]
+  // host_reservations     reservations[] @relation("host_reservations")
+  // stash_reservations    reservations[] @relation("stash_reservations")
 }
 
 enum amenity {

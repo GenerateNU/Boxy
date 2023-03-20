@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import AddressForm from "@/components/ListingForms/AddressForm";
 import DatesForm from "@/components/ListingForms/DatesForm";
@@ -7,6 +7,7 @@ import AmenitiesForm from "@/components/ListingForms/AmenitiesForm";
 import ItemsForm from "@/components/ListingForms/ItemsForm";
 import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
@@ -46,8 +47,20 @@ export default function ListingCreate({}: any) {
     signIn();
   }
 
+  async function createStripeProduct() {
+    await fetch("/api/product", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: listingName,
+      }),
+    });
+  }
+
   async function createListing() {
-    const res = await fetch("http://localhost:3000/api/listings", {
+    const res = await fetch("/api/listings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +110,10 @@ export default function ListingCreate({}: any) {
             {currentForm === 5 ? (
               <button
                 className="bg-[#7C7C7C] hover:bg-[#097275] transition:color h-[40px] w-[8vw] mb-7 ml-auto right-2 rounded-full text-white"
-                onClick={createListing}
+                onClick={() => {
+                  createStripeProduct();
+                  createListing();
+                }}
               >
                 Submit
               </button>
