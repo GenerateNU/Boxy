@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ListingResponse } from "@/models/listings";
-import listingDataTable from "lib/listingInstance";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import Utils from "@/utils";
-import Hosts from "@/models/hosts";
+import Hosts, { ViewResponse } from "@/models/hosts";
 import prisma from "lib/db";
 
 type Message = {
@@ -30,7 +28,7 @@ export default async function handler(
 
 async function getHostListings(
   req: NextApiRequest,
-  res: NextApiResponse<ListingResponse[] | Message>,
+  res: NextApiResponse<ViewResponse | Message>,
   session: Session
 ) {
   if (!session) {
