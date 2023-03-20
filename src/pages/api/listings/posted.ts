@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import Utils from "@/utils";
-import prisma from "lib/db";
+import listingDataTable from "lib/listingInstance";
 import { ViewResponse } from "@/models/listings";
 
 type Message = {
@@ -39,8 +39,7 @@ async function getHostListings(
     // Decode token from request header
     const payload = Utils.decodeToken(req.body["token"]);
     const userID = Utils.getUserId(payload);
-    const hostInstance = new Hosts(prisma.listings, prisma.users, prisma.reservations);
-    const response = await hostInstance.getHostListings(payload);
+    const response = await listingDataTable.getHostListings(userID);
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
