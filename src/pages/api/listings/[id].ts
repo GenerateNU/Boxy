@@ -81,10 +81,12 @@ async function deleteListing(
 
 async function authorize(req: NextApiRequest, session: Session) {
   if (!session) {
+    console.log("You must be logged in to perform this action.");
     throw new Error("You must be logged in to perform this action.");
   }
 
   if (!session.user || !session.user.email) {
+    console.log("User email not found in session.");
     throw new Error("User email not found in session.");
   }
 
@@ -93,6 +95,7 @@ async function authorize(req: NextApiRequest, session: Session) {
   });
 
   if (!user || !user.verified) {
+    console.log("You must be a verified user to perform this action.");
     throw new Error("You must be a verified user to perform this action.");
   }
 
@@ -102,6 +105,7 @@ async function authorize(req: NextApiRequest, session: Session) {
   });
 
   if (!listing || listing.host_id !== user.user_id) {
+    console.log("You do not have permission to perform this action.");
     throw new Error("You do not have permission to perform this action.");
   }
 }
