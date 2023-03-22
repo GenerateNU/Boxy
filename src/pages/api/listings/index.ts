@@ -4,7 +4,6 @@ import { ListingResponse } from "@/models/listings";
 import listingDataTable from "lib/listingInstance";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { getSession } from "next-auth/react";
 import prisma from "lib/db";
 
 type Message = {
@@ -16,7 +15,6 @@ export default async function handler(
   res: NextApiResponse<Message>
 ) {
   const session = await getServerSession(req, res, authOptions);
-  console.log(session);
 
   const supportedRequestMethods: { [key: string]: Function } = {
     GET: getListingsGivenFilters,
@@ -32,8 +30,7 @@ export default async function handler(
 
 async function getListingsGivenFilters(
   req: NextApiRequest,
-  res: NextApiResponse<ListingResponse[] | Message>,
-  session: Session
+  res: NextApiResponse<ListingResponse[] | Message>
 ) {
   try {
     const response = await listingDataTable.getListings(req.query);
@@ -49,7 +46,6 @@ async function createListing(
   session: Session
 ) {
   try {
-    //const session = await getServerSession(req, res, authOptions);
     await authorize(req, session);
     await listingDataTable.createListing(req.body);
   } catch (error) {
@@ -61,21 +57,20 @@ async function createListing(
 }
 
 async function authorize(req: NextApiRequest, session: any) {
-  const session1 = await getSession({ req });
-
   if (!session) {
+    console.log("You must be logged in to perform this action.");
     throw new Error("You must be logged in to perform this action.");
   }
 
   const userEmail = session.user.email ?? null;
-  console.log(userEmail);
   if (!userEmail) {
+    console.log("User email not found.");
     throw new Error("User email not found.");
   }
 
   const user = await prisma.users.findUnique({ where: { email: userEmail } });
-  console.log(user);
   if (!user || !user.verified) {
+    console.log("You must be a verified user to perform this action.");
     throw new Error("You must be a verified user to perform this action.");
   }
 

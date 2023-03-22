@@ -3,7 +3,8 @@ import prisma from "lib/db";
 import ListingsDataTable from "@/models/listings";
 import { listings } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
-import { getSession } from "next-auth/react";
+import { authOptions } from "../auth/[...nextauth]";
+import { getServerSession, Session } from "next-auth";
 
 type Message = {
   message: string;
@@ -13,6 +14,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
+  const session = await getServerSession(req, res, authOptions);
+
   const supportedRequestMethods: { [key: string]: Function } = {
     GET: getListingDetails,
     PUT: updateListing,
@@ -26,7 +29,7 @@ export default async function handler(
   }
 
   if (req.method) {
-    return supportedRequestMethods[req.method](req, res);
+    return supportedRequestMethods[req.method](req, res, session);
   }
 
   return res.status(405).send({ message: "request method not supported" });
@@ -34,7 +37,8 @@ export default async function handler(
 
 async function getListingDetails(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
     await listingDataTable.getListing(req.body.id);
@@ -47,10 +51,11 @@ async function getListingDetails(
 
 async function updateListing(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
-    await authorize(req);
+    await authorize(req, session);
     await listingDataTable.updateListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -61,10 +66,11 @@ async function updateListing(
 
 async function deleteListing(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
-    await authorize(req);
+    await authorize(req, session);
     await listingDataTable.deleteListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -73,9 +79,7 @@ async function deleteListing(
   return res.status(200).send({ message: "deleted listing" });
 }
 
-async function authorize(req: NextApiRequest) {
-  const session = await getSession({ req });
-
+async function authorize(req: NextApiRequest, session: Session) {
   if (!session) {
     throw new Error("You must be logged in to perform this action.");
   }
