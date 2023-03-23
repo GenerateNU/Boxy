@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { listings } from "@prisma/client";
 import { ListingResponse } from "@/models/listings";
 import listingDataTable from "lib/listingInstance";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
 type Message = {
@@ -21,7 +21,7 @@ export default async function handler(
   };
 
   if (req.method) {
-    return supportedRequestMethods[req.method](req, res);
+    return supportedRequestMethods[req.method](req, res, session);
   }
 
   return res.status(405).send({ message: "request method not supported" });
@@ -29,7 +29,8 @@ export default async function handler(
 
 async function getListingsGivenFilters(
   req: NextApiRequest,
-  res: NextApiResponse<ListingResponse[] | Message>
+  res: NextApiResponse<ListingResponse[] | Message>,
+  session: Session
 ) {
   try {
     const response = await listingDataTable.getListings(req.query);
@@ -41,8 +42,13 @@ async function getListingsGivenFilters(
 
 async function createListing(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
+  if (!session) {
+    return res.status(401).send({ message: "user is not authenticated" });
+  }
+
   try {
     await listingDataTable.createListing(req.body);
   } catch (error) {

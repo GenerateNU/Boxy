@@ -24,18 +24,13 @@ export default function ListingCreate({}: any) {
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
-    <AddressForm changeAddress={setAddress} changeName={setListingName}/>,
-    <DatesForm/>,
-    <AmenitiesForm/>,
+    <AddressForm changeAddress={setAddress} changeName={setListingName} />,
+    <DatesForm />,
+    <AmenitiesForm />,
     <SpaceTypeForm />,
-    <ItemsForm/>,
-    <SubmitForm fields={[
-        address,
-        datesAvailable,
-        amenities,
-        spaceType,
-        items,
-      ]} 
+    <ItemsForm />,
+    <SubmitForm
+      fields={[address, datesAvailable, amenities, spaceType, items]}
       changeForm={setCurrentForm}
     />,
   ];
@@ -104,7 +99,7 @@ export default function ListingCreate({}: any) {
             ) : (
               <button
                 className="bg-[#097275] h-[40px] w-[8vw] mb-7 right-2 rounded-full text-white"
-                onClick={() => 
+                onClick={() =>
                   setCurrentForm(
                     currentForm !== 5 ? currentForm + 1 : currentForm
                   )
@@ -120,7 +115,7 @@ export default function ListingCreate({}: any) {
           className="h-[6px] bg-bxBoxLight grid grid-cols-6"
         >
           {forms.slice(0, currentForm + 1).map((_, i) => {
-            return <div className="bg-[#B3B3B3]" key={i}/>;
+            return <div className="bg-[#B3B3B3]" key={i} />;
           })}
         </div>
       </div>
