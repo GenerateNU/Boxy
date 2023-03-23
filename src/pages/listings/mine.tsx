@@ -73,7 +73,7 @@ export default function ListingsPage({
           {listing_tab("unlisted", "Unlisted")}
           {listing_tab("progress", "In Progress")}
           <div className="col-span-2 flex justify-end border-b-2">
-            <Link href="/listing/create" className="h-2/3 w-[55%]">
+            <Link href="/listings/create" className="h-2/3 w-[55%]">
               <button className="flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black">
                 <AiOutlinePlus />
                 <h3 className="ml-1">New Listing</h3>
