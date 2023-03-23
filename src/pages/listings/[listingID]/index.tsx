@@ -7,7 +7,7 @@ export default function ListingDetailsPage() {
   return (
     <div className="flex flex-col pt-16">
       <h1>listing {listingID} details go here</h1>
-      <button onClick={() => router.push("./reserve")}>click here to reserve</button>
+      <button onClick={() => router.push(`./${listingID}/reserve`)}>click here to reserve</button>
     </div>
   );
 }
