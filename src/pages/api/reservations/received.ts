@@ -39,8 +39,8 @@ async function getHostReservations(
   
     try {
       // Decode token from request header
-      const payload = Utils.decodeToken(req.body["token"]);
-      const userID = Utils.getUserId(payload);
+      const email = session.user?.email
+      const userID = Utils.getUserId(email);
       const response = await persistentReservationInstance.getHostReservations(userID);
       return res.status(200).send(response);
     } catch (error) {
