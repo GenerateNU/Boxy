@@ -21,11 +21,11 @@ export default class Utils {
   }
 
   // Returns user_id given decoded payload from token
-  public static async getUserId(payload: any) {
+  public static async getUserId(email: any) {
     // Find user info based on username
     const userInfo = await prisma.users.findUnique({
       where: {
-          username: payload["sub"],
+          email: email,
       },
   });
 
