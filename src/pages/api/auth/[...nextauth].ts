@@ -16,14 +16,17 @@ export const authOptions: NextAuthOptions = {
 
       // case 1: user is in database and verified -> send them back to page they came from
       if (exists && verified) {
+        return true;
       }
 
       // case 2: user is in database but not verified -> send them to page to upload DL photo
       if (exists && !verified) {
+        return "/user/verify";
       }
 
       // case 3: user is not in database -> send to account creatin page
       if (!exists && !verified) {
+        return "/user/register";
       }
 
       return true;
