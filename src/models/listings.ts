@@ -3,12 +3,16 @@ import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
   listing_id: number;
-  price: Decimal;
   name: string;
   proximity?: number;
   longitude?: Decimal;
   latitude?: Decimal;
 };
+
+export type ViewResponse = {
+  "my listings"?: number[];
+};
+
 
 export default class ListingsDataTable {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -130,6 +134,27 @@ export default class ListingsDataTable {
           }
         });
       }
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getHostListings(userID: any) {
+    try {
+      const listingsResponse = await this.listingsDB.findMany({
+        where: {
+          host_id: userID,
+        },
+      });
+
+      const listing_ids = new Array();
+      listingsResponse.forEach(function (value) {
+        listing_ids.push(value["listing_id"]);
+      });
+
+      let response: ViewResponse = { "my listings": listing_ids };
 
       return response;
     } catch (e) {
