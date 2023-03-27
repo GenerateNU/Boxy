@@ -55,11 +55,19 @@ export default function NavBar() {
             )}
             {nav_bar_button(
               "myListings",
-              <Link href="http://localhost:3000/listings">My Listings</Link>
+              <Link href="http://localhost:3000/listings/mine">
+                My Listings
+              </Link>
+            )}
+            {nav_bar_button(
+              "myListings",
+              <Link href="http://localhost:3000/reservations/mine">
+                My Reservations
+              </Link>
             )}
             {nav_bar_button(
               "createListing",
-              <Link href="http://localhost:3000/listing/create">
+              <Link href="http://localhost:3000/listings/create">
                 Create Listing
               </Link>
             )}

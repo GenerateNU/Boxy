@@ -1,5 +1,9 @@
+import prisma from "lib/db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "lib/db";
+import { authOptions } from "./pages/api/auth/[...nextauth]";
+import { getServerSession, Session } from "next-auth";
+import { users } from "@prisma/client";
 
 export default class Utils {
   public static decodeToken(token: string) {
@@ -17,7 +21,29 @@ export default class Utils {
   }
 
   public static async checkForUser(email: any) {
-    return { exists: true, verified: true };
+    let exists = false;
+    let verified = false;
+
+    const user = await prisma.users.findUnique({
+      where: { email: email },
+    });
+
+    if (user) {
+      exists = true;
+    }
+
+    const response: users[] = await prisma.users.findMany({
+      where: {
+        email: email,
+        verified: true,
+      },
+    });
+
+    if (response.length > 0) {
+      verified = true;
+    }
+
+    return { exists: exists, verified: verified };
   }
 
   // Returns user_id given decoded payload from token
