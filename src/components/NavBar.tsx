@@ -40,7 +40,7 @@ export default function NavBar() {
 
   return (
     <div>
-      <nav className="container fixed min-w-full h-16 border-b-2 border-gray bg-white shadow-md">
+      <nav className="container fixed min-w-full h-16 border-b-2 border-gray bg-white shadow-md z-10">
         <div className="flex justify-between items-center container mx-auto h-full ">
           <Link
             href={"http://localhost:3000/"}
@@ -55,11 +55,15 @@ export default function NavBar() {
             )}
             {nav_bar_button(
               "myListings",
-              <Link href="http://localhost:3000/listings/mine">My Listings</Link>
+              <Link href="http://localhost:3000/listings/mine">
+                My Listings
+              </Link>
             )}
             {nav_bar_button(
               "myListings",
-              <Link href="http://localhost:3000/reservations/mine">My Reservations</Link>
+              <Link href="http://localhost:3000/reservations/mine">
+                My Reservations
+              </Link>
             )}
             {nav_bar_button(
               "createListing",

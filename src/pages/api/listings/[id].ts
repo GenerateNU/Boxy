@@ -33,15 +33,29 @@ export default async function handler(
 
 async function getListingDetails(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message | listings>
 ) {
+  let listing;
   try {
-    await listingDataTable.getListing(req.body.id);
+    if (!req.query.id) {
+      throw new Error("Missing id parameter");
+    }
+    const id = Array.isArray(req.query.id)
+      ? parseInt(req.query.id[0])
+      : parseInt(req.query.id);
+    if (isNaN(id)) {
+      throw new Error("Invalid id parameter");
+    }
+    listing = await listingDataTable.getListing(id);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
 
-  return res.status(200).send({ message: "returned listing information" });
+  if (!listing) {
+    return res.status(404).send({ message: "Listing not found" });
+  }
+
+  return res.status(200).json(listing);
 }
 
 async function updateListing(

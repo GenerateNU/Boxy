@@ -5,6 +5,7 @@ export default function BrowseListingsPage({ listings }: any) {
   const router = useRouter();
 
   const display_listing = (
+    id: string,
     name: string,
     cost: string,
     location: string,
@@ -13,7 +14,7 @@ export default function BrowseListingsPage({ listings }: any) {
     return (
       <div
         className="container flex flex-col border border-grey-500"
-        onClick={() => router.push("/listings/<listing id goes here>>")}
+        onClick={() => router.push(`/listings/${id}`)}
       >
         <div className="flex justify-center">
           <img
@@ -66,6 +67,7 @@ export default function BrowseListingsPage({ listings }: any) {
             {listings.map((listing: any) => {
               {
                 return display_listing(
+                  listing.listing_id,
                   listing.name,
                   listing.price,
                   listing.proximity,
@@ -73,6 +75,7 @@ export default function BrowseListingsPage({ listings }: any) {
                 );
               }
             })}
+
             {/* {display_listing(
               "5 x 5 Closet",
               "$50/month",
