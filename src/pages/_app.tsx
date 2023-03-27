@@ -4,7 +4,6 @@ import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import NavBar from "src/components/NavBar";
 import { useEffect } from "react";
-import Utils from "@/utils";
 import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -30,6 +29,7 @@ function UserRedirectWrapper() {
 
           if (exists && verified) {
             // do nothing
+            alert("user is verified");
           } else if (exists && !verified) {
             router.push("http://localhost:3000/user/verify");
           } else if (!exists && !verified) {
