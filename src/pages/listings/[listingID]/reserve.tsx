@@ -7,6 +7,11 @@ export default function ListingReservationPage() {
   return (
     <div className="flex flex-col pt-16">
       <h1>reservation for listing {listingID} page go here</h1>
+      <button onClick={sendReservationRequest}>click here to reserve reservation</button>
     </div>
   );
+
+  function sendReservationRequest() {
+    // make call to endpoint
+  }
 }
