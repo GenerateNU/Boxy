@@ -62,5 +62,4 @@ export default class Utils {
 
     return userInfo["user_id"];
   }
-
 }
