@@ -1,3 +1,4 @@
+import prisma from "lib/db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "lib/db";
 import { authOptions } from "./pages/api/auth/[...nextauth]";
@@ -44,4 +45,22 @@ export default class Utils {
 
     return { exists: exists, verified: verified };
   }
+
+  // Returns user_id given decoded payload from token
+  public static async getUserId(email: any) {
+    // Find user info based on username
+    const userInfo = await prisma.users.findUnique({
+      where: {
+          email: email,
+      },
+  });
+
+    // If user doesn't exists
+    if (!userInfo) {
+      throw new Error("User does not exists");
+    }
+
+    return userInfo["user_id"];
+  }
+
 }
