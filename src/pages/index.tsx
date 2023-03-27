@@ -1,6 +1,7 @@
-import {motion, useAnimation} from "framer-motion"
+import {useAnimation} from "framer-motion"
 import {useInView} from 'react-intersection-observer'
 import {useEffect, useState} from 'react'
+import arrowIcon from '../assets/BoxyArrowIcon.png'
 
 export default function LandingPage() {
   
@@ -11,7 +12,7 @@ export default function LandingPage() {
           <img className="w-[12.5vw] mb-5 object-fill rounded-full" src={image}/>
           <h3 className="text-[15px] w-[12.5vw] text-center">{text}</h3>
         </div>
-        {arrow ? <img className="w-[6.25vw] h-3 mt-[6.25vw] object-contain" src="https://i.imgur.com/P13cWtf.png"/> : <></>}
+        {arrow ? <img className="w-[6.25vw] h-3 mt-[6.25vw] object-contain" src={arrowIcon.src}/> : <></>}
       </div>
     )
   }
