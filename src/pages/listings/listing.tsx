@@ -17,7 +17,7 @@ export default function Listing({ listing }: any) {
   }, [listing.price]);
 
   return (
-    <Link href="/checkout/payments">
+    <Link href="/listings/<listing id goes here>">
       <div
         className="w-full bg-bxBoxLight hover:bg-[#e6e6e6] border border-[#e6e6e6] rounded-xl h-[13.5vh] mb-5 grid grid-cols-2"
         onMouseEnter={() => setHoverStatus(true)}

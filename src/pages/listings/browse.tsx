@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from 'react'
 
 export default function BrowseListingsPage({ listings }: any) {
+  const router = useRouter();
+
   const display_listing = (
     name: string,
     cost: string,
@@ -8,7 +12,10 @@ export default function BrowseListingsPage({ listings }: any) {
     image: string
   ) => {
     return (
-      <div className="container flex flex-col border border-grey-500">
+      <div
+        className="container flex flex-col border border-grey-500"
+        onClick={() => router.push("/listings/<listing id goes here>>")}
+      >
         <div className="flex justify-center">
           <img
             className="object-cover w-full h-56 rounded-lg ml-2 mr-2"
@@ -35,7 +42,7 @@ export default function BrowseListingsPage({ listings }: any) {
     );
   };
 
-  <Link href="/results"/>;
+  <Link href="/results" />;
   return (
     <div className="flex flex-col pt-16">
       <div className="container mx-auto pt-[5vh]">

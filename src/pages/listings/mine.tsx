@@ -3,6 +3,7 @@ import { useState } from "react";
 import Listing from "./listing";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 type Listing = {
   listing_id: string;
@@ -18,9 +19,10 @@ export default function ListingsPage({
   listingsInProgress,
 }: any) {
   const [tabState, setTabState] = useState("all");
+  const router = useRouter();
 
   const renderListingElements = (listings: []) => {
-    console.log(listings)
+    console.log(listings);
     if (listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
@@ -73,7 +75,7 @@ export default function ListingsPage({
           {listing_tab("unlisted", "Unlisted")}
           {listing_tab("progress", "In Progress")}
           <div className="col-span-2 flex justify-end border-b-2">
-            <Link href="/listing/create" className="h-2/3 w-[55%]">
+            <Link href="/listings/create" className="h-2/3 w-[55%]">
               <button className="flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black">
                 <AiOutlinePlus />
                 <h3 className="ml-1">New Listing</h3>
@@ -82,6 +84,18 @@ export default function ListingsPage({
           </div>
         </div>
         {renderCurrentForm()}
+        <h1>Reservation Requests</h1>
+        <li>dummy reservation request name</li>
+        <li>
+          dummy reservation request details... (dates, name of user who
+          requested etc.)
+        </li>
+        <button
+          onClick={() => router.push("http://localhost:3000/reservations/mine")}
+        >
+          accept button
+        </button>
+        <button>decline button</button>
       </div>
     </div>
   );
