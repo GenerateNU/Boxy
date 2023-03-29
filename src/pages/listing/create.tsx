@@ -48,7 +48,7 @@ export default function ListingCreate({}: any) {
   }
 
   async function createStripeProduct() {
-    await fetch("/api/product", {
+    await fetch("/api/stripe/product", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

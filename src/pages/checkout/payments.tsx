@@ -14,7 +14,7 @@ function Payment() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/payment-intent", {
+    fetch("/api/stripe/payment-intent", {
       method: "POST",
       body: JSON.stringify({}),
     }).then(async (result) => {

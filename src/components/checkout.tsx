@@ -51,7 +51,7 @@ export default function CheckoutForm() {
         className="p-4 mt-4 rounded-lg bg-blue-400 hover:bg-blue-500"
       >
         <span id="button-text">
-          {isProcessing ? "Processing ... " : "Pay now"}
+          {isProcessing ? "Processing ... " : "Checkout"}
         </span>
       </button>
       {/* Show any error or success messages */}
