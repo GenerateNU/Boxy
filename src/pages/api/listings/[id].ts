@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
-import ListingsDataTable from "@/models/listings";
+import ListingsDataTable, { ListingResponse } from "@/models/listings";
 import { listings } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
 import { authOptions } from "../auth/[...nextauth]";
@@ -41,12 +41,12 @@ async function getListingDetails(
   session: Session
 ) {
   try {
-    await listingDataTable.getListing(req.body.id);
+    const id: number = parseInt(req.query.id as string)
+    const response: any = await listingDataTable.getListing(id);
+    return res.status(200).send({ message: response });
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
-
-  return res.status(200).send({ message: "returned listing information" });
 }
 
 async function updateListing(

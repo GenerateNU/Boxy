@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function Listing({ listing }: any) {
   const [statusColor, setStatusColor] = useState("#00000");
   const [statusHover, setHoverStatus] = useState(false);
+  const link = "/listings/" + listing.listing_id
 
   useEffect(() => {
     if (listing.price < 20) {
@@ -17,7 +18,7 @@ export default function Listing({ listing }: any) {
   }, [listing.price]);
 
   return (
-    <Link href="/listings/<listing id goes here>">
+    <Link href={link}>
       <div
         className="w-full bg-bxBoxLight hover:bg-[#e6e6e6] border border-[#e6e6e6] rounded-xl h-[13.5vh] mb-5 grid grid-cols-2"
         onMouseEnter={() => setHoverStatus(true)}

@@ -1,18 +1,42 @@
-import { DateCalendar, DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
-import { start } from 'repl';
+import { Calendar } from 'primereact/calendar'
 
-export default function DateRangeEditor(dates_available: Date[]) {
-    const firstAvailable = dates_available[0]
-    const lastAvailable = dates_available[dates_available.length - 1]
-    const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(firstAvailable).add(1, 'day'));
-    const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(firstAvailable))
+import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";                                //icons
 
-    // Loop through each date. If there is a next, add the next to canVisit (array)
-    // Will be a dictionary object with key "String version of date" and value array of can visits
-    function computeInReach(dates_available: Date[]) {
+export default function DateRangeSelector(dates_available: string[]) {
+    /**
+     * The below variables are temporary as we prep to move date selection to a calendar: 
+     */
+    const firstAvailable = new Date(dates_available[0])
+    const lastAvailable = new Date(dates_available[dates_available.length - 1])
+
+    const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
+
+    // Locate the dates that make up gaps in available period: 
+    function locDateGaps() {
+        const date_diff = (dayjs(lastAvailable).diff(dayjs(firstAvailable)) / 86400000) + 1
+        var disabledDays = []
+
+        var cur_date = firstAvailable
+        for (var i = 0 ; i < date_diff ; i++) {
+            const found = dates_available.find(date => dayjs(date).date() == dayjs(cur_date).date()
+                                               && dayjs(date).month() == dayjs(cur_date).month()
+                                               && dayjs(date).year() == dayjs(cur_date).year())
+
+            if (found === undefined) {
+                disabledDays.push(cur_date)
+            }
+            cur_date = new Date(dayjs(cur_date).add(1, 'day').toString())
+        }
+
+        return disabledDays
+    }
+
+    // Compute all dates in reach: 
+    function computeInReach() {
         
         // Instantiate the dictionary: 
         var inReach: { [id: string]: string[] } = {}
@@ -22,14 +46,14 @@ export default function DateRangeEditor(dates_available: Date[]) {
         for (var i = 0 ; i < date_length ; i++) {
             // Grab the current date: 
             var currentDate = dayjs(dates_available[i])
-            var key = (currentDate.date() + 1).toString() + '-' + currentDate.month().toString() + '-' + currentDate.year().toString()
+            var key = currentDate.date().toString() + '-' + currentDate.month().toString() + '-' + currentDate.year().toString()
             inReach[key] = []
             
             // If there is a date after in the list: 
             if (i > 0) {
                 // Grab the next date: 
                 var pastDate = dayjs(dates_available[i-1])
-                var past_key = (pastDate.date() + 1).toString() + '-' + pastDate.month().toString() + '-' + pastDate.year().toString()
+                var past_key = pastDate.date().toString() + '-' + pastDate.month().toString() + '-' + pastDate.year().toString()
 
                 // If they are within one day of eachother: 
                 if (currentDate.diff(pastDate, 'days') <= 1) {
@@ -41,51 +65,30 @@ export default function DateRangeEditor(dates_available: Date[]) {
         return inReach
     }
 
-    // Compute in reach dates for available dates: 
-    const inReach = computeInReach(dates_available)
+    // Identify whether start and end date make a valid date range given available dates: 
+    function identifyValidRange() {
+        if (dateRange && Array.isArray(dateRange) && dateRange.length == 2) {
+            const start = dateRange[0]
+            const end = dateRange[1]
 
-    // Disable all dates that are not included in dates available: 
-    function shouldDisableEndDate(date: Dayjs) {
-        const found = dates_available.find(day => dayjs(day).date() + 1 == date.date() 
-                                          && dayjs(day).month() == date.month()
-                                          && dayjs(day).year() == date.year());
-
-        if (found === undefined) {
-            return true
-        }
-
-        var key = (dayjs(found).date() + 1).toString() + '-' + dayjs(found).month().toString() + '-' + dayjs(found).year().toString()
-
-        if (startDate) {
-            var startKey = (startDate.date()).toString() + '-' + startDate.month().toString() + '-' + startDate.year().toString()
-            console.log(key)
-            console.log(startKey)
-            if (inReach[key].includes(startKey) || key == startKey) {
-                return false
+            if (end == null) {
+                return dateRange
             }
-        }
 
-        return true
-    }
-
-    // Disable all dates that are not included in dates available: 
-    function shouldDisableStartDate(date: Dayjs) {
-        const found = dates_available.find(day => dayjs(day).date() + 1 == date.date() 
-                                          && dayjs(day).month() == date.month()
-                                          && dayjs(day).year() == date.year());
-
-        if (found === undefined) {
-            return true
-        }
-        return false
+            // If end can reach start, we are good. If it cannot, reset to firstAvailable: 
+            const inReach = computeInReach()
+            const start_key = start.getDate().toString() + '-' + start.getMonth().toString() + '-' + start.getFullYear().toString()
+            const end_key = end.getDate().toString() + '-' + end.getMonth().toString() + '-' + end.getFullYear().toString()
+            if (!inReach[end_key].includes(start_key)) {
+                return firstAvailable
+            }
+        }   
+        return dateRange
     }
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div className='container flex'>
-                <DatePicker shouldDisableDate={shouldDisableStartDate} value={startDate} onChange={(newValue) => setStartDate(newValue)}/>
-                <DatePicker shouldDisableDate={shouldDisableEndDate} value={endDate?.isBefore(startDate) ? startDate : endDate} onChange={(newValue) => setEndDate(newValue)}/>
-            </div>
-        </LocalizationProvider>
+        <div>
+            <Calendar selectionMode='range' disabledDates={locDateGaps()} viewDate={firstAvailable} value={identifyValidRange()} onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy' minDate={firstAvailable} maxDate={lastAvailable}/>
+        </div>
     )
 }
