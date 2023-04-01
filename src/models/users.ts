@@ -32,6 +32,26 @@ export default class Users {
     }
   }
 
+  public async getUser(email: any) {
+    const res = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    const userDetails = { verified: false, exists: false };
+
+    // user doesn't exist in db
+    if (!res) {
+      return userDetails;
+    }
+
+    userDetails["verified"] = res["verified"];
+    userDetails["exists"] = true;
+
+    return userDetails;
+  }
+
   public async updateUser(body: any, headers: any) {
     try {
       this.validateInputData(body);
@@ -117,6 +137,15 @@ export default class Users {
       console.log(error);
       throw new Error("Failed to delete user!");
     }
+  }
+
+  public async verify(email: string) {
+    await this.usersDB.update({
+      where: {
+        email: email,
+      },
+      data: { verified: true },
+    });
   }
 
   private hashPassword(password: string) {

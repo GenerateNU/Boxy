@@ -3,6 +3,8 @@ import prisma from "lib/db";
 import ListingsDataTable from "@/models/listings";
 import { listings } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
+import { authOptions } from "../auth/[...nextauth]";
+import { getServerSession, Session } from "next-auth";
 
 type Message = {
   message: string;
@@ -12,6 +14,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
+  const session = await getServerSession(req, res, authOptions);
+
   const supportedRequestMethods: { [key: string]: Function } = {
     GET: getListingDetails,
     PUT: updateListing,
@@ -25,7 +29,7 @@ export default async function handler(
   }
 
   if (req.method) {
-    return supportedRequestMethods[req.method](req, res);
+    return supportedRequestMethods[req.method](req, res, session);
   }
 
   return res.status(405).send({ message: "request method not supported" });
@@ -34,6 +38,7 @@ export default async function handler(
 async function getListingDetails(
   req: NextApiRequest,
   res: NextApiResponse<Message | listings>
+  session: Session
 ) {
   let listing;
   try {
@@ -60,9 +65,11 @@ async function getListingDetails(
 
 async function updateListing(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
+    await authorize(req, session);
     await listingDataTable.updateListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -73,13 +80,46 @@ async function updateListing(
 
 async function deleteListing(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
+    await authorize(req, session);
     await listingDataTable.deleteListing(req.body);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
 
   return res.status(200).send({ message: "deleted listing" });
+}
+
+async function authorize(req: NextApiRequest, session: Session) {
+  if (!session) {
+    console.log("You must be logged in to perform this action.");
+    throw new Error("You must be logged in to perform this action.");
+  }
+
+  if (!session.user || !session.user.email) {
+    console.log("User email not found in session.");
+    throw new Error("User email not found in session.");
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { email: session.user.email },
+  });
+
+  if (!user || !user.verified) {
+    console.log("You must be a verified user to perform this action.");
+    throw new Error("You must be a verified user to perform this action.");
+  }
+
+  const listingId = req.query.id;
+  const listing = await prisma.listings.findUnique({
+    where: { listing_id: Number(listingId) },
+  });
+
+  if (!listing || listing.host_id !== user.user_id) {
+    console.log("You do not have permission to perform this action.");
+    throw new Error("You do not have permission to perform this action.");
+  }
 }

@@ -74,7 +74,7 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && router.push("http://localhost:3000/listings");
+    res.status == 200 && router.push("http://localhost:3000/listings/mine");
   }
 
   return (
