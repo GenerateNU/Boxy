@@ -53,18 +53,21 @@ export default class ListingsDataTable {
     }
   }
 
-  async getListing(id: number) {
-    try {
-      const response = await this.listingsDB.findUnique({
-        where: {
-          listing_id: id,
-        },
-      });
-      return response;
-    } catch (e) {
-      throw e;
+  async getListing(query:any) {
+    if(query.id) {
+      const id = parseInt(query.id)
+      try {
+        const response = await this.listingsDB.findUnique({
+          where: {
+            listing_id: id,
+          },
+        });
+        return response;
+      } catch (e) {
+        throw e;
+      }
     }
-  }
+}
 
   async getListings(data: any) {
     const distanceFilter = (listing: any) => {

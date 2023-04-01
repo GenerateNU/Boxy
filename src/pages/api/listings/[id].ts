@@ -41,7 +41,7 @@ async function getListingDetails(
   session: Session
 ) {
   try {
-    await listingDataTable.getListing(req.body.id);
+    await listingDataTable.getListing(req.query);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }

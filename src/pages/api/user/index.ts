@@ -33,7 +33,7 @@ async function getUser(
   session: any
 ) {
   try {
-    const response = await persistentUserInstance.getUser(session.user?.email);
+    const response: any = await persistentUserInstance.getUser(session.user?.email);
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
