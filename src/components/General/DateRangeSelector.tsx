@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { Calendar } from 'primereact/calendar'
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
@@ -12,7 +13,7 @@ export default function DateRangeSelector(dates_available: string[]) {
      */
     const firstAvailable = new Date(dates_available[0])
     const lastAvailable = new Date(dates_available[dates_available.length - 1])
-
+    
     const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
 
     // Locate the dates that make up gaps in available period: 
@@ -65,7 +66,6 @@ export default function DateRangeSelector(dates_available: string[]) {
         return inReach
     }
 
-    // Identify whether start and end date make a valid date range given available dates: 
     function identifyValidRange() {
         if (dateRange && Array.isArray(dateRange) && dateRange.length == 2) {
             const start = dateRange[0]
@@ -88,7 +88,28 @@ export default function DateRangeSelector(dates_available: string[]) {
 
     return (
         <div>
-            <Calendar selectionMode='range' disabledDates={locDateGaps()} viewDate={firstAvailable} value={identifyValidRange()} onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy' minDate={firstAvailable} maxDate={lastAvailable}/>
+            <div className='flex justify-center mb-5 mt-5'>
+                <div className='flex h-[60px] w-1/4 rounded-md border-[1px] border-[#979797] mr-[2px] items-center'>
+                    <div className='flex-col pl-2'>
+                        <h4>Drop off date</h4>
+                        <h4 className='text-gray-500'>{Array.isArray(dateRange) && dateRange[0] != null ? dateRange[0].toLocaleString('default', {month: 'short', day: '2-digit', year: 'numeric'}) : 'Select'}</h4>
+                    </div>
+                </div>
+                <div className='flex h-[60px] w-1/4 rounded-md border-[1px] border-[#979797] mr-[2px] items-center'>
+                    <div className='flex-col pl-2'>
+                        <h4>Pick up date</h4>
+                        <h4 className='text-gray-500'>{Array.isArray(dateRange) && dateRange[1] != null ? dateRange[1].toLocaleString('default', {month: 'short', day: '2-digit', year: 'numeric'}) : 'Select'}</h4>
+                    </div>
+                </div>
+            </div>
+            <div className='flex justify-center mb-5'>
+                <Calendar className='w-[475px]' inline selectionMode='range' disabledDates={locDateGaps()} viewDate={firstAvailable} value={identifyValidRange()} onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy' minDate={firstAvailable} maxDate={lastAvailable}/>
+            </div>
+            <div className='flex justify-center'>  
+                <button className={`h-[60px] w-[15vw] ml-5 bg-bxBrand text-white rounded-3xl hover:bg-bxBrandLight transition ease-in duration-75`}>
+                    Submit
+                </button>
+            </div>
         </div>
     )
 }
