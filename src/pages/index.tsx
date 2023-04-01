@@ -10,13 +10,21 @@ type LocationSuggestion = {
   lon: string;
 };
 
-export default function LandingPage() {
+export default function LandingPage(props: any) {
   const [locationInput, setLocationInput] = useState("");
   const suggestions = useLocationSuggestions(locationInput);
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: string;
     lon: string;
   } | null>(null);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      const lat = parseInt(selectedLocation.lat)
+      const lon = parseInt(selectedLocation.lon)
+      props.setLocation([lat, lon])
+    }
+  }, [selectedLocation])
 
   function useLocationSuggestions(query: string): LocationSuggestion[] {
     const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
