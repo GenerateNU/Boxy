@@ -144,7 +144,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
                 <div className="flex flex-col p-4 gap-1 col-span-2">
                   <div className="flex flex-col border-b border-gray-100 p-2">
                     <h2 className="text-xl font-semibold mb-4">
-                      20 x 20 Finished {listing.space_type}
+                      {listing.space_available[0]} x{" "}
+                      {listing.space_available[1]} ft {listing.space_type}
                     </h2>
                     <p>
                       {listing.city}, {listing.state}
