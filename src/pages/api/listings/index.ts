@@ -4,6 +4,7 @@ import { ListingResponse } from "@/models/listings";
 import listingDataTable from "lib/listingInstance";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import prisma from "lib/db";
 
 type Message = {
   message: string;
@@ -50,10 +51,33 @@ async function createListing(
   }
 
   try {
+    await authorize(req, session);
     await listingDataTable.createListing(req.body);
   } catch (error) {
+    console.error(error);
     return res.status(403).send({ message: String(error) });
   }
 
   return res.status(200).send({ message: "created listing" });
+}
+
+async function authorize(req: NextApiRequest, session: any) {
+  if (!session) {
+    console.log("You must be logged in to perform this action.");
+    throw new Error("You must be logged in to perform this action.");
+  }
+
+  const userEmail = session.user.email ?? null;
+  if (!userEmail) {
+    console.log("User email not found.");
+    throw new Error("User email not found.");
+  }
+
+  const user = await prisma.users.findUnique({ where: { email: userEmail } });
+  if (!user || !user.verified) {
+    console.log("You must be a verified user to perform this action.");
+    throw new Error("You must be a verified user to perform this action.");
+  }
+
+  return true;
 }
