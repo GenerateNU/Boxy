@@ -31,9 +31,9 @@ async function getHostListings(
   res: NextApiResponse<ViewResponse | Message>,
   session: Session
 ) {
-  if (!session) {
-    return res.status(401).send({ message: "user is not authenticated." });
-  }
+  // if (!session) {
+  //   return res.status(401).send({ message: "user is not authenticated." });
+  // }
 
   try {
     // Decode token from request header

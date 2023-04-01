@@ -1,4 +1,4 @@
-import { PrismaClient, listings } from "@prisma/client";
+import { PrismaClient, listings, amenity, spacetype } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
 
 export type ListingResponse = {
@@ -7,12 +7,13 @@ export type ListingResponse = {
   proximity?: number;
   longitude?: Decimal;
   latitude?: Decimal;
+  price?: Decimal;
+  dates_available?: Date[];
 };
 
 export type ViewResponse = {
   "my listings"?: number[];
 };
-
 
 export default class ListingsDataTable {
   constructor(private readonly listingsDB: PrismaClient["listings"]) {}
@@ -55,11 +56,23 @@ export default class ListingsDataTable {
 
   async getListing(id: number) {
     try {
-      const response = await this.listingsDB.findUnique({
+      const res = await this.listingsDB.findUnique({
         where: {
           listing_id: id,
-        },
+        }
       });
+
+      // If response doesn't exists
+      if (!res) {
+        throw new Error("Listing doesn't exists")
+      }
+
+      let response: ListingResponse = {
+        listing_id: res["listing_id"],
+        name: res["name"],
+        price: res["price"]
+      }
+
       return response;
     } catch (e) {
       throw e;

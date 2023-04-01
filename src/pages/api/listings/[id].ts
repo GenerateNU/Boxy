@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
-import ListingsDataTable from "@/models/listings";
-import { listings } from "@prisma/client";
+import ListingsDataTable, { ListingResponse } from "@/models/listings";
+import { amenity, listings, spacetype } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
+import { Decimal } from "@prisma/client/runtime";
 
 type Message = {
   message: string;
 };
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,15 +35,14 @@ export default async function handler(
 
 async function getListingDetails(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<ListingResponse | Message>
 ) {
   try {
-    await listingDataTable.getListing(req.body.id);
+    const response = await listingDataTable.getListing(Number(req.url?.split("/").at(-1)));
+    return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
-
-  return res.status(200).send({ message: "returned listing information" });
 }
 
 async function updateListing(

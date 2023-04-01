@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import Listing from "./listing";
-import { useSession, signIn, signOut } from "next-auth/react";
 import { AiOutlinePlus } from "react-icons/ai";
 
 type Listing = {
@@ -13,14 +12,12 @@ type Listing = {
 
 export default function ListingsPage({
   listingsAll,
-  listingsListed,
-  listingsUnlisted,
-  listingsInProgress,
+  listingsRequested,
+  listingsConfirmed,
 }: any) {
-  const [tabState, setTabState] = useState("all");
+  const [tabState, setTabState] = useState("Listings");
 
   const renderListingElements = (listings: []) => {
-    console.log(listings)
     if (listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
@@ -35,14 +32,12 @@ export default function ListingsPage({
 
   function renderCurrentForm() {
     switch (tabState) {
-      case "all":
+      case "Listings":
         return renderListingElements(listingsAll);
-      case "listed":
-        return renderListingElements(listingsListed);
-      case "unlisted":
-        return renderListingElements(listingsUnlisted);
-      case "progress":
-        return renderListingElements(listingsInProgress);
+      case "Requested":
+        return renderListingElements(listingsRequested);
+      case "Confirmed":
+        return renderListingElements(listingsConfirmed);
     }
   }
 
@@ -68,10 +63,9 @@ export default function ListingsPage({
       <div className="w-[50vw] flex-col pt-[5vh]">
         <h1 className="text-3xl pb-10">My Listings</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
-          {listing_tab("all", "All")}
-          {listing_tab("listed", "Listed")}
-          {listing_tab("unlisted", "Unlisted")}
-          {listing_tab("progress", "In Progress")}
+          {listing_tab("Listings", "Listings")}
+          {listing_tab("Requested", "Requested")}
+          {listing_tab("Confirmed", "Confirmed")}
           <div className="col-span-2 flex justify-end border-b-2">
             <Link href="/listings/create" className="h-2/3 w-[55%]">
               <button className="flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black">
@@ -88,40 +82,99 @@ export default function ListingsPage({
 }
 
 export async function getServerSideProps() {
+
+  // Get all Listings
+  const all_res = await (
+      await fetch(
+      "http://localhost:3000/api/listings/posted", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )).json();
+  
+    const all_listings: Listing[] = [];
+    if (!(JSON.stringify(all_res) === '{}')) {
+      for (const value of all_res["my listings"]) {
+        const get_listing_info = await (
+          await fetch(
+          "http://localhost:3000/api/listings/" + value, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        )).json();
+        let newListing: Listing = {
+          listing_id: get_listing_info["listing_id"],
+          name: get_listing_info["name"],
+          price: get_listing_info["price"],
+          proximity: "TEMPORARY"
+        }
+        all_listings.push(newListing)
+      }
+    };
+  
+    // Get all Reservations Requests For Host
+    const all_reservations_requests = await (
+      await fetch(
+      "http://localhost:3000/api/reservations/received", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )).json();
+
+    // Requested and Confirmed Reservations 
+    const requested_reservations = new Array();
+    const confirmed_reservations = new Array();
+    if (!(!(JSON.stringify(all_reservations_requests) === '{}'))) {
+      for (const value of all_res["my listings"]) {
+      // Get All Reservations ID
+      const get_reservation_info = await (
+        await fetch(
+        "http://localhost:3000/api/reservations/" + value, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      )).json();
+
+      // Get Listing Info
+      const listing_info = await (
+        await fetch(
+        "http://localhost:3000/api/listings/" + get_reservation_info["listing_id"], {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      )).json();
+
+
+      let newListing: Listing = {
+        listing_id: listing_info["listing_id"],
+        name: listing_info["name"],
+        price: listing_info["price"],
+        proximity: "TEMPORARY"
+      }
+
+      if (get_reservation_info["accepted"]) {
+        confirmed_reservations.push(newListing)
+      } else {
+        requested_reservations.push(newListing)
+      }
+    };
+  }
+
   return {
     props: {
-      listingsAll: await (
-        await fetch(
-          "http://localhost:3000/api/listings?" +
-            new URLSearchParams({
-              price: "1000",
-            })
-        )
-      ).json(),
-      listingsListed: await (
-        await fetch(
-          "http://localhost:3000/api/listings?" +
-            new URLSearchParams({
-              price: "25",
-            })
-        )
-      ).json(),
-      listingsUnlisted: await (
-        await fetch(
-          "http://localhost:3000/api/listings?" +
-            new URLSearchParams({
-              price: "100",
-            })
-        )
-      ).json(),
-      listingsInProgress: await (
-        await fetch(
-          "http://localhost:3000/api/listings?" +
-            new URLSearchParams({
-              price: "10",
-            })
-        )
-      ).json(),
+      listingsAll: all_listings,
+      listingsRequested: requested_reservations,
+      listingsConfirmed: confirmed_reservations,
     },
   };
 }

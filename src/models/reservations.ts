@@ -1,10 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-import persistentListingInstance from "lib/listingInstance";
 
 export type ViewResponse = {
   "my reservation requests"?: number[];
   "my accepted reservations"?: number[];
   "my approved reservations"?: number[];
+};
+
+export type ReservationResponse = {
+  reservation_id: number,
+  listing_id: number,
+  accepted: Boolean,
+  accepted_on?: Date,
+  requested_on?: Date,
+  dates_requested?: Date[]
 };
 
 export default class Reservations {
@@ -20,6 +28,56 @@ export default class Reservations {
 
       // add entry to database
       await this.reservationsDB.create({ data });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async updateReservation(data: any) {
+    try {
+      this.validateInputData(data);
+
+      await this.reservationsDB.update({
+        where: {
+          reservation_id: data["reservation_id"],
+        },
+        data: data,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteReservation(data: any) {
+    try {
+      await this.reservationsDB.delete({
+        where: data,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getReservation(id: number) {
+    try {
+      const res = await this.reservationsDB.findUnique({
+        where: {
+          reservation_id: id,
+        }
+      });
+
+      // If response doesn't exists
+      if (!res) {
+        throw new Error("Reservation doesn't exists")
+      }
+
+      let response: ReservationResponse = {
+        reservation_id: res["reservation_id"],
+        listing_id: res["listing_id"],
+        accepted: res["accepted"]
+      }
+
+      return response;
     } catch (e) {
       throw e;
     }
@@ -77,17 +135,20 @@ export default class Reservations {
   }
 
   private async validateInputData(data: any) {
-    const response = await persistentListingInstance.getListing(
-      data.listing_id
-    );
-    const dates_available = response?.dates_available;
-    if (
-      dates_available === undefined ||
-      !data.dates_requested.every((date: Date) => {
-        dates_available.includes(new Date(date));
-      })
-    ) {
-      throw new Error("Listing is not available during requested dates");
-    }
+  //   const response = await this.reservationsDB.getReservation(data) {
+  //     (
+  //     data.listing_id
+  //   );
+  //   const dates_available = response?.dates_available;
+  //   if (
+  //     dates_available === undefined ||
+  //     !data.dates_requested.every((date: Date) => {
+  //       dates_available.includes(new Date(date));
+  //     })
+  //   ) {
+  //     throw new Error("Listing is not available during requested dates");
+  //   }
+  // }
+    return true;
   }
 }
