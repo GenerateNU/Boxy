@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import NavBar from "src/components/NavBar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -19,6 +19,8 @@ export default function App({ Component, pageProps }: AppProps) {
 function UserRedirectWrapper() {
   const session = useSession();
   const router = useRouter();
+  const [verified, setVerified] = useState(false);
+  const [exists, setExists] = useState(false);
 
   useEffect(() => {
     if (session.status === "authenticated") {
@@ -26,6 +28,8 @@ function UserRedirectWrapper() {
         .then((response) => response.json())
         .then((data) => {
           const { exists, verified } = data;
+          setExists(exists);
+          setVerified(verified);
 
           if (exists && verified) {
             // do nothing
@@ -38,7 +42,7 @@ function UserRedirectWrapper() {
           }
         });
     }
-  }, [session]);
+  }, [session, exists, verified]);
 
   return <div></div>;
 }
