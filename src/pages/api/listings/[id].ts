@@ -37,7 +37,7 @@ export default async function handler(
 
 async function getListingDetails(
   req: NextApiRequest,
-  res: NextApiResponse<Message | listings>
+  res: NextApiResponse<Message | listings>,
   session: Session
 ) {
   let listing;
