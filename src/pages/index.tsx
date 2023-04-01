@@ -3,13 +3,43 @@ import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
 
-export default function LandingPage(props: any) {
-  const [location, setLocation] = useState([0, 0]);
+type LocationSuggestion = {
+  place_id: string;
+  display_name: string;
+  lat: string;
+  lon: string;
+};
 
-  // update this component's state and parent component's state
-  useEffect(() => {
-    props.setLocation(props.location);
-  }, [location]);
+export default function LandingPage() {
+  const [locationInput, setLocationInput] = useState("");
+  const suggestions = useLocationSuggestions(locationInput);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: string;
+    lon: string;
+  } | null>(null);
+
+  function useLocationSuggestions(query: string): LocationSuggestion[] {
+    const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
+
+    useEffect(() => {
+      if (!query) {
+        setSuggestions([]);
+        return;
+      }
+
+      const fetchSuggestions = async () => {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&countrycodes=us&limit=5`
+        );
+        const data = await response.json();
+        setSuggestions(data);
+      };
+
+      fetchSuggestions();
+    }, [query]);
+
+    return suggestions;
+  }
 
   function workflow(image: string, text: string, arrow: boolean) {
     return (
@@ -84,11 +114,32 @@ export default function LandingPage(props: any) {
             Boxy makes it easy to find convenient, local storage.
           </h3>
           <div className="flex pt-5 h-[80px]">
-            <input
-              id="search_input"
-              className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
-              placeholder="Enter a location"
-            />
+            <div className="relative">
+              <input
+                id="search_input"
+                className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
+                placeholder="Enter a location"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+              />
+              <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
+                {suggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.place_id}
+                    className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                    onClick={() => {
+                      setLocationInput(suggestion.display_name);
+                      setSelectedLocation({
+                        lat: suggestion.lat,
+                        lon: suggestion.lon,
+                      });
+                    }}
+                  >
+                    {suggestion.display_name}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <a href="/listings/browse">{button("Find Storage")}</a>
           </div>
         </div>
