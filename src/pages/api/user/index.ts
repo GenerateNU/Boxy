@@ -29,7 +29,7 @@ export default async function handler(
 
 async function getUser(
   req: NextApiRequest,
-  res: NextApiResponse<Message>,
+  res: NextApiResponse,
   session: any
 ) {
   try {

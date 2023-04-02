@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
-import ListingsDataTable from "@/models/listings";
+import ListingsDataTable, { ListingResponse } from "@/models/listings";
 import { listings } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
 import { authOptions } from "../auth/[...nextauth]";
