@@ -2,14 +2,6 @@ import {useAnimation} from "framer-motion"
 import {useInView} from 'react-intersection-observer'
 import {useEffect, useState} from 'react'
 import arrowIcon from '../assets/BoxyArrowIcon.png'
-import { workflow } from "@/components/General/GeneralComponents"
-import { service } from "@/components/General/GeneralComponents"
-import { button } from "@/components/General/GeneralComponents"
-
-import { useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
-import arrowIcon from "../assets/BoxyArrowIcon.png";
 
 type LocationSuggestion = {
   place_id: string;
