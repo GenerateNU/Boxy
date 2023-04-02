@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Listing from "./listing";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 type Listing = {
   listing_id: string;
@@ -76,6 +77,18 @@ export default function ListingsPage({
           </div>
         </div>
         {renderCurrentForm()}
+        <h1>Reservation Requests and Confirmed reservatins (host view)</h1>
+        <li>dummy reservation request name</li>
+        <li>
+          dummy reservation request details... (dates, name of user who
+          requested etc.)
+        </li>
+        <button
+          onClick={() => router.push("http://localhost:3000/reservations/mine")}
+        >
+          accept button
+        </button>
+        <button>decline button</button>
       </div>
     </div>
   );

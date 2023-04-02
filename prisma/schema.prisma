@@ -49,6 +49,8 @@ model reservations {
   host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
   stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
   listing         listings   @relation(fields: [listing_id], references: [listing_id])
+  cancelled       Boolean    @default(false)
+  cancelled_on    DateTime   @default(now())
 }
 
 model users {

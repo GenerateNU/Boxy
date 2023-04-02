@@ -125,10 +125,40 @@ export default class Reservations {
     }
   }
 
+  async getReservation(id: number) {
+    try {
+      const response = await this.reservationsDB.findUnique({
+        where: {
+          reservation_id: id,
+        },
+      });
+      return response;
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  async cancelReservation(id: number, now: Date) {
+    try {
+      await this.reservationsDB.update({
+        where: {
+          reservation_id: id,
+        },
+        data: {
+          cancelled: true,
+          cancelled_on: now
+        }
+      });
+    } catch(e) {
+      throw e;
+    }
+  }
+
   private setDefaultAttributes(data: any) {
     data["accepted"] = false;
     data["requested_on"] = new Date();
     data["host_id"] = 1;
+    data["cancelled"] = false;
     data.dates_requested = data.dates_requested.map(
       (date: string | number | Date) => new Date(date)
     );

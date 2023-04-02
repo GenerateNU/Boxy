@@ -1,5 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "lib/db";
+import { authOptions } from "./pages/api/auth/[...nextauth]";
+import { getServerSession, Session } from "next-auth";
 import { users } from "@prisma/client";
 
 export default class Utils {
@@ -48,9 +50,9 @@ export default class Utils {
     // Find user info based on username
     const userInfo = await prisma.users.findUnique({
       where: {
-          email: email,
+        email: email,
       },
-  });
+    });
 
     // If user doesn't exists
     if (!userInfo) {
