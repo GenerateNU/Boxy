@@ -84,7 +84,7 @@ export default function ListingsPage({
           </div>
         </div>
         {renderCurrentForm()}
-        <h1>Reservation Requests</h1>
+        <h1>Reservation Requests and Confirmed reservatins (host view)</h1>
         <li>dummy reservation request name</li>
         <li>
           dummy reservation request details... (dates, name of user who

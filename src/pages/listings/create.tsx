@@ -11,9 +11,12 @@ import { useRouter } from "next/router";
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
-  const [address, setAddress] = useState("");
-  const [name, setName] = useState("");
-  const [listingName, setListingName] = useState();
+  // address form states
+  const [address, setAddress] = useState();
+  const [city, setCity] = useState();
+  const [zipCode, setZipCode] = useState();
+  const [name, setName] = useState();
+
   const [datesAvailable, setDatesAvailable] = useState();
   const [price, setPrice] = useState();
   const [spaceType, setSpaceType] = useState("");
@@ -24,7 +27,16 @@ export default function ListingCreate({}: any) {
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
-    <AddressForm changeAddress={setAddress} changeName={setListingName} />,
+    <AddressForm
+      setAddress={setAddress}
+      setCity={setCity}
+      setName={setName}
+      setZipCode={setZipCode}
+      address={address}
+      city={city}
+      zipCode={zipCode}
+      name={name}
+    />,
     <DatesForm />,
     <AmenitiesForm />,
     <SpaceTypeForm />,
@@ -48,15 +60,25 @@ export default function ListingCreate({}: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: listingName,
+        name: name,
         dates_available: [],
         price: 1,
-        description: "",
-        amenities: [],
-        space_type: "Basement",
-        address: "1234 Huntington Ave",
-        city: "boston",
-        zip_code: "02115",
+        description: "This is a description for the place",
+        amenities: [
+          "Pest_Controlled",
+          "Fire_Alarm_System",
+          "Smoke_Free",
+          "Pet_Free",
+          "Access_to_Elevator",
+          "Ground_Floor",
+          "Climate_Controlled",
+          "Private_Storage",
+          "Party_Free",
+        ],
+        space_type: "Closet",
+        address: address,
+        city: city,
+        zip_code: zipCode,
         state: "CA",
         space_available: [1, 2, 3],
         longitude: 2,

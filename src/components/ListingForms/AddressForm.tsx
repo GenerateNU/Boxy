@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react";
 
-export default function AddressForm({ changeAddress, changeName }: { changeAddress: Function, changeName: Function }) {
-  const [street, setStreet] = useState<string>("");
-  const [apartment, setApartment] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [zip, setZip] = useState<string>("");
-  const [name, setName] = useState<string>("");
-
+export default function AddressForm(props: any) {
   const placeHolders = [
     "Street Address",
-    "Apt, Suite, Building Number (Optional)",
     "City",
     "Postal Code",
   ];
-  const setters = [setStreet, setApartment, setCity, setZip];
-
-  useEffect(() => {
-    changeAddress(`${street} ${apartment} ${city} ${zip} ${name}`);
-    changeName(name);
-  }, [street, apartment, city, zip, name]);
+  const setters = [props.setAddress, props.setCity, props.setZipCode];
+  const values= [props.address, props.city, props.zipCode];
 
   return (
     <div className="container min-w-full flex flex-col items-center pt-[5vh]">
@@ -32,14 +21,16 @@ export default function AddressForm({ changeAddress, changeName }: { changeAddre
               className="h-[60px] pl-5 bg-bxBoxLight rounded-3xl mb-3"
               placeholder={field}
               key={i}
+              value={values[i]}
             />
           );
         })}
         <h3 className="pt-5 pb-5">Enter a name for this Listing.</h3>
         <input
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event) => props.setName(event.target.value)}
           className="h-[60px] pl-5 bg-bxBoxLight rounded-3xl mb-3"
           placeholder="Name"
+          value={props.name}
         />
       </div>
     </div>
