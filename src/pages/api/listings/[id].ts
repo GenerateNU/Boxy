@@ -1,14 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/db";
 import ListingsDataTable, { ListingResponse } from "@/models/listings";
-import { listings } from "@prisma/client";
+import { amenity, listings, spacetype } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
+import { Decimal } from "@prisma/client/runtime";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession, Session } from "next-auth";
 
 type Message = {
   message: string;
 };
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,30 +39,16 @@ export default async function handler(
 
 async function getListingDetails(
   req: NextApiRequest,
-  res: NextApiResponse<Message | listings>,
+  res: NextApiResponse<ListingResponse | Message>,
   session: Session
 ) {
   let listing;
   try {
-    if (!req.query.id) {
-      throw new Error("Missing id parameter");
-    }
-    const id = Array.isArray(req.query.id)
-      ? parseInt(req.query.id[0])
-      : parseInt(req.query.id);
-    if (isNaN(id)) {
-      throw new Error("Invalid id parameter");
-    }
-    listing = await listingDataTable.getListing(id);
+    const response = await listingDataTable.getListing(Number(req.url?.split("/").at(-1)));
+    return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
-
-  if (!listing) {
-    return res.status(404).send({ message: "Listing not found" });
-  }
-
-  return res.status(200).json(listing);
 }
 
 async function updateListing(
