@@ -55,14 +55,14 @@ export default function NavBar() {
             )}
             {nav_bar_button(
               "myListings",
-              <Link href="http://localhost:3000/listings/mine">
-                My Listings
+              <Link href="http://localhost:3000/host/dashboard">
+                Host Dashboard
               </Link>
             )}
             {nav_bar_button(
               "myListings",
-              <Link href="http://localhost:3000/reservations/mine">
-                My Reservations
+              <Link href="http://localhost:3000/stasher/dashboard">
+                Stasher dashboard
               </Link>
             )}
             {nav_bar_button(

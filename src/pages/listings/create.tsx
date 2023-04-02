@@ -86,7 +86,7 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && router.push("http://localhost:3000/listings/mine");
+    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
   }
 
   return (

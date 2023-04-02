@@ -127,7 +127,7 @@ export default function ListingReservationPage({ listing }: any) {
   function sendReservationRequest() {
     // make call to endpoint then redirect to my reservations
 
-    router.push("http://localhost:3000/reservations/mine");
+    router.push("http://localhost:3000/stasher/dashboard");
   }
 }
 
