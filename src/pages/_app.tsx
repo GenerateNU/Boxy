@@ -36,7 +36,6 @@ function UserRedirectWrapper() {
 
           if (exists && verified) {
             // do nothing
-            alert("user is verified");
           } else if (exists && !verified) {
             router.push("http://localhost:3000/user/verify");
           } else if (!exists && !verified) {
