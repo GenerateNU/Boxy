@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Listing from "./listing";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 
 type Listing = {
   listing_id: string;
@@ -11,14 +11,57 @@ type Listing = {
   proximity: string;
 };
 
-export default function ListingsPage({
-  listingsAll,
-  listingsRequested,
-  listingsConfirmed,
-}: any) {
+export default function ListingsPage() {
   const [tabState, setTabState] = useState("Listings");
+  const [allListings, setAllListings] = useState<Array<Listing>>([]);
+  const [reservationRequests, setReservationRequests] = useState<[]>([])
+  const [confirmedReservations, setConfirmedReservations] = useState<Array<Listing>>([]);
 
-  const renderListingElements = (listings: []) => {
+  useEffect(() => {
+    getAllListings();
+    getReservationRequests();
+  }, []);
+
+  async function getAllListings() {
+    const all_res = await (
+      await fetch("http://localhost:3000/api/listings/posted", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    setAllListings(all_res["my listings"])
+  }
+
+  async function getReservationRequests() {
+    const all_res = await (
+      await fetch("http://localhost:3000/api/reservations/received", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json()
+
+    setReservationRequests(all_res["my reservation requests"])
+  }
+
+  // async function getConfirmedReservations() {
+  //   const all_res = await (
+  //     await fetch("http://localhost:3000/api/listings/posted", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //   ).json();
+
+  //   setConfirmedReservations(all_res["my listings"])
+  // }
+
+  const renderListingElements = (listings: Listing[]) => {
     if (listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
@@ -31,14 +74,18 @@ export default function ListingsPage({
     }
   };
 
+  const renderReservationRequests = (reservationIDs: []) => {
+    return <>{reservationIDs}</>
+  }
+
   function renderCurrentForm() {
     switch (tabState) {
       case "Listings":
-        return renderListingElements(listingsAll);
+        return renderListingElements(allListings);
       case "Requested":
-        return renderListingElements(listingsRequested);
+        return renderReservationRequests(reservationRequests);
       case "Confirmed":
-        return renderListingElements(listingsConfirmed);
+        return <></>
     }
   }
 
@@ -94,100 +141,103 @@ export default function ListingsPage({
   );
 }
 
-export async function getServerSideProps() {
+// export async function getServerSideProps() {
+//   console.log("test");
+//   // Get all Listings
+//   const all_res = await (
+//     await fetch("http://localhost:3000/api/listings/posted", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     })
+//   ).json();
 
-  // Get all Listings
-  const all_res = await (
-      await fetch(
-      "http://localhost:3000/api/listings/posted", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )).json();
-  
-    const all_listings: Listing[] = [];
-    if (!(JSON.stringify(all_res) === '{}')) {
-      for (const value of all_res["my listings"]) {
-        const get_listing_info = await (
-          await fetch(
-          "http://localhost:3000/api/listings/" + value, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }
-        )).json();
-        let newListing: Listing = {
-          listing_id: get_listing_info["listing_id"],
-          name: get_listing_info["name"],
-          price: get_listing_info["price"],
-          proximity: "TEMPORARY"
-        }
-        all_listings.push(newListing)
-      }
-    };
-  
-    // Get all Reservations Requests For Host
-    const all_reservations_requests = await (
-      await fetch(
-      "http://localhost:3000/api/reservations/received", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )).json();
+//   let all_listings: Listing[] = [];
+//   if (all_res && !(JSON.stringify(all_res) === "{}")) {
+//     let listings: [] = all_res["my listings"] || [];
+//     if ("my listings" in all_res) {
+//       all_listings = all_res["my listings"];
+//     }
+//     for (const value of listings) {
+//       const get_listing_info = await (
+//         await fetch("http://localhost:3000/api/listings/" + value, {
+//           method: "GET",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         })
+//       ).json();
+//       let newListing: Listing = {
+//         listing_id: get_listing_info["listing_id"],
+//         name: get_listing_info["name"],
+//         price: get_listing_info["price"],
+//         proximity: "TEMPORARY",
+//       };
+//       // all_listings.push(newListing);
+//     }
+//   }
 
-    // Requested and Confirmed Reservations 
-    const requested_reservations = new Array();
-    const confirmed_reservations = new Array();
-    if (!(!(JSON.stringify(all_reservations_requests) === '{}'))) {
-      for (const value of all_res["my listings"]) {
-      // Get All Reservations ID
-      const get_reservation_info = await (
-        await fetch(
-        "http://localhost:3000/api/reservations/" + value, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }
-      )).json();
+//   // Get all Reservations Requests For Host
+//   const all_reservations_requests = await (
+//     await fetch("http://localhost:3000/api/reservations/received", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     })
+//   ).json();
 
-      // Get Listing Info
-      const listing_info = await (
-        await fetch(
-        "http://localhost:3000/api/listings/" + get_reservation_info["listing_id"], {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }
-      )).json();
+//   // Requested and Confirmed Reservations
+//   const requested_reservations = new Array();
+//   const confirmed_reservations = new Array();
+//   if (!!(JSON.stringify(all_reservations_requests) === "{}")) {
+//     for (const value of all_res["my listings"]) {
+//       // Get All Reservations ID
+//       const get_reservation_info = await (
+//         await fetch("http://localhost:3000/api/reservations/" + value, {
+//           method: "GET",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         })
+//       ).json();
 
+//       // Get Listing Info
+//       const listing_info = await (
+//         await fetch(
+//           "http://localhost:3000/api/listings/" +
+//             get_reservation_info["listing_id"],
+//           {
+//             method: "GET",
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         )
+//       ).json();
 
-      let newListing: Listing = {
-        listing_id: listing_info["listing_id"],
-        name: listing_info["name"],
-        price: listing_info["price"],
-        proximity: "TEMPORARY"
-      }
+//       let newListing: Listing = {
+//         listing_id: listing_info["listing_id"],
+//         name: listing_info["name"],
+//         price: listing_info["price"],
+//         proximity: "TEMPORARY",
+//       };
 
-      if (get_reservation_info["accepted"]) {
-        confirmed_reservations.push(newListing)
-      } else {
-        requested_reservations.push(newListing)
-      }
-    };
-  }
+//       if (get_reservation_info["accepted"]) {
+//         confirmed_reservations.push(newListing);
+//       } else {
+//         requested_reservations.push(newListing);
+//       }
+//     }
+//   }
 
-  return {
-    props: {
-      listingsAll: all_listings,
-      listingsRequested: requested_reservations,
-      listingsConfirmed: confirmed_reservations,
-    },
-  };
-}
+//   return {
+//     props: {
+//       listingsAll: all_listings,
+//       listingsRequested: requested_reservations,
+//       listingsConfirmed: confirmed_reservations,
+//       test: all_reservations_requests,
+//     },
+//   };
+// }

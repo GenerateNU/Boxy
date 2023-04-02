@@ -162,12 +162,12 @@ export default class ListingsDataTable {
         },
       });
 
-      const listing_ids = new Array();
+      const listing_details = new Array();
       listingsResponse.forEach(function (value) {
-        listing_ids.push(value["listing_id"]);
+        listing_details.push(value);
       });
 
-      let response: ViewResponse = { "my listings": listing_ids };
+      let response: ViewResponse = { "my listings": listing_details};
 
       return response;
     } catch (e) {
