@@ -67,10 +67,22 @@ export default class ListingsDataTable {
         throw new Error("Listing doesn't exists")
       }
 
-      let response: ListingResponse = {
+      let response: any = {
         listing_id: res["listing_id"],
         name: res["name"],
-        price: res["price"]
+        host_id: res["host_id"],
+        dates_available: res["dates_available"],
+        price: res["price"],
+        description: res["description"],
+        amenities: res["amenities"],
+        space_type: res["space_type"],
+        address: res["address"],
+        city: res["city"],
+        zip_code: res["zip_code"],
+        state: res["state"],
+        space_available: res["space_available"],
+        longitude: res["longitude"],
+        latitude: res["latitude"],
       }
 
       return response;
