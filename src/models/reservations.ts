@@ -7,12 +7,12 @@ export type ViewResponse = {
 };
 
 export type ReservationResponse = {
-  reservation_id: number,
-  listing_id: number,
-  accepted: Boolean,
-  accepted_on?: Date,
-  requested_on?: Date,
-  dates_requested?: Date[]
+  reservation_id: number;
+  listing_id: number;
+  accepted: Boolean;
+  accepted_on?: Date;
+  requested_on?: Date;
+  dates_requested?: Date[];
 };
 
 export default class Reservations {
@@ -48,10 +48,12 @@ export default class Reservations {
     }
   }
 
-  async deleteReservation(data: any) {
+  async deleteReservation(id: number) {
     try {
       await this.reservationsDB.delete({
-        where: data,
+        where: {
+          reservation_id: id,
+        },
       });
     } catch (e) {
       throw e;
@@ -63,19 +65,19 @@ export default class Reservations {
       const res = await this.reservationsDB.findUnique({
         where: {
           reservation_id: id,
-        }
+        },
       });
 
       // If response doesn't exists
       if (!res) {
-        throw new Error("Reservation doesn't exists")
+        throw new Error("Reservation doesn't exists");
       }
 
       let response: ReservationResponse = {
         reservation_id: res["reservation_id"],
         listing_id: res["listing_id"],
-        accepted: res["accepted"]
-      }
+        accepted: res["accepted"],
+      };
 
       return response;
     } catch (e) {
@@ -88,6 +90,7 @@ export default class Reservations {
       const reservationResponse = await this.reservationsDB.findMany({
         where: {
           host_id: userID,
+          cancelled: false,
         },
       });
 
@@ -96,7 +99,9 @@ export default class Reservations {
         reservation_ids.push(value["reservation_id"]);
       });
 
-      let response: ViewResponse = { "my reservation requests": reservation_ids };
+      let response: ViewResponse = {
+        "my reservation requests": reservation_ids,
+      };
 
       return response;
     } catch (e) {
@@ -117,7 +122,9 @@ export default class Reservations {
         reservation_ids.push(value["reservation_id"]);
       });
 
-      let response: ViewResponse = {"my reservation requests": reservation_ids};
+      let response: ViewResponse = {
+        "my reservation requests": reservation_ids,
+      };
 
       return response;
     } catch (e) {
@@ -133,7 +140,7 @@ export default class Reservations {
         },
       });
       return response;
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
@@ -146,39 +153,39 @@ export default class Reservations {
         },
         data: {
           cancelled: true,
-          cancelled_on: now
-        }
+          cancelled_on: now,
+        },
       });
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
 
   private setDefaultAttributes(data: any) {
-    data["accepted"] = false;
-    data["requested_on"] = new Date();
-    data["host_id"] = 1;
-    data["cancelled"] = false;
-    data.dates_requested = data.dates_requested.map(
-      (date: string | number | Date) => new Date(date)
-    );
+    // data["accepted"] = false;
+    // data["requested_on"] = new Date();
+    // data["host_id"] = 1;
+    // data["cancelled"] = false;
+    // data.dates_requested = data.dates_requested.map(
+    //   (date: string | number | Date) => new Date(date)
+    // );
   }
 
   private async validateInputData(data: any) {
-  //   const response = await this.reservationsDB.getReservation(data) {
-  //     (
-  //     data.listing_id
-  //   );
-  //   const dates_available = response?.dates_available;
-  //   if (
-  //     dates_available === undefined ||
-  //     !data.dates_requested.every((date: Date) => {
-  //       dates_available.includes(new Date(date));
-  //     })
-  //   ) {
-  //     throw new Error("Listing is not available during requested dates");
-  //   }
-  // }
+    //   const response = await this.reservationsDB.getReservation(data) {
+    //     (
+    //     data.listing_id
+    //   );
+    //   const dates_available = response?.dates_available;
+    //   if (
+    //     dates_available === undefined ||
+    //     !data.dates_requested.every((date: Date) => {
+    //       dates_available.includes(new Date(date));
+    //     })
+    //   ) {
+    //     throw new Error("Listing is not available during requested dates");
+    //   }
+    // }
     return true;
   }
 }

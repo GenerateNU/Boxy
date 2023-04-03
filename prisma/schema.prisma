@@ -42,15 +42,13 @@ model reservations {
   host_id         Int        
   stasher_id      Int        
   listing_id      Int        
-  accepted        Boolean
-  accepted_on     DateTime?  @db.Date
-  requested_on    DateTime   @db.Date
+  reserved_on     DateTime   @default(now())
   dates_requested DateTime[] @db.Date
   host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
   stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
   listing         listings   @relation(fields: [listing_id], references: [listing_id])
-  cancelled       Boolean    @default(false)
-  cancelled_on    DateTime   @default(now())
+  cancelled       Boolean?   @default(false)
+  cancelled_on    DateTime?  @default(now())
 }
 
 model users {

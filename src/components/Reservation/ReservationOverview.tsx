@@ -3,7 +3,8 @@ import { button } from "../General/GeneralComponents";
 export default function ReservationOverview(
   reservation: any,
   currentForm: number,
-  setCurrentForm: Function
+  setCurrentForm: Function,
+  confirmReservation: Function
 ) {
   return (
     <div className="flex flex-col justify-center">
@@ -74,7 +75,7 @@ export default function ReservationOverview(
         onClick={() =>
           currentForm !== 2
             ? setCurrentForm(currentForm + 1)
-            : requestReservation()
+            : confirmReservation()
         }
         className={`h-[60px] w-[25vw] lg:w-[25vw] mt-5 bg-bxBrand text-white rounded-full hover:bg-bxBrandLight transition ease-in duration-75`}
       >

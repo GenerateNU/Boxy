@@ -35,7 +35,9 @@ async function getReservationDetails(
   res: NextApiResponse<ReservationResponse | Message>
 ) {
   try {
-    const response = await persistentReservationInstance.getReservation(Number(req.url?.split("/").at(-1)));
+    const response = await persistentReservationInstance.getReservation(
+      Number(req.url?.split("/").at(-1))
+    );
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -60,11 +62,12 @@ async function deleteReservation(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentReservationInstance.deleteReservation(req.body);
+    await persistentReservationInstance.deleteReservation(
+      parseInt(req.query.id)
+    );
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
 
   return res.status(200).send({ message: "deleted reservation" });
 }
-

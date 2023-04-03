@@ -17,6 +17,24 @@ export default function ListingReservationPage({ listing }: any) {
     <DateForm listing={listing_info} setDateEdit={setDateEdit} />,
   ];
 
+  async function confirmReservation() {
+    const res = await fetch("http://localhost:3000/api/reservations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // hard coded values for now
+      body: JSON.stringify({
+        host_id: 1,
+        stasher_id: 1,
+        listing_id: 4,
+        dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
+      }),
+    });
+
+    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
+  }
+
   useEffect(() => {
     console.log(listing);
   }, [listing]);
@@ -116,7 +134,8 @@ export default function ListingReservationPage({ listing }: any) {
             {ReservationOverview(
               reservation_overview,
               currentForm,
-              setCurrentForm
+              setCurrentForm,
+              confirmReservation
             )}
           </div>
         </div>

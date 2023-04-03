@@ -61,7 +61,7 @@ export default function ListingCreate({}: any) {
       },
       body: JSON.stringify({
         name: name,
-        dates_available: [],
+        dates_available: [new Date("2023-04-01"), new Date("2023-04-02")],
         price: 1,
         description: "This is a description for the place",
         amenities: [
