@@ -2,6 +2,7 @@ import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
+import { signIn } from "next-auth/react";
 
 type LocationSuggestion = {
   place_id: string;
@@ -222,7 +223,9 @@ export default function LandingPage(props: any) {
             "Register as a host to turn your empty spaces into passive income. Boxy enables you to rent out these spaces for others to stash in."
           )}
         </div>
-        <a href={"/user/register"}>{button("Sign up now", "11vw", "20vw")}</a>
+        <div onClick={signIn} href={"/user/register"}>
+          {button("Sign up now", "11vw", "20vw")}
+        </div>
       </div>
     </div>
   );
