@@ -53,8 +53,6 @@ export default function ListingDetailsPage({ listing, host }: any) {
 
   return (
     <div className="flex justify-center flex-col pt-16 ">
-      <h1>listing {listingID} details go here</h1>
-
       <div className="flex justify-center">
         <div className="flex flex-col pt-4 w-4/5">
           <section className="overflow-hidden text-neutral-700">
@@ -64,7 +62,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                   <img
                     alt="gallery"
                     className="block h-full w-full rounded-lg object-cover object-center"
-                    src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVKeqGoOAeda1gBkO1FwdKC4aLI7bOsAVnDw&usqp=CAU"
                   />
                 </div>
                 <div className="w-1/2">
@@ -73,21 +71,21 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       <img
                         alt="gallery"
                         className="block h-full w-full rounded-lg object-cover object-center"
-                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp"
+                        src="https://st.hzcdn.com/simgs/a881cb090fe2028b_4-3777/traditional-garage.jpg"
                       />
                     </div>
                     <div className="w-1/2 p-1 md:p-2">
                       <img
                         alt="gallery"
                         className="block h-full w-full rounded-lg object-cover object-center"
-                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
+                        src="https://insulationcart.com/image/kb/k003007_How-to-Optimise-a-Cold-Storage-Room2.jpg"
                       />
                     </div>
                     <div className="w-1/2 p-1 md:p-2">
                       <img
                         alt="gallery"
                         className="block h-full w-full rounded-lg object-cover object-center"
-                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSVp-adcJZGdgEqalN6fEBlMXSw5h1DGaxGQ&usqp=CAU"
                       />
                     </div>
                     <div className="w-1/2 p-1 md:p-2">
@@ -98,7 +96,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                         <img
                           alt="gallery"
                           className="block h-full w-full rounded-lg object-cover object-center"
-                          src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp"
+                          src="https://images.younghouselove.com/2010/12/NewEmpty-Living-Built-Ins.jpg"
                         />
                         <div className="absolute inset-0 bg-gray-700 opacity-70 rounded-lg"></div>
                         <div className="absolute inset-0 flex items-center justify-center text-white">
@@ -117,12 +115,12 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       <img
                         alt="gallery"
                         className="rounded-lg object-cover object-center"
-                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp"
+                        src="https://insulationcart.com/image/kb/k003007_How-to-Optimise-a-Cold-Storage-Room2.jpg"
                       />
                       <img
                         alt="gallery"
                         className="block h-full w-full rounded-lg object-cover object-center"
-                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp"
+                        src="https://images.younghouselove.com/2010/12/NewEmpty-Living-Built-Ins.jpg"
                       />
                       {/* Add more images here. ALSO HAVE TO ADD SOME SCROLL FEATURE OR SOMETHING*/}
                     </div>
@@ -140,9 +138,9 @@ export default function ListingDetailsPage({ listing, host }: any) {
 
           <div className="flex justify-center mt-1">
             <div className="w-9/10 p-4">
-              <div className="grid grid-cols-3 grid-rows-4 gap-4">
+              <div className="grid grid-cols-3 grid-rows-1 gap-4">
                 <div className="flex flex-col p-4 gap-1 col-span-2">
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">
                       {listing.space_available[0]} x{" "}
                       {listing.space_available[1]} ft {listing.space_type}
@@ -151,11 +149,11 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       {listing.city}, {listing.state}
                     </p>
                   </div>
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <p>{listing.description}</p>
                     <p>Description</p>
                   </div>
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">
                       Approximate Space Size: {listing.space_available[0]} x{" "}
                       {listing.space_available[1]} ft
@@ -167,7 +165,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       information, etc.
                     </p>
                   </div>
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">Amentities</h2>
                     <ul className="space-y-2">
                       {listing.amenities.map(
@@ -186,31 +184,68 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       )}
                     </ul>
                   </div>
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">Questions</h2>
-                    <p>
-                      Listing details and description go here. You can add more
-                      content related to the listing, such as reviews, owner
-                      information, etc.
-                    </p>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="border border-gray-300 rounded-md p-4">
+                        <div>
+                          <h3 className="font-semibold mb-2">
+                            Would it be possible to store a mattress in this
+                            space? Is it easy access?
+                          </h3>
+                          <p>
+                            Yes, a mattress will fit in this space. It would
+                            need to bend or be rolled up to move through the
+                            doorway.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="border border-gray-300 rounded-md p-4">
+                        <div>
+                          <h3 className="font-semibold mb-2">
+                            What is the parking situation?
+                          </h3>
+                          <p>
+                            Temporary street parking is available, there is also
+                            a small parking lot across the street.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="border border-gray-300 rounded-md p-4">
+                        <div>
+                          <h3 className="font-semibold mb-2">
+                            Are there multiple rooms available in this space?{" "}
+                          </h3>
+                          <p>
+                            Yes, the basement has one separate room off of it.
+                            It can be used for more private storage for an
+                            individual’s items.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-col border-b border-gray-100 p-2">
-                    <h2 className="text-xl font-semibold mb-4">Hosted By</h2>
-                    <div className="flex items-center space-x-4">
+
+                  <div className="flex items-center justify-between border-b border-gray-300 p-2">
+                    <div className="flex flex-row items-center">
                       <img
-                        src={""}
+                        src={
+                          "https://ih1.redbubble.net/image.1554216071.9881/st,small,845x845-pad,1000x1000,f8f8f8.jpg"
+                        }
                         alt="Host profile"
                         className="h-16 w-16 rounded-full object-cover"
                       />
-                      <div>
-                        <p className="font-semibold">{host.name}</p>
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded"
-                          onClick={toggleContactModal}
-                        >
-                          Contact
-                        </button>
-                      </div>
+                      <p className="ml-2">Hosted by John Doe</p>
+                    </div>
+
+                    <div className="flex items-center">
+                      <p className="font-semibold">{host.name}</p>
+                      <button
+                        className="hover:bg-gray-300 border border-stone-800 w-full m-8 p-4 rounded-full text-black"
+                        onClick={toggleContactModal}
+                      >
+                        Contact
+                      </button>
                     </div>
                   </div>
 
@@ -221,10 +256,10 @@ export default function ListingDetailsPage({ listing, host }: any) {
                           Contact Host
                         </h2>
                         <p>
-                          Email:{" "}
+                          Email:{" johnDoe@gmail.com"}
                           <a href={`mailto:${host.email}`}>{host.email}</a>
                         </p>
-                        <p>Phone: {host.phone_number}</p>
+                        <p>Phone: 631-899-2304{host.phone_number}</p>
                         <button
                           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                           onClick={toggleContactModal}
@@ -235,7 +270,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     </div>
                   )}
 
-                  <div className="flex flex-col border-b border-gray-100 p-2">
+                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">
                       Safety as a Stasher
                     </h2>
@@ -253,34 +288,70 @@ export default function ListingDetailsPage({ listing, host }: any) {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex flex-col border border-gray-900 rounded-md p-1 ">
+                  <div className="flex flex-col rounded-md p-1 border border-gray-400 p-4">
                     <h2 className="text-xl font-semibold mb-4">
                       Price: ${listing.price}
                     </h2>
-                    <div className="grid grid-cols-2 grid-rows-2 divide-gray-400 border border-gray-400 rounded-md p-1 text-[12px]">
-                      <div className=" border">
-                        <label>Drop off Date:</label>
-                        <input
-                          type="date"
-                          value={dropOffDate}
-                          onChange={(e) => setDropOffDate(e.target.value)}
-                        />
+                    <div className="grid grid-cols-2 grid-rows-2 gap-2 text-[12px]">
+                      <div>
+                        <label htmlFor="dropOffDate">Drop off Date:</label>
+                        <div className="flex items-center justify-between rounded-md border bg-gray-100 p-2">
+                          <span
+                            onClick={() => {
+                              const el = document.getElementById("dropOffDate");
+                              if (el) el.click();
+                            }}
+                          >
+                            Select
+                          </span>
+                          <input
+                            id="dropOffDate"
+                            type="date"
+                            value={dropOffDate}
+                            onChange={(e) => setDropOffDate(e.target.value)}
+                            className="bg-gray-100"
+                          />
+                        </div>
                       </div>
-                      <div className=" border">
-                        <label>Pick up Date:</label>
-                        <input
-                          type="date"
-                          value={pickUpDate}
-                          onChange={(e) => setPickUpDate(e.target.value)}
-                        />
+                      <div>
+                        <label htmlFor="pickUpDate">Pick up Date:</label>
+                        <div className="flex items-center justify-between rounded-md border bg-gray-100 p-2">
+                          <span
+                            onClick={() => {
+                              const el = document.getElementById("pickUpDate");
+                              if (el) el.click();
+                            }}
+                          >
+                            Select
+                          </span>
+                          <input
+                            id="pickUpDate"
+                            type="date"
+                            value={pickUpDate}
+                            onChange={(e) => setPickUpDate(e.target.value)}
+                            className="bg-gray-100"
+                          />
+                        </div>
                       </div>
-                      <div className="border">
-                        <label>Access Dates:</label>
-                        <input
-                          type="date"
-                          value={accessDate}
-                          onChange={(e) => setAccessDate(e.target.value)}
-                        />
+                      <div>
+                        <label htmlFor="accessDate">Access Dates:</label>
+                        <div className="flex items-center justify-between rounded-md border bg-gray-100 p-2">
+                          <span
+                            onClick={() => {
+                              const el = document.getElementById("accessDate");
+                              if (el) el.click();
+                            }}
+                          >
+                            Select
+                          </span>
+                          <input
+                            id="accessDate"
+                            type="date"
+                            value={accessDate}
+                            onChange={(e) => setAccessDate(e.target.value)}
+                            className="bg-gray-100"
+                          />
+                        </div>
                       </div>
                     </div>
                     <p className="mt-4 text-xs">Total: $200</p>
@@ -311,6 +382,8 @@ export async function getServerSideProps(context: any) {
   const id = context.query.listingID;
   const res = await fetch(`http://localhost:3000/api/listings/${id}`);
   const listing = await res.json();
+
+  console.log(context.query.listingID);
 
   // Fetch the host information (Need to implement get endpoint probs)
   const hostRes = await fetch(
