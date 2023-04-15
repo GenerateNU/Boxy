@@ -62,7 +62,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                   <img
                     alt="gallery"
                     className="block h-full w-full rounded-lg object-cover object-center"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVKeqGoOAeda1gBkO1FwdKC4aLI7bOsAVnDw&usqp=CAU"
+                    src="https://s3-alpha-sig.figma.com/img/be11/98c7/414bff037b07e04cdaf38071768364c1?Expires=1682294400&Signature=H31IvsmhN6v5rNJCZLOGbSmWZ1pOhQsx6tlnlZa5Pi1WEzzt0F8B91~Gwhe9F~CRwwBjzQOSXvV7gau7XkE2sQAfcegj-9DGBGE3lSZjEUVs5PpB2I-pTEiZ725a-o9F8ZnchKEWuRJdkOg2PvDhidC71aogQRQtRMNFqnk7LR68ZVTmMk7IV5RjxN3rUKVvX0cq~oj2GBGPlrI1cRSE7vnFbqVtCfBiPKr8QknqPFSuOOYGhIzqaArFsv3C-ywmjjbI5KSB9vY7oYK5U4i4udQ3ttQ4wwBabk0lLZmigK~BDCOg~iAeLosIYJvjhkPgWZGWA2jG~divNmgqYMKpAA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
                   />
                 </div>
                 <div className="w-1/2">
@@ -100,7 +100,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                         />
                         <div className="absolute inset-0 bg-gray-700 opacity-70 rounded-lg"></div>
                         <div className="absolute inset-0 flex items-center justify-center text-white">
-                          <span className="text-lg font-semibold">+ {4}</span>
+                          <span className="text-lg font-semibold">+ {2}</span>
                         </div>
                       </button>
                     </div>
