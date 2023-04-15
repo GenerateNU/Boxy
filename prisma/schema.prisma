@@ -54,16 +54,15 @@ model reservations {
 model users {
   user_id               Int            @id @default(autoincrement())
   name                  String         @db.VarChar(255)
-  phone_number          BigInt            @unique
+  phone_number          BigInt         @unique
   email                 String         @unique @db.VarChar(255)
   drivers_license_photo String         @db.VarChar(255)
   verified              Boolean
   verified_on           DateTime?      @db.Date
-  username              String         @unique @db.VarChar(255)
-  password              String         @db.VarChar(255)
   listings              listings[]
   host_reservations     reservations[] @relation("host_reservations")
   stash_reservations    reservations[] @relation("stash_reservations")
+  is_admin              Boolean        @default(false)
 }
 
 enum amenity {
