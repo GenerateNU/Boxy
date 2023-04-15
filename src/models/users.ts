@@ -9,6 +9,16 @@ import Utils from "@/utils";
 export default class Users {
   constructor(private readonly usersDB: PrismaClient["users"]) {}
 
+  public async getUnverifiedUsers() {
+    const users = await prisma.users.findMany({
+      where: {
+        verified: false,
+      },
+    });
+
+    return users;
+  }
+
   public async signUp(data: any) {
     try {
       // input validation (can add more validation methods and call them here)
@@ -39,7 +49,7 @@ export default class Users {
       },
     });
 
-    const userDetails = { verified: false, exists: false };
+    const userDetails = { verified: false, exists: false, is_admin: false };
 
     // user doesn't exist in db
     if (!res) {
@@ -48,6 +58,7 @@ export default class Users {
 
     userDetails["verified"] = res["verified"];
     userDetails["exists"] = true;
+    userDetails["is_admin"] = res["is_admin"];
 
     return userDetails;
   }
@@ -153,8 +164,8 @@ export default class Users {
   }
 
   private setDefaultAttributes(data: any) {
-    data["verified"] = false;
-    data["password"] = this.hashPassword(data["password"]);
+    data["verified"] = true; // makes it easier for testing TODO: change this and add admin page
+    data["drivers_license_photo"] = "placeholder";
   }
 
   private validateEmail(email: string) {

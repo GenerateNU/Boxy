@@ -132,19 +132,6 @@ export default class Reservations {
     }
   }
 
-  async getReservation(id: number) {
-    try {
-      const response = await this.reservationsDB.findUnique({
-        where: {
-          reservation_id: id,
-        },
-      });
-      return response;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async cancelReservation(id: number, now: Date) {
     try {
       await this.reservationsDB.update({

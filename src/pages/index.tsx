@@ -1,7 +1,8 @@
-import {useAnimation} from "framer-motion"
-import {useInView} from 'react-intersection-observer'
-import {useEffect, useState} from 'react'
-import arrowIcon from '../assets/BoxyArrowIcon.png'
+import { useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useEffect, useState } from "react";
+import arrowIcon from "../assets/BoxyArrowIcon.png";
+import { signIn } from "next-auth/react";
 
 type LocationSuggestion = {
   place_id: string;
@@ -20,11 +21,11 @@ export default function LandingPage(props: any) {
 
   useEffect(() => {
     if (selectedLocation) {
-      const lat = parseInt(selectedLocation.lat)
-      const lon = parseInt(selectedLocation.lon)
-      props.setLocation([lat, lon])
+      const lat = parseInt(selectedLocation.lat);
+      const lon = parseInt(selectedLocation.lon);
+      props.setLocation([lat, lon]);
     }
-  }, [selectedLocation])
+  }, [selectedLocation]);
 
   function useLocationSuggestions(query: string): LocationSuggestion[] {
     const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -110,6 +111,17 @@ export default function LandingPage(props: any) {
       });
     }
   }, [inView]);
+
+  function getSearchResultsUrl(): string {
+    if (selectedLocation) {
+      return `/listings/browse?lat=${encodeURIComponent(
+        selectedLocation.lat
+      )}&long=${encodeURIComponent(selectedLocation.lon)}`;
+    } else {
+      return `/listings/browse`;
+    }
+  }
+
   return (
     <div className="container min-w-[100vw]">
       <div
@@ -148,7 +160,9 @@ export default function LandingPage(props: any) {
                 ))}
               </ul>
             </div>
-            <a href="/listings/browse">{button("Find Storage", "11vw", "20vw")}</a>
+            <a href={getSearchResultsUrl()}>
+              {button("Find Storage", "11vw", "20vw")}
+            </a>
           </div>
         </div>
         <div className="pt-8 w-0 lg:w-[34.5vw] h-[38vh] invisible lg:visible">
@@ -209,9 +223,9 @@ export default function LandingPage(props: any) {
             "Register as a host to turn your empty spaces into passive income. Boxy enables you to rent out these spaces for others to stash in."
           )}
         </div>
-        <a href={'/user/register'}>
+        <div onClick={signIn} href={"/user/register"}>
           {button("Sign up now", "11vw", "20vw")}
-        </a>
+        </div>
       </div>
     </div>
   );

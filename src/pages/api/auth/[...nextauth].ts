@@ -1,3 +1,4 @@
+import persistentUserInstance from "lib/userInstance";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Utils from "src/utils";
@@ -11,7 +12,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
+      persistentUserInstance.signUp({ name: user.name, email: user.email });
+
       return true;
     },
   },
