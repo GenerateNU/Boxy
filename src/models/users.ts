@@ -165,7 +165,6 @@ export default class Users {
 
   private setDefaultAttributes(data: any) {
     data["verified"] = true; // makes it easier for testing TODO: change this and add admin page
-    data["phone_number"] = 0;
     data["drivers_license_photo"] = "placeholder";
   }
 

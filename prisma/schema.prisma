@@ -54,7 +54,6 @@ model reservations {
 model users {
   user_id               Int            @id @default(autoincrement())
   name                  String         @db.VarChar(255)
-  phone_number          BigInt         @unique
   email                 String         @unique @db.VarChar(255)
   drivers_license_photo String         @db.VarChar(255)
   verified              Boolean
