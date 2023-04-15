@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import router, { useRouter } from "next/router";
 import Listing from "../listings/listing";
+import { signIn, useSession } from "next-auth/react";
+import { sign } from "crypto";
 
 type Listing = {
   listing_id: string;
@@ -15,6 +17,11 @@ export default function HostDashboard() {
   const [tabState, setTabState] = useState("Listings");
   const [allListings, setAllListings] = useState<Array<Listing>>([]);
   const [reservations, setReservations] = useState<[]>([]);
+  const { data, status } = useSession();
+
+  if (status === "unauthenticated") {
+    signIn();
+  }
 
   useEffect(() => {
     getAllListings();
