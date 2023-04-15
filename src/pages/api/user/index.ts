@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import persistentUserInstance from "lib/userInstance";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import stripe from "lib/stripe";
 
 type Message = {
   message: string;
@@ -54,7 +55,15 @@ async function registerUser(
   res: NextApiResponse<Message>
 ) {
   try {
-    await persistentUserInstance.signUp(req.body);
+    const stripeAccount = await stripe.accounts.create({
+      type: "standard",
+      country: "US",
+      email: req.body.email,
+    });
+    await persistentUserInstance.signUp({
+      ...req.body,
+      stripe_id: stripeAccount.id,
+    });
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }

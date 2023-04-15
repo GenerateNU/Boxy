@@ -1,10 +1,10 @@
-import { button } from "../General/GeneralComponents";
 
 export default function ReservationOverview(
   reservation: any,
   currentForm: number,
   setCurrentForm: Function,
-  confirmReservation: Function
+  confirmReservation: Function,
+  buttonLabel?: string,
 ) {
   return (
     <div className="flex flex-col justify-center">
@@ -79,12 +79,9 @@ export default function ReservationOverview(
         }
         className={`h-[60px] w-[25vw] lg:w-[25vw] mt-5 bg-bxBrand text-white rounded-full hover:bg-bxBrandLight transition ease-in duration-75`}
       >
-        {currentForm === 2 ? "confirm reservation" : "continue"}
+        {buttonLabel ? buttonLabel : (currentForm === 2 ? "confirm reservation" : "continue")}
       </button>
     </div>
   );
 }
 
-function requestReservation() {
-  // ping add reservaiton endpoint with request details
-}

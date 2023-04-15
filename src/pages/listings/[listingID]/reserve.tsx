@@ -1,46 +1,24 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { AiOutlineLeft } from "react-icons/ai";
 import DateForm from "@/components/Reservation/DateForm";
 import ReservationOverview from "@/components/Reservation/ReservationOverview";
 import DateRangeSelector from "../../../components/General/DateRangeSelector";
-import dayjs, { Dayjs } from "dayjs";
-import time from "console";
+import PaymentForm from "@/components/Reservation/PaymentForm";
 
 export default function ListingReservationPage({ listing }: any) {
   const listing_info = listing.message;
-  const router = useRouter();
   const [currentForm, setCurrentForm] = useState(0);
   const [dateEdit, setDateEdit] = useState(false);
   const reservation_forms = [
     <DateForm listing={listing_info} setDateEdit={setDateEdit} />,
+    <div/>,
+    <PaymentForm />
   ];
-
-  async function confirmReservation() {
-    const res = await fetch("http://localhost:3000/api/reservations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // hard coded values for now
-      body: JSON.stringify({
-        host_id: 1,
-        stasher_id: 1,
-        listing_id: 4,
-        dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
-      }),
-    });
-
-    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
-  }
-
-  useEffect(() => {
-    console.log(listing);
-  }, [listing]);
-
   const reservation_overview = {
+    id: 1,
     total: "$350",
+    price: 35000,
     address: listing_info?.address,
     city: listing_info?.city,
     state: listing_info?.state,
@@ -65,6 +43,10 @@ export default function ListingReservationPage({ listing }: any) {
       </h2>
     );
   };
+
+  if (currentForm === 2) {
+    return <PaymentForm reservation={reservation_overview}/>
+  }
 
   return (
     <>
@@ -135,19 +117,13 @@ export default function ListingReservationPage({ listing }: any) {
               reservation_overview,
               currentForm,
               setCurrentForm,
-              confirmReservation
+              () => {}
             )}
           </div>
         </div>
       </div>
     </>
   );
-
-  function sendReservationRequest() {
-    // make call to endpoint then redirect to my reservations
-
-    router.push("http://localhost:3000/stasher/dashboard");
-  }
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

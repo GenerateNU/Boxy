@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]";
+import { authOptions } from "../auth/[...nextauth]";
+import stripe from "lib/stripe";
 
 type Message = {
   message: string;
 };
-
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-08-01",
-});
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,15 +29,9 @@ async function createPaymentIntent(
   res: NextApiResponse<any>
 ) {
   try {
-    const product = await stripe.paymentIntents.create({
-      currency: "USD",
-      amount: 1999,
-      automatic_payment_methods: { enabled: true },
-    });
-    return res.status(200).send(product);
-  } catch (error) {
+    const paymentIntent = await stripe.paymentIntents.create(JSON.parse(req.body));
+    return res.status(200).send(paymentIntent);
+  } catch (error: any) {
     return res.status(403).send({ message: error.message });
   }
 }
-
-// this class might not be needed if we use checkout sessions

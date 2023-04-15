@@ -31,10 +31,11 @@ model listings {
   editable        Boolean
   created_on      DateTime       @db.Date
   space_available Int[]
-  host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
+  // host            users          @relation(fields: [host_id], references: [user_id], onDelete: Cascade)
   longitude       Decimal        @db.Decimal
   latitude        Decimal        @db.Decimal
-  reservations    reservations[]
+  // reservations    reservations[]
+  stripe_id       String
 }
 
 model reservations {
@@ -44,26 +45,28 @@ model reservations {
   listing_id      Int        
   reserved_on     DateTime   @default(now())
   dates_requested DateTime[] @db.Date
-  host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
-  stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
-  listing         listings   @relation(fields: [listing_id], references: [listing_id])
+  // host            users      @relation("host_reservations", fields: [host_id], references: [user_id])
+  // stasher         users      @relation("stash_reservations", fields: [stasher_id], references: [user_id])
+  // listing         listings   @relation(fields: [listing_id], references: [listing_id])
   cancelled       Boolean?   @default(false)
   cancelled_on    DateTime?  @default(now())
+  payment_id       String
 }
 
 model users {
   user_id               Int            @id @default(autoincrement())
   name                  String         @db.VarChar(255)
-  phone_number          BigInt            @unique
+phone_number          BigInt           @unique
   email                 String         @unique @db.VarChar(255)
   drivers_license_photo String         @db.VarChar(255)
   verified              Boolean
   verified_on           DateTime?      @db.Date
   username              String         @unique @db.VarChar(255)
   password              String         @db.VarChar(255)
-  listings              listings[]
-  host_reservations     reservations[] @relation("host_reservations")
-  stash_reservations    reservations[] @relation("stash_reservations")
+  stripe_id             String
+  // listings              listings[]
+  // host_reservations     reservations[] @relation("host_reservations")
+  // stash_reservations    reservations[] @relation("stash_reservations")
 }
 
 enum amenity {
