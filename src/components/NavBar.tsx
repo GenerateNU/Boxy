@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
 import { useRouter } from "next/router";
+import BoxyLogo from "./BoxyLogo";
 
 export default function NavBar() {
   const router = useRouter();
@@ -42,12 +43,8 @@ export default function NavBar() {
     <div>
       <nav className="container fixed min-w-full h-16 border-b-2 border-gray bg-white shadow-md z-10">
         <div className="flex justify-between items-center container mx-auto h-full ">
-          <Link
-            href={"http://localhost:3000/"}
-            className="text-center font-Inter font-semibold text-xl text-[#097275]"
-          >
-            BOXY
-          </Link>
+          <BoxyLogo />
+
           <div className="flex items-center gap-10 text-[#C4C4C4]">
             {nav_bar_button(
               "browse",

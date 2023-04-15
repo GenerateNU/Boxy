@@ -170,13 +170,13 @@ export default function UserAccountPage() {
   };
 
   return (
-    <div className="flex flex-col w-full ml-12 mt-10">
+    <div className="flex flex-col w-full">
       <div className="flex flex-row mb-10 ml-2">
         <h1 className="text-3xl flex ml-20">Account</h1>
         {display_tab()}
       </div>
       <div className="flex flex-row">
-        <div className="flex transition-transform h-screen h-full w-1/3">
+        <div className="flex transition-transform h-screen w-1/3">
           <div className="ml-20">
             <ul className="space-y-4">
               <li>{account_tab("account", "Account Information")}</li>
