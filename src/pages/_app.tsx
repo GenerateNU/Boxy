@@ -25,26 +25,26 @@ function UserRedirectWrapper() {
   const [verified, setVerified] = useState(false);
   const [exists, setExists] = useState(false);
 
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      fetch("/api/user")
-        .then((response) => response.json())
-        .then((data) => {
-          const { exists, verified } = data;
-          setExists(exists);
-          setVerified(verified);
+  // useEffect(() => {
+  //   if (session.status === "authenticated") {
+  //     fetch("/api/user")
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         const { exists, verified } = data;
+  //         setExists(exists);
+  //         setVerified(verified);
 
-          if (exists && verified) {
-            // do nothing
-          } else if (exists && !verified) {
-            router.push("http://localhost:3000/user/verify");
-          } else if (!exists && !verified) {
-            console.log(exists, verified);
-            router.push("http://localhost:3000/user/register");
-          }
-        });
-    }
-  }, [session, exists, verified]);
+  //         if (exists && verified) {
+  //           // do nothing
+  //         } else if (exists && !verified) {
+  //           router.push("http://localhost:3000/user/verify");
+  //         } else if (!exists && !verified) {
+  //           console.log(exists, verified);
+  //           router.push("http://localhost:3000/user/register");
+  //         }
+  //       });
+  //   }
+  // }, [session, exists, verified]);
 
   return <div></div>;
 }
