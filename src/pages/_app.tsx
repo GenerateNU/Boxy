@@ -5,6 +5,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import NavBar from "src/components/NavBar";
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Footer from "@/components/Footer";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [location, setLocation] = useState([-71.088257, 42.340075]);
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <NavBar />
       <UserRedirectWrapper></UserRedirectWrapper>
       <Component {...pageProps} location={location} setLocation={setLocation} />
+      <Footer />
     </SessionProvider>
   );
 }

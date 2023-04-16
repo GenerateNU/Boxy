@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
 import { signIn } from "next-auth/react";
+import FAQ from "@/components/FAQ";
 
 type LocationSuggestion = {
   place_id: string;
@@ -227,6 +228,7 @@ export default function LandingPage(props: any) {
           {button("Sign up now", "11vw", "20vw")}
         </div>
       </div>
+      <FAQ />
     </div>
   );
 }
