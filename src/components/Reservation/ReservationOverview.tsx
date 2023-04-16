@@ -7,7 +7,7 @@ export default function ReservationOverview(
   buttonLabel?: string,
 ) {
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center items-center">
       <div className="border-[#B5B5B5] border-[0.75px] rounded-md p-[26px]">
         <div className="w-[100%] flex place-content-between mb-3">
           <h2 className="text-[25px]">Total</h2>
@@ -77,11 +77,10 @@ export default function ReservationOverview(
             ? setCurrentForm(currentForm + 1)
             : confirmReservation()
         }
-        className={`h-[60px] w-[25vw] lg:w-[25vw] mt-5 bg-bxBrand text-white rounded-full hover:bg-bxBrandLight transition ease-in duration-75`}
+        className={`h-[60px] w-[25vw] lg:w-[25vw] mt-5 mx-auto bg-bxBrand text-white rounded-full hover:bg-bxBrandLight transition ease-in duration-75`}
       >
         {buttonLabel ? buttonLabel : (currentForm === 2 ? "confirm reservation" : "continue")}
       </button>
     </div>
   );
 }
-

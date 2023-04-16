@@ -53,6 +53,7 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async () => {
     if (!stripe || !elements) {
@@ -62,32 +63,16 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
 
     setStatus("Processing ...");
 
-    // const res = await fetch("/api/reservations", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   // hard coded values for now
-    //   body: JSON.stringify({
-    //     host_id: 1,
-    //     stasher_id: 1,
-    //     listing_id: 4,
-    //     dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
-    //     stripe_id: paymentId,
-    //   }),
-    // });
-
-    // if (res.status !== 200) {
-    //   return console.log("Error creating reservation");
-    // }
-
     const result = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/stasher/confirmation`,
       },
     });
-    console.log(result);
+    if (result.error.message) {
+      setError(result.error.message);
+    }
+
     setStatus("");
   };
 
@@ -127,6 +112,7 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
               handleSubmit,
               status
             )}
+            <div className="text-red-500 pt-2 text-center">{error}</div>
           </div>
         </div>
       </div>
