@@ -3,6 +3,8 @@ import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
 import { signIn } from "next-auth/react";
+import { Coordinate } from "./_app";
+import Workflow from "@/components/LandingPage/Workflow";
 
 type LocationSuggestion = {
   place_id: string;
@@ -12,64 +14,13 @@ type LocationSuggestion = {
 };
 
 export default function LandingPage(props: any) {
-  const [locationInput, setLocationInput] = useState("");
-  const suggestions = useLocationSuggestions(locationInput);
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: string;
-    lon: string;
-  } | null>(null);
+  const [locationSearchSuggestions, setLocationSearchSuggestions] = useState<
+    LocationSuggestion[]
+  >([]);
+  const [locationSearchInput, setLocationSearchInput] = useState("");
 
-  useEffect(() => {
-    if (selectedLocation) {
-      const lat = parseInt(selectedLocation.lat);
-      const lon = parseInt(selectedLocation.lon);
-      props.setLocation([lat, lon]);
-    }
-  }, [selectedLocation]);
-
-  function useLocationSuggestions(query: string): LocationSuggestion[] {
-    const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
-
-    useEffect(() => {
-      if (!query) {
-        setSuggestions([]);
-        return;
-      }
-
-      const fetchSuggestions = async () => {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&countrycodes=us&limit=5`
-        );
-        const data = await response.json();
-        setSuggestions(data);
-      };
-
-      fetchSuggestions();
-    }, [query]);
-
-    return suggestions;
-  }
-
-  function workflow(image: string, text: string, arrow: boolean) {
-    return (
-      <div className="flex align-top">
-        <div className="ml-5 mr-5">
-          <img
-            className="w-[12.5vw] mb-5 object-fill rounded-full"
-            src={image}
-          />
-          <h3 className="text-[15px] w-[12.5vw] text-center">{text}</h3>
-        </div>
-        {arrow ? (
-          <img
-            className="w-[6.25vw] h-3 mt-[6.25vw] object-contain"
-            src={arrowIcon.src}
-          />
-        ) : (
-          <></>
-        )}
-      </div>
-    );
+  function setUniversalLocationState(coordinates: Coordinate) {
+    props.setLocation(coordinates);
   }
 
   function service(image: string, title: string, text: string) {
@@ -113,13 +64,18 @@ export default function LandingPage(props: any) {
   }, [inView]);
 
   function getSearchResultsUrl(): string {
-    if (selectedLocation) {
-      return `/listings/browse?lat=${encodeURIComponent(
-        selectedLocation.lat
-      )}&long=${encodeURIComponent(selectedLocation.lon)}`;
-    } else {
-      return `/listings/browse`;
-    }
+    return `/listings/browse?latitude=${encodeURIComponent(
+      props.location.latitude
+    )}&longitude=${encodeURIComponent(props.location.longitude)}&proximity=15`;
+  }
+
+  async function getLocationSuggestions(locationSearchInput: string) {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${locationSearchInput}&addressdetails=1&countrycodes=us&limit=5`
+    );
+    const data = await response.json();
+
+    setLocationSearchSuggestions(data);
   }
 
   return (
@@ -139,20 +95,23 @@ export default function LandingPage(props: any) {
                 id="search_input"
                 className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
                 placeholder="Enter a location"
-                value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
+                value={locationSearchInput}
+                onChange={(event) => {
+                  setLocationSearchInput(event.currentTarget.value);
+                  getLocationSuggestions(event.currentTarget.value);
+                }}
               />
               <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
-                {suggestions.map((suggestion) => (
+                {locationSearchSuggestions.map((suggestion) => (
                   <li
                     key={suggestion.place_id}
                     className="px-2 py-1 cursor-pointer hover:bg-gray-200"
                     onClick={() => {
-                      setLocationInput(suggestion.display_name);
-                      setSelectedLocation({
-                        lat: suggestion.lat,
-                        lon: suggestion.lon,
+                      setUniversalLocationState({
+                        latitude: parseInt(suggestion.lat),
+                        longitude: parseInt(suggestion.lon),
                       });
+                      setLocationSearchInput(suggestion.display_name);
                     }}
                   >
                     {suggestion.display_name}
@@ -179,26 +138,26 @@ export default function LandingPage(props: any) {
       >
         <h2 className="text-[25px] mb-10">How it Works</h2>
         <div className="flex">
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Request a storage reservation through Boxy.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Get approval from your host to confirm the reservation.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Bring your belongings to the storage location on your drop-off day.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Pick up your belongings on your pick-up day. Storage successful!",
-            false
-          )}
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Request a storage reservation through Boxy."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Get approval from your host to confirm the reservation."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Bring your belongings to the storage location on your drop-off day."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Pick up your belongings on your pick-up day. Storage successful!"
+            arrow={false}
+          ></Workflow>
         </div>
       </div>
       <div
