@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Query } from "pg";
-import { stringify } from "querystring";
 import { useEffect, useState } from "react";
 
 export default function BrowseListingsPage({ listings }: any) {
-  const query = new URLSearchParams();
   const router = useRouter();
+  const query = new URLSearchParams(router.pathname);
+  const { lat, lon, proximity } = router.query;
+
+  useEffect(() => {
+    if (lat) {
+    }
+
+    if (lon) {
+    }
+
+    if (proximity) {
+    }
+  }, []);
 
   const imageList = [
     "https://s3-alpha-sig.figma.com/img/a037/cefe/ef1adc938dd648a6e10a3b69ebda558c?Expires=1682294400&Signature=n8vZKRIS0oK1on8lL8TAuSqokhRVesKk9Bag0ewfssNszBRdffILCcaCuYnhu1u2CJYE6Y3ifXO2BguDUYho9o45wvU3w1xUMBEhD2Er9xX~--kgNENzHSnv3WxEdeN~KT3v8AQtJJjqv0ymiXmLiNeUpaxSh-zXJWKU6P8dy0hz3~RzI74bq0jd~pIa8wkKM8FXn6IkW5Q-7O6TRJ0dbj-1jPfWXePaAXgy5sDWBxxwq6tcq914oDebYbEz978-ZacVMdz5EkpiB-k~UUlX8Wjgg3gQzn7rcvxk9NZ87bjmJWAMWy4t6BlvBo-q7Lx5UWJk6AXdLEPuyTYaTK799g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
@@ -190,19 +200,23 @@ export default function BrowseListingsPage({ listings }: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  // + new URLSearchParams(JSON.stringify(query)
-  if (context.query) {
-    return {
-      props: {
-        listings: await (
-          await fetch(
-            "http://localhost:3000/api/listings" +
-              "?" +
-              new URLSearchParams(context.query) +
-              "&longitude=42.340075&latitude=-71.088257"
-          )
-        ).json(),
-      },
-    };
+  if (!context.query.longitude) {
+    context.query.longitude = "42.340075";
   }
+
+  if (!context.query.latitude) {
+    context.query.latitude = "-71.088257";
+  }
+
+  return {
+    props: {
+      listings: await (
+        await fetch(
+          "http://localhost:3000/api/listings" +
+            "?" +
+            new URLSearchParams(context.query)
+        )
+      ).json(),
+    },
+  };
 }
