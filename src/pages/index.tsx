@@ -2,7 +2,7 @@ import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Coordinate } from "./_app";
 import Workflow from "@/components/LandingPage/Workflow";
 import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
@@ -15,6 +15,7 @@ type LocationSuggestion = {
 };
 
 export default function LandingPage(props: any) {
+  const session = useSession();
   function setUniversalLocationState(coordinates: Coordinate) {
     props.setLocation(coordinates);
   }
@@ -89,35 +90,6 @@ export default function LandingPage(props: any) {
             <LocationSearchBar
               setCoordinates={setUniversalLocationState}
             ></LocationSearchBar>
-            {/* <div className="relative">
-              <input
-                id="search_input"
-                className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
-                placeholder="Enter a location"
-                value={locationSearchInput}
-                onChange={(event) => {
-                  setLocationSearchInput(event.currentTarget.value);
-                  getLocationSuggestions(event.currentTarget.value);
-                }}
-              />
-              <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
-                {locationSearchSuggestions.map((suggestion) => (
-                  <li
-                    key={suggestion.place_id}
-                    className="px-2 py-1 cursor-pointer hover:bg-gray-200"
-                    onClick={() => {
-                      setUniversalLocationState({
-                        latitude: parseInt(suggestion.lat),
-                        longitude: parseInt(suggestion.lon),
-                      });
-                      setLocationSearchInput(suggestion.display_name);
-                    }}
-                  >
-                    {suggestion.display_name}
-                  </li>
-                ))}
-              </ul>
-            </div> */}
             <a href={getSearchResultsUrl()}>
               {button("Find Storage", "11vw", "20vw")}
             </a>
@@ -181,9 +153,13 @@ export default function LandingPage(props: any) {
             "Register as a host to turn your empty spaces into passive income. Boxy enables you to rent out these spaces for others to stash in."
           )}
         </div>
-        <div onClick={signIn} href={"/user/register"}>
-          {button("Sign up now", "11vw", "20vw")}
-        </div>
+        {session.status === "unauthenticated" ? (
+          <div onClick={signIn} href={"/user/register"}>
+            {button("Sign up now", "11vw", "20vw")}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
