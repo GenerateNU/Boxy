@@ -10,16 +10,10 @@ export type Coordinate = {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
-  // this is our universal state for location
-  const [location, setLocation] = useState<Coordinate>({
-    latitude: -71.088257,
-    longitude: 42.340075,
-  });
-
   return (
     <SessionProvider session={pageProps.session}>
       <NavBar />
-      <Component {...pageProps} location={location} setLocation={setLocation} />
+      <Component {...pageProps} />
     </SessionProvider>
   );
 }

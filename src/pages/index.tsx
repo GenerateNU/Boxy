@@ -16,9 +16,10 @@ type LocationSuggestion = {
 
 export default function LandingPage(props: any) {
   const session = useSession();
-  function setUniversalLocationState(coordinates: Coordinate) {
-    props.setLocation(coordinates);
-  }
+  const [coordinates, setCoordinates] = useState<Coordinate>({
+    latitude: -71.088257,
+    longitude: 42.340075,
+  });
 
   function service(image: string, title: string, text: string) {
     return (
@@ -62,17 +63,8 @@ export default function LandingPage(props: any) {
 
   function getSearchResultsUrl(): string {
     return `/listings/browse?latitude=${encodeURIComponent(
-      props.location.latitude
-    )}&longitude=${encodeURIComponent(props.location.longitude)}&proximity=15`;
-  }
-
-  async function getLocationSuggestions(locationSearchInput: string) {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${locationSearchInput}&addressdetails=1&countrycodes=us&limit=5`
-    );
-    const data = await response.json();
-
-    setLocationSearchSuggestions(data);
+      coordinates.latitude
+    )}&longitude=${encodeURIComponent(coordinates.longitude)}&proximity=15`;
   }
 
   return (
@@ -88,7 +80,7 @@ export default function LandingPage(props: any) {
           </h3>
           <div className="flex pt-5 h-[80px]">
             <LocationSearchBar
-              setCoordinates={setUniversalLocationState}
+              setCoordinates={setCoordinates}
             ></LocationSearchBar>
             <a href={getSearchResultsUrl()}>
               {button("Find Storage", "11vw", "20vw")}
