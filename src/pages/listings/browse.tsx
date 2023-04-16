@@ -7,17 +7,6 @@ export default function BrowseListingsPage({ listings }: any) {
   const query = new URLSearchParams(router.pathname);
   const { lat, lon, proximity } = router.query;
 
-  useEffect(() => {
-    if (lat) {
-    }
-
-    if (lon) {
-    }
-
-    if (proximity) {
-    }
-  }, []);
-
   const imageList = [
     "https://s3-alpha-sig.figma.com/img/a037/cefe/ef1adc938dd648a6e10a3b69ebda558c?Expires=1682294400&Signature=n8vZKRIS0oK1on8lL8TAuSqokhRVesKk9Bag0ewfssNszBRdffILCcaCuYnhu1u2CJYE6Y3ifXO2BguDUYho9o45wvU3w1xUMBEhD2Er9xX~--kgNENzHSnv3WxEdeN~KT3v8AQtJJjqv0ymiXmLiNeUpaxSh-zXJWKU6P8dy0hz3~RzI74bq0jd~pIa8wkKM8FXn6IkW5Q-7O6TRJ0dbj-1jPfWXePaAXgy5sDWBxxwq6tcq914oDebYbEz978-ZacVMdz5EkpiB-k~UUlX8Wjgg3gQzn7rcvxk9NZ87bjmJWAMWy4t6BlvBo-q7Lx5UWJk6AXdLEPuyTYaTK799g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "https://s3-alpha-sig.figma.com/img/a038/cec0/c92e1b0c419c310758401dd8490139ba?Expires=1682294400&Signature=NZkUFlZw7ZcfaqnwSCjKEt6U86O3Lom~d-3JBDHavyg0i7w7Hnuyh~UaKNlRIIRUukuGyMTyjgcnM-v4XVNB72MgFB1fQI25Ptr9X1fCw3Cgf8HA-T8gV2vnLnXg8GEwIhVNdC7aEXXmRQGc2Rnt4g~tx6coe~37Yjmki2HWkC~iXSbmaZIpu2LftFmc5v-TK~cbEVC~YpW84mcIy9Cq8XnPPLUVp-~75yHcGKjhm0ejZ8hHATKfObhKzl~gb2IQgUcnTK43rTK16TUyJVGGTD02j~vYOD8FXeSDKp5adnIfPgDnXH3lxWbPMXyefbxcJ6l4QTFb6eCJF4NvFuBzvA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
