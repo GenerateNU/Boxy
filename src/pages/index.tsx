@@ -5,6 +5,7 @@ import arrowIcon from "../assets/BoxyArrowIcon.png";
 import { signIn } from "next-auth/react";
 import { Coordinate } from "./_app";
 import Workflow from "@/components/LandingPage/Workflow";
+import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
 
 type LocationSuggestion = {
   place_id: string;
@@ -14,11 +15,6 @@ type LocationSuggestion = {
 };
 
 export default function LandingPage(props: any) {
-  const [locationSearchSuggestions, setLocationSearchSuggestions] = useState<
-    LocationSuggestion[]
-  >([]);
-  const [locationSearchInput, setLocationSearchInput] = useState("");
-
   function setUniversalLocationState(coordinates: Coordinate) {
     props.setLocation(coordinates);
   }
@@ -90,7 +86,10 @@ export default function LandingPage(props: any) {
             Boxy makes it easy to find convenient, local storage.
           </h3>
           <div className="flex pt-5 h-[80px]">
-            <div className="relative">
+            <LocationSearchBar
+              setCoordinates={setUniversalLocationState}
+            ></LocationSearchBar>
+            {/* <div className="relative">
               <input
                 id="search_input"
                 className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
@@ -118,7 +117,7 @@ export default function LandingPage(props: any) {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
             <a href={getSearchResultsUrl()}>
               {button("Find Storage", "11vw", "20vw")}
             </a>
