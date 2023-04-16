@@ -9,6 +9,7 @@ export type ListingResponse = {
   latitude?: Decimal;
   price?: Decimal;
   dates_available?: Date[];
+  location_details: String;
 };
 
 export type ViewResponse = {
@@ -59,12 +60,12 @@ export default class ListingsDataTable {
       const res = await this.listingsDB.findUnique({
         where: {
           listing_id: id,
-        }
+        },
       });
 
       // If response doesn't exists
       if (!res) {
-        throw new Error("Listing doesn't exists")
+        throw new Error("Listing doesn't exists");
       }
 
       let response: any = {
@@ -83,7 +84,7 @@ export default class ListingsDataTable {
         space_available: res["space_available"],
         longitude: res["longitude"],
         latitude: res["latitude"],
-      }
+      };
 
       return response;
     } catch (e) {
@@ -145,13 +146,45 @@ export default class ListingsDataTable {
           latitude: true,
         },
       });
+      // let response: ListingResponse[] = [];
 
-      let response: ListingResponse[] = listingResults.map((listing) => {
-        const dist: number | undefined = distanceFilter(listing);
-        delete listing.longitude;
-        delete listing.latitude;
-        return Object.assign({}, listing, { proximity: dist });
-      });
+      // listingResults.forEach(async (listing) => {
+      //   const dist: number | undefined = distanceFilter(listing);
+      //   const lon = listing.longitude;
+      //   const lat = listing.latitude;
+
+      //   delete listing.longitude;
+      //   delete listing.latitude;
+
+      //   const locationDetails = await this.getLocationDetails(lat, lon);
+      //   console.log("test", locationDetails);
+
+      //   response.push(
+      //     Object.assign({}, listing, {
+      //       proximity: dist,
+      //       location_details: locationDetails,
+      //     })
+      //   );
+      // });
+
+      let response: ListingResponse[] = await Promise.all(
+        listingResults.map(async (listing) => {
+          const dist: number | undefined = distanceFilter(listing);
+          const lon = listing.longitude;
+          const lat = listing.latitude;
+
+          delete listing.longitude;
+          delete listing.latitude;
+
+          const locationDetails = await this.getLocationDetails(lat, lon);
+
+          return Object.assign({}, listing, {
+            proximity: dist,
+            location_details: locationDetails,
+          });
+        })
+      );
+
       if (data.proximity) {
         response = response.filter((response) => {
           if (response.proximity !== undefined) {
@@ -164,6 +197,17 @@ export default class ListingsDataTable {
     } catch (e) {
       throw e;
     }
+  }
+
+  async getLocationDetails(lat: any, lon: any) {
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${process.env.OPEN_CAGE_DATA_API_KEY}&pretty=1&no_annotations=1`;
+
+    return fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        return data.results[0].formatted;
+      })
+      .catch((error) => console.error(error));
   }
 
   async getHostListings(userID: any) {
@@ -179,7 +223,7 @@ export default class ListingsDataTable {
         listing_details.push(value);
       });
 
-      let response: ViewResponse = { "my listings": listing_details};
+      let response: ViewResponse = { "my listings": listing_details };
 
       return response;
     } catch (e) {

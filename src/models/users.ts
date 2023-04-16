@@ -128,12 +128,10 @@ export default class Users {
   }
 
   async delete(headers: any) {
-    console.log(headers);
     try {
       this.validateTokenHeader(headers);
 
       const tokenPayload: any = jwt.decode(headers["login_token"]);
-      console.log(tokenPayload);
       await prisma.users.delete({
         where: {
           username: tokenPayload.sub,
