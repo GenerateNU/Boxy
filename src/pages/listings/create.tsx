@@ -7,15 +7,16 @@ import AmenitiesForm from "@/components/ListingForms/AmenitiesForm";
 import ItemsForm from "@/components/ListingForms/ItemsForm";
 import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
+import { defaultCoordindates } from "../_app";
 
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
 
   // address form states
-  const [address, setAddress] = useState();
-  const [city, setCity] = useState();
-  const [zipCode, setZipCode] = useState();
-  const [name, setName] = useState();
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [name, setName] = useState("");
 
   const [datesAvailable, setDatesAvailable] = useState();
   const [price, setPrice] = useState();
@@ -81,8 +82,8 @@ export default function ListingCreate({}: any) {
         zip_code: zipCode,
         state: "CA",
         space_available: [1, 2, 3],
-        longitude: 2,
-        latitude: 1,
+        longitude: defaultCoordindates.longitude,
+        latitude: defaultCoordindates.latitude,
       }),
     });
 
