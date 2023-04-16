@@ -46,6 +46,7 @@ export function LocationSearchBar(props: { setCoordinates: any }) {
                 longitude: parseInt(suggestion.lon),
               });
               setLocationSearchInput(suggestion.display_name);
+              setLocationSearchSuggestions([])
             }}
           >
             {suggestion.display_name}
