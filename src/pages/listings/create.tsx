@@ -54,43 +54,40 @@ export default function ListingCreate({}: any) {
   }
 
   async function createListing() {
-    fetch("http://localhost:3000/api/stripe/product", {
+    console.log(name);
+    const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: name,
+        dates_available: [new Date("2023-04-01"), new Date("2023-04-02")],
+        price: 1,
+        description: "This is a description for the place",
+        amenities: [
+          "Pest_Controlled",
+          "Fire_Alarm_System",
+          "Smoke_Free",
+          "Pet_Free",
+          "Access_to_Elevator",
+          "Ground_Floor",
+          "Climate_Controlled",
+          "Private_Storage",
+          "Party_Free",
+        ],
+        space_type: "Closet",
+        address: address || "123 test ave",
+        city: city || "boston",
+        zip_code: zipCode || "12345",
+        state: "CA",
+        space_available: [1, 2, 3],
+        longitude: 2,
+        latitude: 1,
       }),
-    })
-      .then((response) => response.json())
-      .then(async (data) => {
-        console.log(data);
-        const res = await fetch("http://localhost:3000/api/listings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            dates_available: [],
-            price: 1,
-            description: "",
-            amenities: [],
-            space_type: "Basement",
-            address: "1234 Huntington Ave",
-            city: "boston",
-            zip_code: "02115",
-            state: "CA",
-            space_available: [1, 2, 3],
-            longitude: 2,
-            latitude: 1,
-            product_id: data.product.id,
-          }),
-        });
+    });
 
-        res.status == 200 && router.push("http://localhost:3000/listings/mine");
-      });
+    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
   }
 
   return (

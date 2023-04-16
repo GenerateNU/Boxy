@@ -60,7 +60,6 @@ async function createListing(
       ...req.body,
       stripe_id: stripeProduct.id,
     });
-    await listingDataTable.createListing(req.body);
   } catch (error) {
     console.error(error);
     return res.status(403).send({ message: String(error) });
