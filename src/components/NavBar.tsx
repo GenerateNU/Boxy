@@ -4,11 +4,20 @@ import { useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
 import { useRouter } from "next/router";
 import BoxyLogo from "./BoxyLogo";
+import { defaultCoordindates } from "@/pages/_app";
 
 export default function NavBar() {
   const router = useRouter();
   const { data, status } = useSession();
   const [navState, setNavState] = useState("");
+
+  function getSearchResultsUrl(): string {
+    return `/listings/browse?latitude=${encodeURIComponent(
+      defaultCoordindates.latitude
+    )}&longitude=${encodeURIComponent(
+      defaultCoordindates.longitude
+    )}&proximity=15`;
+  }
 
   const nav_bar_button = (state: string, text: any) => {
     const handleClick = (state: string) => {
@@ -48,7 +57,7 @@ export default function NavBar() {
           <div className="flex items-center gap-10 text-[#C4C4C4]">
             {nav_bar_button(
               "browse",
-              <Link href="http://localhost:3000/listings/browse">Browse</Link>
+              <Link href={getSearchResultsUrl()}>Browse</Link>
             )}
             {nav_bar_button(
               "myListings",

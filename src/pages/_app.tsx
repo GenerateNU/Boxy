@@ -9,6 +9,11 @@ export type Coordinate = {
   longitude: number;
 };
 
+export const defaultCoordindates = {
+  latitude: -71.088257,
+  longitude: 42.340075,
+};
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>

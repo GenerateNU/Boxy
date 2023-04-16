@@ -2,7 +2,7 @@ import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Coordinate } from "../_app";
+import { Coordinate, defaultCoordindates } from "../_app";
 
 type LocationSuggestion = {
   place_id: string;
@@ -200,11 +200,11 @@ export default function BrowseListingsPage({ listings }: any) {
 
 export async function getServerSideProps(context: any) {
   if (!context.query.longitude) {
-    context.query.longitude = "42.340075";
+    context.query.longitude = defaultCoordindates.longitude;
   }
 
   if (!context.query.latitude) {
-    context.query.latitude = "-71.088257";
+    context.query.latitude = defaultCoordindates.latitude;
   }
 
   return {

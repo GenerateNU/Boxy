@@ -3,7 +3,7 @@ import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
 import { signIn, useSession } from "next-auth/react";
-import { Coordinate } from "./_app";
+import { Coordinate, defaultCoordindates } from "./_app";
 import Workflow from "@/components/LandingPage/Workflow";
 import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
 
@@ -16,10 +16,7 @@ type LocationSuggestion = {
 
 export default function LandingPage(props: any) {
   const session = useSession();
-  const [coordinates, setCoordinates] = useState<Coordinate>({
-    latitude: -71.088257,
-    longitude: 42.340075,
-  });
+  const [coordinates, setCoordinates] = useState<Coordinate>(defaultCoordindates);
 
   function service(image: string, title: string, text: string) {
     return (
