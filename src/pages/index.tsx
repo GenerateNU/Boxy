@@ -41,7 +41,6 @@ export default function LandingPage(props: any) {
   const [loaded, setLoad] = useState(false);
 
   useEffect(() => {
-    console.log(inView);
     if (inView) {
       setLoad(true);
       animation.start({

@@ -30,7 +30,6 @@ export default async function handler(
       if (error instanceof Error) {
         return res.status(403).send({ message: error.message });
       }
-      console.log(error);
     }
 
     return res.status(200).send({ message: "logged in", token: token });

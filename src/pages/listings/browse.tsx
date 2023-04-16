@@ -13,22 +13,7 @@ type LocationSuggestion = {
 
 export default function BrowseListingsPage({ listings }: any) {
   const router = useRouter();
-  const query = new URLSearchParams(router.pathname);
-  const [locationSearchSuggestions, setLocationSearchSuggestions] = useState<
-    LocationSuggestion[]
-  >([]);
-  const [locationSearchInput, setLocationSearchInput] = useState("");
   const [locationInput, setLocationInput] = useState<Coordinate>();
-
-  // TODO: abstract this entire locaiton suggestion feature
-  async function getLocationSuggestions(locationSearchInput: string) {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${locationSearchInput}&addressdetails=1&countrycodes=us&limit=5`
-    );
-    const data = await response.json();
-
-    setLocationSearchSuggestions(data);
-  }
 
   const imageList = [
     "https://s3-alpha-sig.figma.com/img/a037/cefe/ef1adc938dd648a6e10a3b69ebda558c?Expires=1682294400&Signature=n8vZKRIS0oK1on8lL8TAuSqokhRVesKk9Bag0ewfssNszBRdffILCcaCuYnhu1u2CJYE6Y3ifXO2BguDUYho9o45wvU3w1xUMBEhD2Er9xX~--kgNENzHSnv3WxEdeN~KT3v8AQtJJjqv0ymiXmLiNeUpaxSh-zXJWKU6P8dy0hz3~RzI74bq0jd~pIa8wkKM8FXn6IkW5Q-7O6TRJ0dbj-1jPfWXePaAXgy5sDWBxxwq6tcq914oDebYbEz978-ZacVMdz5EkpiB-k~UUlX8Wjgg3gQzn7rcvxk9NZ87bjmJWAMWy4t6BlvBo-q7Lx5UWJk6AXdLEPuyTYaTK799g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
@@ -86,7 +71,8 @@ export default function BrowseListingsPage({ listings }: any) {
     name: string,
     cost: string,
     location: string,
-    imageList: string[]
+    imageList: string[],
+    location_details: string
   ) => {
     const getRandomImage = () => {
       const randomIndex = Math.floor(Math.random() * imageList.length);
@@ -120,7 +106,9 @@ export default function BrowseListingsPage({ listings }: any) {
               </span>
             </div>
           </div>
-          <span className="text-sm text-black dark:text-black">{location}</span>
+          <span className="text-sm text-black dark:text-black">
+            {location_details}
+          </span>
         </div>
       </div>
     );
@@ -165,7 +153,7 @@ export default function BrowseListingsPage({ listings }: any) {
             </button>
             <button
               className="ml-2 rounded-lg bg-white p-2 text-black hover:bg-gray-600 hover:text-white border border-black"
-              onClick={() => setQueryValues()}
+              onClick={setQueryValues}
             >
               Filter
             </button>
@@ -182,7 +170,8 @@ export default function BrowseListingsPage({ listings }: any) {
                   listing.name,
                   listing.price,
                   listing.proximity,
-                  imageList
+                  imageList,
+                  listing.location_details
                 );
               }
             })}
