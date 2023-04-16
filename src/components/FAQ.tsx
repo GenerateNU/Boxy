@@ -102,37 +102,56 @@ const faqs: FAQItem[] = [
   },
   {
     header: "Hosting with Boxy",
-    question: "What is hosting with Boxy?",
+    question: "How can I sign up as a Boxy Host?",
     answer:
-      "Boxy can host your items and help you make money from your unused space!",
+      "Our signup process is quick and easy! Check out our website and click on 'Register' under 'Host' to get started. Fill out your storage space(s) information and you are on your way! \n Within 72 hours, you'll receive a follow-up email letting you know whether or not your listing has been approved. If it has, we will send you a link that displays your listing on our website. \n We're working on implementing a system that will allow you to manage your space and bookings in the near future. \n Stay tuned for updates on when this feature will be available!",
   },
   {
     header: "Hosting with Boxy",
-    question: "How does hosting with Boxy work?",
+    question: "How do I get paid?",
     answer:
-      "You can sign up to become a host on our website and start earning money from your unused space.",
+      "We will be in touch with you as soon as we find a suitable stasher for your storage space. You will receive the storage details and the amount you will be paid. Once you approve, we will send you a confirmation email with the stasher's profile. \n After you receive the confirmation email, the stasher may reach out to you at any time to coordinate the storage. You will receive 75% of your payment on a monthly basis. We keep the 25% in reserve for liability purposes. Once the stasher moves out and there's no damage or missing item reported by the stasher, you will receive the remaining 25% of your payment within 5-7 business days.",
+  },
+  {
+    header: "Hosting with Boxy",
+    question: "How much should I expect to get paid?",
+    answer:
+      "The earnings of our hosts can vary depending on the specific requirements and timeline of the stasher. On average, our hosts earn approximately $50 per month, but this amount can be higher depending on the stasher's needs and your hosting availability.",
+  },
+  {
+    header: "Hosting with Boxy",
+    question: "How am I protected as a Boxy Host?",
+    answer: "",
+  },
+  {
+    header: "Hosting with Boxy",
+    question: "How often is a Boxy Stasher allowed to check-in on their stuff?",
+    answer:
+      "A boxy stasher is permitted to check in up to three times during their storage period. If they need to access their items or add/remove something, they can do so within these three check-ins. However, please be aware that you reserve the right to decline any additional check-in requests that exceed the limit of three.",
   },
   {
     header: "Moving Help",
-    question: "Can Boxy help me move?",
-    answer: "Yes, Boxy provides moving services in select cities.",
+    question: "I need transportation to move my stuff, what should I do?",
+    answer:
+      "You've got options! In the past, some of our stashers have used Uber as a quick and easy way to move a limited number of items. Another option is booking a mover through TaskRabbit, which makes coordinating pick-up and drop-off times super simple - giving you more time to worry about other things! See this information on how to qualify for a TaskRabbit reimbursement.",
   },
   {
     header: "Moving Help",
-    question: "How do I book a moving service with Boxy?",
+    question: "How do I qualify for Taskrabbit reimbursement?",
     answer:
-      "You can book a moving service on our website or by contacting our customer support team.",
+      "We have got you covered! If you use Taskrabbit to move your stuff, we will reimburse 10% of your transportation cost. Just submit your reimbursement request here using this easy form. As long as the info is transparent and accurate and you submit it within 30 days, you will see your reimbursement pop up on your account within 5-7 business days. Cha-ching!",
   },
   {
     header: "Cancellations and Refunds",
-    question: "What is your cancellation policy?",
+    question: "Stasher Cancellation",
     answer:
-      "You can cancel your booking up to 24 hours before the scheduled pickup time for a full refund.",
+      "It is the responsibility of the stasher, not the host, to cancel a booking by email us at booking@storewithoxy.com once the stasher has removed the stored items from the space. stashers are not eligible for a refund nor a prorated amount if they store for less than the standard rental month. In addition, the following provisions apply to cancellation by a stasher: If a stasher cancels a booking less than 24 hours after approval and/or more than a week before the start date, the stasher is eligible for a 100% refund of the price quote and the $25 deposit fee. \n Boxy may, in its sole discretion, halt or otherwise withhold payouts to hosts to cover a refund to stasher if stasher timely cancels a booking. A refund may apply before a Stasher is matched with a host, once a stasher who has received information and/or has established a form of communication with a host, a refund cannot be issued.  If a stasher communicates to its host that it wants to move out and end its booking but does not cancel its booking on the Boxy site or services, the stasher is not eligible for a refund if its rental month automatically renews. Please see our Terms and Conditions for more details!",
   },
   {
     header: "Cancellations and Refunds",
-    question: "How do I get a refund?",
-    answer: "Please contact our customer support team to request a refund.",
+    question: "Host Cancellation",
+    answer:
+      "If for some reason a host needs to terminate a booking after the stasher has stored its stored items with no fault of the stasher, the host is required to provide 30 days’ notice to the stasher. \n If an extreme situation requires a host to deny a stasher’s right to possess space with less than 30 days’ notice, the stasher will receive a full refund (minus a $25 deposit fee) of the most recent rental month and the host will not receive the most recent month’s payroll and will be charged a $60 termination fee. Hosts who repeatedly cancel bookings may be subject to additional charges, including removal from the Boxy community and suspension of the use of the site and services. Please see our Terms and Conditions for more details!",
   },
 ];
 

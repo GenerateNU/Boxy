@@ -376,7 +376,6 @@ export default function ListingDetailsPage({ listing, host }: any) {
           </div>
         </div>
       </div>
-      <FAQ />
     </div>
   );
 }
