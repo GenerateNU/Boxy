@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import router, { useRouter } from "next/router";
 import Listing from "../listings/listing";
+import Reservation from "../reservations/reservation";
 
 type Listing = {
   listing_id: string;
@@ -11,10 +12,17 @@ type Listing = {
   proximity: string;
 };
 
+type Reservation = {
+  reservation_id: string;
+  listing_address: string;
+  stasher_name: string;
+  dates_requested: Date[];
+}
+
 export default function HostDashboard() {
   const [tabState, setTabState] = useState("Listings");
   const [allListings, setAllListings] = useState<Array<Listing>>([]);
-  const [reservations, setReservations] = useState<[]>([]);
+  const [reservations, setReservations] = useState<Array<Reservation>>([]);
 
   useEffect(() => {
     getAllListings();
@@ -44,7 +52,49 @@ export default function HostDashboard() {
       })
     ).json();
 
-    setReservations(all_res["my reservation requests"]);
+    const received_reservations = new Array();
+    for (const value of all_res["my reservation requests"]) {
+
+      const reservation_info = await (
+        await fetch("http://localhost:3000/api/listings/" + value, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      
+      const listing_info = await (
+        await fetch(
+          "http://localhost:3000/api/listings/" + reservation_info["listing_id"], {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      ).json();
+
+      const stasher_info = await (
+        await fetch(
+          "http://localhost:3000/api/users/" + reservation_info["user_id"], {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      ).json();
+
+      let newReservation: Reservation = {
+        reservation_id: reservation_info["reservation_id"],
+        listing_address: listing_info["address"],
+        stasher_name: stasher_info["name"],
+        dates_requested: reservation_info["dates_requested"],
+      }
+
+      received_reservations.push(newReservation);
+    }
+
+    setReservations(received_reservations);
   }
 
   async function cancelReservation(reservation_id: any) {
@@ -59,6 +109,8 @@ export default function HostDashboard() {
 
     getReservations(); // triggering refresh
   }
+
+
 
   // async function getConfirmedReservations() {
   //   const all_res = await (
@@ -86,16 +138,16 @@ export default function HostDashboard() {
     }
   };
 
-  const renderReservationElements = (reservations: any[]) => {
+  const renderReservationElements = (reservations: Reservation[]) => {
     if (reservations.length == 0) {
       return <h1>You have no reservations!</h1>;
     } else {
       return (
         reservations &&
-        reservations.map((reservation: any) => {
+        reservations.map((reservation: Reservation) => {
           return (
             <div>
-              <h1>{reservation}</h1>
+              <Reservation reservation={reservation} />
               <button onClick={() => cancelReservation(reservation)}>
                 cancel
               </button>

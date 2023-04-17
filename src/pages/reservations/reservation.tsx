@@ -2,28 +2,27 @@ import { AiOutlineRight } from "react-icons/ai";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function Listing({ listing }: any) {
+export default function Reservation({ Reservation }: any) {
   const [statusColor, setStatusColor] = useState("#00000");
   const [statusHover, setHoverStatus] = useState(false);
-  const link = "/listings/" + listing.listing_id
+  const link = "/reservations/" + Reservation.reservation_id
   var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November","December"];
   
   // Assuming that first and last in the list are the earliest and latest dates 
-  const earlyDate = new Date(listing.dates_available[0])
-  const lateDate = new Date(listing.dates_available[listing.dates_available.length - 1])
+  const earlyDate = new Date(Reservation.dates_requested[0])
+  const lateDate = new Date(Reservation.dates_requested[Reservation.dates_requested.length - 1])
   const getEarliestDate = monthNames[earlyDate.getMonth()] + " " + earlyDate.getDate();
   const getLatestDate = monthNames[lateDate.getMonth()] + " " + lateDate.getDate();
 
-
-  useEffect(() => {
-    if (listing.price < 20) {
-      setStatusColor("#E03C32");
-    } else if (listing.price >= 20 && listing.price < 100) {
-      setStatusColor("#FFD301");
-    } else {
-      setStatusColor("#7BB662");
-    }
-  }, [listing.price]);
+  // useEffect(() => {
+  //   if (reservation.price < 20) {
+  //     setStatusColor("#E03C32");
+  //   } else if (reservation.price >= 20 && reservation.price < 100) {
+  //     setStatusColor("#FFD301");
+  //   } else {
+  //     setStatusColor("#7BB662");
+  //   }
+  // }, [reservation.price]);
 
   return (
     <Link href={link}>
@@ -33,7 +32,8 @@ export default function Listing({ listing }: any) {
         onMouseLeave={() => setHoverStatus(false)}
       >
         <div className="h-full flex items-center pl-10">
-          <h2>{listing.address}</h2>
+          <h2>{Reservation.listing_address}</h2>
+          <h2>{Reservation.stasher_name}</h2>
         </div>
         <div className="h-full flex items-center justify-end pr-7">
           <div className="rounded-md flex bg-[#e6e6e6] items-center justify-evenly mr-5">
