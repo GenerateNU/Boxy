@@ -7,7 +7,7 @@ export default function BoxyConfirmation() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_7354_6830)">
+      <g clipPath="url(#clip0_7354_6830)">
         <path
           d="M15.752 96.2785L92.4678 63.5098L168.1 96.2785L91.9393 129.047L15.752 96.2785Z"
           fill="#9BD6CD"
@@ -24,8 +24,8 @@ export default function BoxyConfirmation() {
           d="M91.8666 103.733C119.407 103.733 141.733 81.4072 141.733 53.8666C141.733 26.326 119.407 4 91.8666 4C64.326 4 42 26.326 42 53.8666C42 81.4072 64.326 103.733 91.8666 103.733Z"
           fill="#077477"
           stroke="white"
-          stroke-width="7"
-          stroke-miterlimit="10"
+          strokeWidth="7"
+          strokeMiterlimit="10"
         />
         <path
           d="M75.4062 55.0029L89.0951 68.1368L108.307 41.8425"
@@ -34,9 +34,9 @@ export default function BoxyConfirmation() {
         <path
           d="M75.4062 55.0029L89.0951 68.1368L108.307 41.8425"
           stroke="white"
-          stroke-width="10"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M15.752 96.2783V178.861L91.9393 212.264V129.1L15.752 96.2783Z"

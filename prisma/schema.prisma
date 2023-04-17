@@ -50,7 +50,7 @@ model reservations {
   listing         listings   @relation(fields: [listing_id], references: [listing_id])
   cancelled       Boolean?   @default(false)
   cancelled_on    DateTime?  @default(now())
-  payment_id       String
+  stripe_id       String
 }
 
 model users {

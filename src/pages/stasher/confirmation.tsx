@@ -1,4 +1,4 @@
-import BoxyConfirmation from "@/components/BoxyConfirmation";
+import BoxyConfirmation from "@/components/Reservation/BoxyConfirmation";
 import { useRouter } from "next/router";
 
 export default function ReservationConfirmation() {

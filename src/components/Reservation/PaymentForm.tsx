@@ -63,14 +63,34 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
 
     setStatus("Processing ...");
 
-    const result = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/stasher/confirmation`,
+    const res = await fetch("http://localhost:3000/api/reservations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      // hard coded values for now
+      body: JSON.stringify({
+        host_id: 1,
+        stasher_id: 1,
+        listing_id: 1,
+        dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
+        stripe_id: paymentId,
+      }),
     });
-    if (result.error.message) {
-      setError(result.error.message);
+
+    if (res.status === 200) {
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/stasher/confirmation`,
+        },
+      });
+      console.log(result);
+      if (result.error.message) {
+        setError(result.error.message);
+      }
+    } else {
+      setError("Error: Server failed to create reservation");
     }
 
     setStatus("");
