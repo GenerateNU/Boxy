@@ -1,18 +1,22 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, listings, reservations } from "@prisma/client";
+import listingDataTable from "lib/listingInstance";
 
 export type ViewResponse = {
   "my reservation requests"?: number[];
   "my accepted reservations"?: number[];
   "my approved reservations"?: number[];
+  "my reservations"?: ReservationResponse[]
 };
 
 export type ReservationResponse = {
   reservation_id: number;
   listing_id: number;
-  accepted: Boolean;
-  accepted_on?: Date;
   requested_on?: Date;
   dates_requested?: Date[];
+  reservation_name?: String;
+  host_name?: String
+  address?: String
+
 };
 
 export default class Reservations {
@@ -76,7 +80,6 @@ export default class Reservations {
       let response: ReservationResponse = {
         reservation_id: res["reservation_id"],
         listing_id: res["listing_id"],
-        accepted: res["accepted"],
       };
 
       return response;
@@ -116,15 +119,17 @@ export default class Reservations {
           stasher_id: userID,
         },
       });
+      const reservation_list: Array<ReservationResponse> = new Array()
 
-      const reservation_ids = new Array();
-      reservationResponse.forEach(function (value) {
-        reservation_ids.push(value["reservation_id"]);
-      });
+      reservationResponse.forEach(async function (reservation) {
+        let curListing: listings = await listingDataTable.getListing(reservation.listing_id)
+        let curDetails:ReservationResponse = {reservation_id: reservation.reservation_id, listing_id:curListing.listing_id, dates_requested: reservation.dates_requested, reservation_name: curListing.address } 
+        reservation_list.push(curDetails)
+      })
 
       let response: ViewResponse = {
-        "my reservation requests": reservation_ids,
-      };
+        "my reservations": reservation_list
+      }
 
       return response;
     } catch (e) {
