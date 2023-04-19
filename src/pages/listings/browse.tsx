@@ -121,9 +121,7 @@ export default function BrowseListingsPage({ listings }: any) {
       <div className="container mx-auto pt-[5vh]">
         <div className="flex flex-row mb-4">
           <div className="flex justify-start w-full">
-            <LocationSearchBar
-              setCoordinates={setLocationInput}
-            ></LocationSearchBar>
+            <LocationSearchBar setCoordinates={() => {}}></LocationSearchBar>
           </div>
           <div className="flex justify-end w-[20vw]">
             <input
