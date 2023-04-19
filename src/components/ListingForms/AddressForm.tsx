@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "@/assets/Navigation.svg";
 import FormLayout from "./FormLayout";
-]
+
 export default function AddressForm({
   setAddress,
   setAparment,
