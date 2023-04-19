@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 type ReservationDetails = {
   datesRequested: Array<Date>;
   name: string;
+  hostName: string;
 };
 
 export default function StasherDashboard() {
@@ -34,12 +35,17 @@ export default function StasherDashboard() {
 
     console.log(all_res);
 
-    const reservations: { datesRequested: any; name: any }[] = [];
+    const reservations: {
+      datesRequested: any;
+      name: string;
+      hostName: string;
+    }[] = [];
 
     all_res.forEach((reservation: { [x: string]: any }) =>
       reservations.push({
         datesRequested: reservation["dates_requested"],
         name: reservation["reservation_name"],
+        hostName: reservation["host_name"],
       })
     );
 
@@ -54,7 +60,13 @@ export default function StasherDashboard() {
         {reservations ? (
           reservations.map((reservation) => {
             return (
-              <li>{reservation.datesRequested + " | " + reservation.name}</li>
+              <li>
+                {reservation.datesRequested +
+                  " | " +
+                  reservation.name +
+                  " | " +
+                  reservation.hostName}
+              </li>
             );
           })
         ) : (

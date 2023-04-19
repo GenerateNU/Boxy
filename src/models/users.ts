@@ -63,6 +63,16 @@ export default class Users {
     return userDetails;
   }
 
+  public async getUserGivenId(user_id: number) {
+    const res = await this.usersDB.findUnique({
+      where: {
+        user_id: user_id,
+      },
+    });
+
+    return res;
+  }
+
   public async updateUser(body: any, headers: any) {
     try {
       this.validateInputData(body);

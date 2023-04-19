@@ -1,5 +1,6 @@
 import { PrismaClient, listings, reservations } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
+import userInstance from "lib/userInstance";
 
 export type ViewResponse = {
   "my reservation requests"?: number[];
@@ -124,11 +125,15 @@ export default class Reservations {
         let curListing: listings = await listingDataTable.getListing(
           reservation.listing_id
         );
+
+        let user = await userInstance.getUserGivenId(curListing.host_id);
+
         let curDetails: ReservationResponse = {
           reservation_id: reservation.reservation_id,
           listing_id: curListing.listing_id,
           dates_requested: reservation.dates_requested,
           reservation_name: curListing.address,
+          host_name: user?.name,
         };
         reservation_list.push(curDetails);
       }
