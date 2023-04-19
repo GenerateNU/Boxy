@@ -42,6 +42,7 @@ async function getHostReservations(
       const email = session.user?.email
       const userID = Utils.getUserId(email);
       const response = await persistentReservationInstance.getHostReservations(userID);
+      console.log(response)
       return res.status(200).send(response);
     } catch (error) {
       return res.status(403).send({ message: String(error) });

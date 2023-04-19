@@ -58,7 +58,7 @@ export default function HostDashboard() {
   async function getReservations() {
     const all_res = (
       await (
-        await fetch("http://localhost:3000/api/reservations/sent", {
+        await fetch("http://localhost:3000/api/reservations/received", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -67,8 +67,6 @@ export default function HostDashboard() {
       ).json()
     )["my reservations"];
 
-    console.log(all_res);
-
     const reservations: {
       datesRequested: any;
       name: string;
@@ -76,11 +74,11 @@ export default function HostDashboard() {
       address: string;
     }[] = [];
 
-    all_res.forEach((reservation: { [x: string]: any }) =>
+    all_res?.forEach((reservation: { [x: string]: any }) =>
       reservations.push({
         datesRequested: reservation["dates_requested"],
         name: reservation["name"],
-        hostName: reservation["host_name"],
+        hostName: reservation["stasher_name"],
         address: reservation["address"],
       })
     );
@@ -124,7 +122,7 @@ export default function HostDashboard() {
       return (
         reservations &&
         reservations.map((reservation: any) => {
-          return <Reservation reservation={reservation}/>
+          return <Reservation reservation={reservation} header={reservation.hostName} sub={reservation.address} />
         })
       );
     }

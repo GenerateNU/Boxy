@@ -1,6 +1,8 @@
-import { PrismaClient, listings, reservations } from "@prisma/client";
+import { PrismaClient, listings, reservations, user } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
+import persistentUserInstance from "lib/userInstance";
 import userInstance from "lib/userInstance";
+import { User } from "next-auth";
 
 export type ViewResponse = {
   "my reservation requests"?: any[];
@@ -17,6 +19,7 @@ export type ReservationResponse = {
   name?: String;
   host_name?: String;
   address?: String;
+  stasher_name?: String;
 };
 
 export default class Reservations {
@@ -96,20 +99,26 @@ export default class Reservations {
           cancelled: false,
         },
       });
+      
+      let reservation_list = []
 
-      const reservation_ids = new Array();
-      reservationResponse.forEach(function (value) {
-        reservation_ids.push(value["reservation_id"]);
-      });
+      for (const reservation of reservationResponse) {
+        let curListing = await listingDataTable.getListing(reservation.listing_id)
+        let user = await userInstance.getUserGivenId(reservation.stasher_id);
 
-      const stasher_ids = new Array();
-      reservationResponse.forEach(function (value) {
-        stasher_ids.push(value["stasher_id"]);
-      });
+        let curDetails: ReservationResponse = {
+          reservation_id: reservation.reservation_id,
+          listing_id: curListing.listing_id,
+          dates_requested: reservation.dates_requested,
+          name: curListing.name,
+          address: curListing.address,
+          stasher_name: user?.name,
+        };
+        reservation_list.push(curDetails);
+      }
 
-
-      let response: ViewResponse = {
-        "my reservation requests": reservationResponse,
+      let response = {
+        "my reservations": reservation_list,
       };
 
       return response;
