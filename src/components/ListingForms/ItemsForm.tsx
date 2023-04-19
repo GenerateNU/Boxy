@@ -1,24 +1,46 @@
+import { useContext, useEffect, useState } from "react";
+import CardGroup from "./CardGroup";
+import FormLayout from "./FormLayout";
+import Notifications from "@/assets/Notifications.svg";
+import { ListingContext } from "@/pages/listings/create";
 
-export default function ItemsForm() {
-    const create_item = (placeholder: string) => {
-        return(
-            <button className="h-[80px] w-[100%] bg-[#F8F8F8] hover:bg-gray-400 rounded-md">{placeholder}</button>
-        )
-    }
-    
-    return (
-        <div className='container min-w-full flex flex-col items-center pt-[5vh]'>
-            <div className="w-3/6 flex flex-col">
-                <h1 className='text-3xl pb-2'>Item and Size Description</h1>
-                <h3 className='mb-5'>Please Describe The Type of Items You are Able to Store. Select all that apply.</h3>
-                <div className = "grid gap-y-5 gap-x-5 grid-cols-3">
-                    {create_item("Boxes Only")}
-                    {create_item("Furniture Only")}
-                    {create_item("Boxes and Furnitures")}
-                    {create_item("Other")}
-                </div>
-                <h3 className="mt-5 mb-5">To the best of your ability, please describe the size of the storage space (e.g. Basement, 500 sqft of empty space with 8 ft ceilings). </h3>
-                <textarea className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-black "></textarea>
-            </div>
-        </div>
-);}
+export default function ItemsForm({
+  description,
+  setDescription,
+  setItems,
+  items,
+}: any) {
+  const listingContext = useContext(ListingContext);
+  const [error, setError] = useState(false);
+
+  const validate = () => {
+    const ret = items.reduce((acc: number, curr: boolean) => curr ? ++acc : acc, 0) < 1;
+    setError(ret);
+    return !ret;
+  }
+
+  useEffect(() => setError(false), [items]);
+
+  return (
+    <FormLayout image={Notifications} validate={validate}>
+      <div className="flex flex-col w-[90%]">
+        <h1 className="text-3xl pb-2">Item and Size Description</h1>
+        <h3 className="mb-5">
+          Please Describe The Type of Items You are Able to Store. Select all
+          that apply.
+        </h3>
+        <CardGroup items={listingContext.itemsList} selected={items} setSelected={setItems}/>
+        {error ? <div className="text-red-500 mt-2">Please select at least 1 item type</div> : undefined}
+        <h3 className="mt-5 mb-5">
+          To the best of your ability, please describe the size of the storage
+          space (e.g. Basement, 500 sqft of empty space with 8 ft ceilings).{" "}
+        </h3>
+        <textarea
+          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+          onChange={(event) => setDescription(event.target.value)}
+          value={description}
+        />
+      </div>
+    </FormLayout>
+  );
+}

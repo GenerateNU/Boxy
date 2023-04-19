@@ -1,4 +1,7 @@
 import { useState } from "react";
+import FormLayout from "./FormLayout";
+import Calendar from "@/assets/Calendar.svg"
+
 export default function DatesForm() {
   const [dateState, useDateState] = useState("start");
 
@@ -14,17 +17,24 @@ export default function DatesForm() {
       </button>
     );
   };
+
   const create_input = (placeholder: string, type: string) => {
     return (
       <input
         className="h-[60px] pl-5 pr-5 bg-bxBoxLight rounded-3xl mb-3 placeholder-[#B3B3B3]"
         type={type}
+        placeholder={placeholder}
       ></input>
     );
   };
+
+  const validate = () => {
+    return true;
+  }
+
   return (
-    <div className="container min-w-full flex flex-col items-center mt-[10vh]">
-      <div className="w-2/6 flex flex-col">
+    <FormLayout image={Calendar} validate={validate}>
+      <div className="flex flex-col">
         <h1 className="text-3xl mb-2">Dates</h1>
         <h3 className="mb-5">
           Please provide the Start Date and End Date for location availability.
@@ -36,6 +46,6 @@ export default function DatesForm() {
         {create_input("MM / DD / YY", "date")}
         {create_input("___ : ___", "time")}
       </div>
-    </div>
+    </FormLayout>
   );
 }
