@@ -3,6 +3,7 @@ import { reservations } from "@prisma/client";
 import { getServerSession, Session } from "next-auth";
 import persistentReservationInstance from "lib/reservationInstance";
 import Utils from "@/utils";
+import persistentUserInstance from "lib/userInstance";
 
 type Message = {
   message: string;
@@ -35,8 +36,19 @@ async function getReservationsGivenFilters(
 
 async function createReservation(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
+  if (!session) {
+    return res.status(401).send({ message: "user is not authenticated." });
+  }
+
+  const user = await persistentUserInstance.getUser(session.user?.email)
+
+  if(!user.verified){
+    return res.status(401).send({ message: "user is not verified." });
+  }
+
   try {
     await persistentReservationInstance.create(req.body);
   } catch (error) {
