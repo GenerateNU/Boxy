@@ -47,9 +47,9 @@ export default function ProgressBar({
           )}
         </div>
       </div>
-      <div id="progress-bar" className="h-[6px] bg-bxBoxLight grid grid-cols-6">
+      <div id="progress-bar" className="h-[6px] bg-bxBoxLight grid grid-cols-6 gap-1 rounded-full">
         {forms.slice(0, currentForm + 1).map((_: any, i: number) => {
-          return <div className="bg-[#B3B3B3]" key={i} />;
+          return <div className="bg-[#B3B3B3] rounded-full" key={i} />;
         })}
       </div>
     </div>

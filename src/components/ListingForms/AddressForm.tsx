@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "@/assets/Navigation.svg";
 import FormLayout from "./FormLayout";
-import { error } from "console";
-
+]
 export default function AddressForm({
   setAddress,
   setAparment,
@@ -20,7 +19,6 @@ export default function AddressForm({
   zipCode,
   name,
   price,
-  latLong,
 }: any) {
   const placeHolders = [
     "Street Address",

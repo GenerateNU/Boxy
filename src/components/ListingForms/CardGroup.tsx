@@ -9,8 +9,8 @@ export default function CardGroup({ items, selected, setSelected }: any) {
               setSelected(newSelected);
             }}
             className={`h-[80px] w-[100%] ${
-              selected[i] ? "bg-gray-300" : "bg-[#F8F8F8]"
-            } hover:bg-gray-300 active:bg-gray-400 rounded-md`}
+              selected[i] ? "bg-gray-400" : "bg-[#F8F8F8]"
+            } hover:bg-gray-400 active:bg-gray-500 rounded-md`}
             key={i}
           >
             {text}

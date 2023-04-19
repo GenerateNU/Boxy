@@ -56,7 +56,13 @@ export default function ListingCreate({}: any) {
     longitude: 0,
   });
 
-  const [datesAvailable, setDatesAvailable] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  // time of day (AM/PM)
+  const [startTOD, setStartTOD] = useState("");
+  const [endTOD, setEndTOD] = useState("");
 
   // amenities, spacetype, items are represented by array of booleans
   // true means that the index in the corresponding list is selected
@@ -88,17 +94,23 @@ export default function ListingCreate({}: any) {
       zipCode={zipCode}
       name={name}
       price={price}
-      latLong={latLong}
     />,
-    <DatesForm />,
-    <AmenitiesForm
-      setAmenities={setAmenities}
-      amenities={amenities}
+    <DatesForm
+      startDate={startDate}
+      startTime={startTime}
+      startTOD={startTOD}
+      endDate={endDate}
+      endTime={endTime}
+      endTOD={endTOD}
+      setStartDate={setStartDate}
+      setStartTime={setStartTime}
+      setStartTOD={setStartTOD}
+      setEndDate={setEndDate}
+      setEndTime={setEndTime}
+      setEndTOD={setEndTOD}
     />,
-    <SpaceTypeForm
-      setSpaceType={setSpaceType}
-      spaceType={spaceType}
-    />,
+    <AmenitiesForm setAmenities={setAmenities} amenities={amenities} />,
+    <SpaceTypeForm setSpaceType={setSpaceType} spaceType={spaceType} />,
     <ItemsForm
       description={description}
       setDescription={setDescription}
@@ -108,11 +120,11 @@ export default function ListingCreate({}: any) {
     <SubmitForm
       fields={[
         name,
-        `${address} ${apartment ? apartment + " " : ""}${city}, ${state}`,
-        datesAvailable,
-        amenityList.filter((_: string, i, number) => amenities[i]).join(", "),
-        spaceTypeList.filter((_: string, i, number) => spaceType[i]).join(", "),
-        itemsList.filter((_: string, i, number) => items[i]).join(", "),
+        `${address} ${apartment ? apartment + " " : ""}${city}, ${state} ${zipCode}`,
+        `from ${startDate} to ${endDate}`,
+        amenityList.filter((_: string, i: number) => amenities[i]).join(", "),
+        spaceTypeList.filter((_: string, i: number) => spaceType[i]).join(", "),
+        itemsList.filter((_: string, i: number) => items[i]).join(", "),
       ]}
       changeForm={setCurrentForm}
     />,
@@ -125,32 +137,6 @@ export default function ListingCreate({}: any) {
   }
 
   async function createListing() {
-    console.log({
-      name: name,
-      dates_available: [new Date("2023-04-01"), new Date("2023-04-02")],
-      price: 1,
-      description: description,
-      amenities: [
-        "Pest_Controlled",
-        "Fire_Alarm_System",
-        "Smoke_Free",
-        "Pet_Free",
-        "Access_to_Elevator",
-        "Ground_Floor",
-        "Climate_Controlled",
-        "Private_Storage",
-        "Party_Free",
-      ],
-      space_type: "Closet",
-      address: address,
-      city: city,
-      zip_code: zipCode,
-      state: "CA",
-      space_available: [1, 2, 3],
-      longitude: defaultCoordindates.longitude,
-      latitude: defaultCoordindates.latitude,
-    });
-    return;
     const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
       headers: {
@@ -158,7 +144,7 @@ export default function ListingCreate({}: any) {
       },
       body: JSON.stringify({
         name: name,
-        dates_available: [new Date("2023-04-01"), new Date("2023-04-02")],
+        dates_available: [new Date(startDate), new Date(endDate)],
         price: 1,
         description: description,
         amenities: [
@@ -183,7 +169,7 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
+    res.status == 200 && router.push("/listings/confirmation");
   }
 
   const validateAddress = () =>

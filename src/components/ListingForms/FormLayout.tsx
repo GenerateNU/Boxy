@@ -11,7 +11,7 @@ export default function FormLayout({ children, image, validate }: any) {
         <div className="basis-1/2 flex flex-col items-start pt-[5vh]">
           {children}
         </div>
-        <div className="basis-1/2 items-center my-auto">
+        <div className="basis-1/2 items-center pt-[5vh]">
           <Image src={image} alt="Image" />
         </div>
       </div>
