@@ -158,7 +158,10 @@ export default function LandingPage(props: any) {
           <></>
         )}
       </div>
-      <FAQ />
+
+      <div id="faq-section">
+        <FAQ />
+      </div>
     </div>
   );
 }
