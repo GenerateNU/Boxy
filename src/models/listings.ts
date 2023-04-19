@@ -258,7 +258,7 @@ export default class ListingsDataTable {
   }
 
   private validateAddress(address: string) {
-    if (!/^\d+\s[A-Za-z]+\s[A-Za-z]+(\.|)$/.test(address)) {
+    if (!/^\d+\s[A-Za-z\s]+\s[A-Za-z\s]+(\.|)$/.test(address)) {
       throw new Error(
         "address must match the pattern 'number street_name street_type'"
       );

@@ -73,6 +73,35 @@ export default class Users {
     return res;
   }
 
+  public async getUserByID(id: any) {
+    const res = await this.usersDB.findUnique({
+      where: {
+        user_id: id,
+      },
+    });
+
+    const userDetails = {
+      name: "",
+      address: "",
+      verified: false,
+      exists: false,
+      is_admin: false,
+    };
+
+    // user doesn't exist in db
+    if (!res) {
+      return userDetails;
+    }
+
+    userDetails["name"] = res["name"];
+    userDetails["address"] = res["email"];
+    userDetails["verified"] = res["verified"];
+    userDetails["exists"] = true;
+    userDetails["is_admin"] = res["is_admin"];
+
+    return userDetails;
+  }
+
   public async updateUser(body: any, headers: any) {
     try {
       this.validateInputData(body);

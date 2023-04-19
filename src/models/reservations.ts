@@ -3,7 +3,7 @@ import listingDataTable from "lib/listingInstance";
 import userInstance from "lib/userInstance";
 
 export type ViewResponse = {
-  "my reservation requests"?: number[];
+  "my reservation requests"?: any[];
   "my accepted reservations"?: number[];
   "my approved reservations"?: number[];
   "my reservations"?: ReservationResponse[];
@@ -102,8 +102,14 @@ export default class Reservations {
         reservation_ids.push(value["reservation_id"]);
       });
 
+      const stasher_ids = new Array();
+      reservationResponse.forEach(function (value) {
+        stasher_ids.push(value["stasher_id"]);
+      });
+
+
       let response: ViewResponse = {
-        "my reservation requests": reservation_ids,
+        "my reservation requests": reservationResponse,
       };
 
       return response;

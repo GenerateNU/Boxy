@@ -364,7 +364,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     onClick={() =>
                       router.push({
                         pathname: `./${listingID}/reserve`,
-                        query: { dropOffDate, pickUpDate, accessDate },
+                        query: { dropOffDate, pickUpDate, accessDate, listingID },
                       })
                     }
                   >

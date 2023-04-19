@@ -8,8 +8,8 @@ import DateRangeSelector from "../../../components/General/DateRangeSelector";
 import dayjs, { Dayjs } from "dayjs";
 import time from "console";
 
-export default function ListingReservationPage({ listing }: any) {
-  const listing_info = listing.message;
+export default function ListingReservationPage(props: any) {
+  const listing_info = props.listing;
   const router = useRouter();
   const [currentForm, setCurrentForm] = useState(0);
   const [dateEdit, setDateEdit] = useState(false);
@@ -27,7 +27,7 @@ export default function ListingReservationPage({ listing }: any) {
       body: JSON.stringify({
         host_id: 1,
         stasher_id: 1,
-        listing_id: 1,
+        listing_id: listing_info.listing_id,
         dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
       }),
     });
@@ -36,8 +36,8 @@ export default function ListingReservationPage({ listing }: any) {
   }
 
   useEffect(() => {
-    console.log(listing);
-  }, [listing]);
+    console.log(props.listing);
+  }, [props.listing]);
 
   const reservation_overview = {
     total: "$350",
@@ -97,7 +97,6 @@ export default function ListingReservationPage({ listing }: any) {
               </svg>
             </button>
           </div>
-          {/* need to handle case where there are no dates available - maybe filter listing from browse page*/}
           {listing_info?.dates_available &&
           listing_info.dates_available.length !== 0 ? (
             DateRangeSelector(listing_info?.dates_available)

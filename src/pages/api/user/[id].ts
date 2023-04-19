@@ -1,31 +1,59 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { authOptions } from "../auth/[...nextauth]";
+import { getServerSession, Session } from "next-auth";
+import persistentUserInstance from "lib/userInstance";
+import prisma from "lib/db";
 
 type Message = {
   message: string;
 };
 
-export default function handler(
+type UserResponse = {
+  name: string;
+  address: string;
+}
+
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
-  if ("id"! in req.query) {
-    return res
-      .status(400)
-      .json({ message: "missing id query in parameter string" });
+
+  const session = await getServerSession(req, res, authOptions);
+
+  const supportedRequestMethods: { [key: string]: Function } = {
+    GET: getUserById,
+  };
+
+  if (!("id" in req.query)) {
+    return res.status(405).send({message: 'no id in query!'})
   }
 
-  // GET - get user with given ID
-  if (req.method === "GET") {
+  if (req.method) {
+    return supportedRequestMethods[req.method](req, res, session);
   }
+  
+  return res.status(405).send({ message: "request method not supported" });
 
-  // POST - edit user with given ID
-  if (req.method === "POST") {
-    // edit user with given id
-  }
-
-  // DELETE - delete user with given ID
-  if (req.method === "DELETE") {
-  }
-
-  return res.status(403).json({ message: "invalid request method" });
 }
+
+  // Retrieve a user with a given id: 
+  async function getUserById(
+    req: NextApiRequest,
+    res: NextApiResponse,
+  ) {
+
+    const id: any = req.query['id']
+
+    if (id instanceof Array<String> || id == undefined) {
+      return
+    }
+
+    try {
+      const response = await persistentUserInstance.getUserByID(parseInt(id));
+      return res.status(200).send(response)
+    }
+    catch (error) {
+      return res.status(200).send({message: error});
+    }
+}
+
