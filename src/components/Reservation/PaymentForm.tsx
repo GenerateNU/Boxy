@@ -37,7 +37,7 @@ export default function PaymentForm({ reservation }: any) {
   }, []);
 
   return (
-    <div className="flex flex-col items-center mt-8">
+    <div className="flex flex-col items-center">
       {clientSecret && (
         <div>
           <Elements stripe={stripePromise} options={{ clientSecret }}>

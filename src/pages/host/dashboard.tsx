@@ -19,10 +19,17 @@ type Listing = {
   proximity: string;
 };
 
+type ReservationDetails = {
+  datesRequested: Array<Date>;
+  name: string;
+  hostName: string;
+  address: string;
+};
+
 export default function HostDashboard() {
   const [tabState, setTabState] = useState("Listings");
   const [allListings, setAllListings] = useState<Array<Listing>>([]);
-  const [reservations, setReservations] = useState<[]>([]);
+  const [reservations, setReservations] = useState<Array<ReservationDetails>>()
   const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
   const { data, status } = useSession();
 
@@ -49,17 +56,37 @@ export default function HostDashboard() {
   }
 
   async function getReservations() {
-    const all_res = await (
-      await fetch("http://localhost:3000/api/reservations/received", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
+    const all_res = (
+      await (
+        await fetch("http://localhost:3000/api/reservations/sent", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json()
+    )["my reservations"];
 
-    setReservations(all_res["my reservation requests"]);
-  }
+    console.log(all_res);
+
+    const reservations: {
+      datesRequested: any;
+      name: string;
+      hostName: string;
+      address: string;
+    }[] = [];
+
+    all_res.forEach((reservation: { [x: string]: any }) =>
+      reservations.push({
+        datesRequested: reservation["dates_requested"],
+        name: reservation["name"],
+        hostName: reservation["host_name"],
+        address: reservation["address"],
+      })
+    );
+
+      setReservations(reservations);
+    }
 
 
   async function cancelReservation(reservation_id: any) {
@@ -75,6 +102,8 @@ export default function HostDashboard() {
     getReservations(); // triggering refresh
   }
 
+
+
   const renderListingElements = (listings: Listing[]) => {
     if (listings == null || listings.length == 0) {
       return <h1>You have no listings!</h1>;
@@ -88,8 +117,8 @@ export default function HostDashboard() {
     }
   };
 
-  const renderReservationElements = (reservations: any[]) => {
-    if (reservations == null || reservations.length == 0) {
+  const renderReservationElements = (reservations: ReservationDetails[] | undefined) => {
+    if (reservations == undefined || reservations.length == 0) {
       return <h1>You have no reservations!</h1>;
     } else {
       return (
@@ -151,7 +180,7 @@ export default function HostDashboard() {
         {renderCurrentForm()}
       </div>
       <div className='w-[40vw] flex justify-center pt-16'>
-        <Calendar className='w-[350px] pt-[7vh]' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
+        <Calendar className='w-[350px] pt-[7vh] pb-20' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
       </div>
     </div>
   );

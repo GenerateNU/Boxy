@@ -60,13 +60,13 @@ export default function NavBar() {
               <Link href={getSearchResultsUrl()}>Browse</Link>
             )}
             {nav_bar_button(
-              "myListings",
+              "host",
               <Link href="http://localhost:3000/host/dashboard">
                 Host Dashboard
               </Link>
             )}
             {nav_bar_button(
-              "myListings",
+              "stasher",
               <Link href="http://localhost:3000/stasher/dashboard">
                 Stasher dashboard
               </Link>
