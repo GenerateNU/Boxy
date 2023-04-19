@@ -132,7 +132,7 @@ export default class Reservations {
           reservation_id: reservation.reservation_id,
           listing_id: curListing.listing_id,
           dates_requested: reservation.dates_requested,
-          reservation_name: curListing.address,
+          reservation_name: curListing.name,
           host_name: user?.name,
         };
         reservation_list.push(curDetails);
