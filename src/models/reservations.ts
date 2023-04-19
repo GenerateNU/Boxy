@@ -14,7 +14,7 @@ export type ReservationResponse = {
   listing_id: number;
   requested_on?: Date;
   dates_requested?: Date[];
-  reservation_name?: String;
+  name?: String;
   host_name?: String;
   address?: String;
 };
@@ -132,7 +132,8 @@ export default class Reservations {
           reservation_id: reservation.reservation_id,
           listing_id: curListing.listing_id,
           dates_requested: reservation.dates_requested,
-          reservation_name: curListing.name,
+          name: curListing.name,
+          address: curListing.address,
           host_name: user?.name,
         };
         reservation_list.push(curDetails);

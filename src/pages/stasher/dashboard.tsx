@@ -5,6 +5,7 @@ type ReservationDetails = {
   datesRequested: Array<Date>;
   name: string;
   hostName: string;
+  address: string;
 };
 
 export default function StasherDashboard() {
@@ -39,13 +40,15 @@ export default function StasherDashboard() {
       datesRequested: any;
       name: string;
       hostName: string;
+      address: string;
     }[] = [];
 
     all_res.forEach((reservation: { [x: string]: any }) =>
       reservations.push({
         datesRequested: reservation["dates_requested"],
-        name: reservation["reservation_name"],
+        name: reservation["name"],
         hostName: reservation["host_name"],
+        address: reservation["address"],
       })
     );
 
@@ -54,7 +57,6 @@ export default function StasherDashboard() {
 
   return (
     <div className="container flex justify-center min-w-full pt-16">
-      <h1>my reservations </h1>
       <span></span>
       <ul>
         {reservations ? (
@@ -65,7 +67,9 @@ export default function StasherDashboard() {
                   " | " +
                   reservation.name +
                   " | " +
-                  reservation.hostName}
+                  reservation.hostName +
+                  " | " +
+                  reservation.address}
               </li>
             );
           })
