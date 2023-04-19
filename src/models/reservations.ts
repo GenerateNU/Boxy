@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 export type ViewResponse = {
-  "my reservation requests"?: number[];
+  "my reservation requests"?: any[];
   "my accepted reservations"?: number[];
   "my approved reservations"?: number[];
 };
@@ -99,8 +99,14 @@ export default class Reservations {
         reservation_ids.push(value["reservation_id"]);
       });
 
+      const stasher_ids = new Array();
+      reservationResponse.forEach(function (value) {
+        stasher_ids.push(value["stasher_id"]);
+      });
+
+
       let response: ViewResponse = {
-        "my reservation requests": reservation_ids,
+        "my reservation requests": reservationResponse,
       };
 
       return response;

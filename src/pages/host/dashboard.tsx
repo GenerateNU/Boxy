@@ -5,6 +5,12 @@ import router, { useRouter } from "next/router";
 import Listing from "../listings/listing";
 import { signIn, useSession } from "next-auth/react";
 import { sign } from "crypto";
+import Reservation from "@/components/Reservation/Reservation";
+import { Calendar } from 'primereact/calendar'
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
+import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";                                //icons
 
 type Listing = {
   listing_id: string;
@@ -17,6 +23,7 @@ export default function HostDashboard() {
   const [tabState, setTabState] = useState("Listings");
   const [allListings, setAllListings] = useState<Array<Listing>>([]);
   const [reservations, setReservations] = useState<[]>([]);
+  const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
   const { data, status } = useSession();
 
   if (status === "unauthenticated") {
@@ -54,6 +61,7 @@ export default function HostDashboard() {
     setReservations(all_res["my reservation requests"]);
   }
 
+
   async function cancelReservation(reservation_id: any) {
     const all_res = await (
       await fetch("http://localhost:3000/api/reservations/" + reservation_id, {
@@ -67,21 +75,8 @@ export default function HostDashboard() {
     getReservations(); // triggering refresh
   }
 
-  // async function getConfirmedReservations() {
-  //   const all_res = await (
-  //     await fetch("http://localhost:3000/api/listings/posted", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //   ).json();
-
-  //   setConfirmedReservations(all_res["my listings"])
-  // }
-
   const renderListingElements = (listings: Listing[]) => {
-    if (listings.length == 0) {
+    if (listings == null || listings.length == 0) {
       return <h1>You have no listings!</h1>;
     } else {
       return (
@@ -94,33 +89,29 @@ export default function HostDashboard() {
   };
 
   const renderReservationElements = (reservations: any[]) => {
-    if (reservations.length == 0) {
+    if (reservations == null || reservations.length == 0) {
       return <h1>You have no reservations!</h1>;
     } else {
       return (
         reservations &&
         reservations.map((reservation: any) => {
-          return (
-            <div>
-              <h1>{reservation}</h1>
-              <button onClick={() => cancelReservation(reservation)}>
-                cancel
-              </button>
-            </div>
-          );
+          return <Reservation reservation={reservation}/>
         })
       );
     }
   };
 
+  const all_listings = renderListingElements(allListings)
+  const all_reservations = renderReservationElements(reservations)
+
   function renderCurrentForm() {
     switch (tabState) {
       case "Listings":
-        return renderListingElements(allListings);
+        return all_listings;
       // case "Requested":
       //   return renderReservationRequests(reservationRequests);
       case "Reservations":
-        return renderReservationElements(reservations);
+        return all_reservations;
     }
   }
 
@@ -142,14 +133,14 @@ export default function HostDashboard() {
   };
 
   return (
-    <div className="container flex justify-center min-w-full pt-16">
-      <div className="w-[50vw] flex-col pt-[5vh]">
+    <div className="container flex min-w-full pt-16">
+      <div className="w-[60vw] flex-col pt-[5vh] ml-20">
+        <h1 className='text-[40px] mb-5'>{tabState}</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
           {listing_tab("Listings", "Listings")}
-          {/* {listing_tab("Requested", "Requested")} */}
           {listing_tab("Reservations", "Reservations")}
-          <div className="col-span-2 flex justify-end border-b-2">
-            <Link href="/listings/create" className="h-2/3 w-[55%]">
+          <div className="col-span-4 flex justify-end border-b-2">
+            <Link href="/listings/create" className="h-2/3 w-[30%]">
               <button className="flex h-full w-full justify-center items-center rounded-3xl outline outline-gray-500 text-gray-500 hover:outline-black hover:text-black">
                 <AiOutlinePlus />
                 <h3 className="ml-1">New Listing</h3>
@@ -158,6 +149,9 @@ export default function HostDashboard() {
           </div>
         </div>
         {renderCurrentForm()}
+      </div>
+      <div className='w-[40vw] flex justify-center pt-16'>
+        <Calendar className='w-[350px] pt-[7vh]' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
       </div>
     </div>
   );
