@@ -5,6 +5,7 @@ import listingDataTable from "lib/listingInstance";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "lib/db";
+import stripe from "lib/stripe";
 
 type Message = {
   message: string;
@@ -52,7 +53,13 @@ async function createListing(
 
   try {
     await authorize(req, session);
-    await listingDataTable.createListing(req.body);
+    const stripeProduct = await stripe.products.create({
+      name: req.body.name,
+    });
+    await listingDataTable.createListing({
+      ...req.body,
+      stripe_id: stripeProduct.id,
+    });
   } catch (error) {
     console.error(error);
     return res.status(403).send({ message: String(error) });

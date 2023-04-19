@@ -52,30 +52,35 @@ async function cancelReservation(
   session: Session
 ) {
   if (!session) {
-    return res.status(401).send({ message: "user is not authenticated." });
-  }
+    //   return res.status(401).send({ message: "user is not authenticated." });
+    // }
 
-  try {
-    const now = new Date();
-    const email = session.user?.email
-    const userID = await Utils.getUserId(email); 
-    const reservation = await persistentReservationInstance.getReservation(req.body.id)
-    if(!reservation) {
-      return res.status(401).send({message : "reservation does not exist"})
-    }
-    for(var date of reservation.dates_requested) {
-      if(date.getTime() > now.getTime()) {
-        return res.send({message: "cannot cancel after dates requested"})
+    try {
+      const now = new Date();
+      const email = session.user?.email;
+      const userID = await Utils.getUserId(email);
+      const reservation = await persistentReservationInstance.getReservation(
+        req.body.id
+      );
+      if (!reservation) {
+        return res.status(401).send({ message: "reservation does not exist" });
       }
-    }
-    if(userID != reservation.host_id && userID != reservation.stasher_id) {
-      return res.status(401).send({ message: "only host or stasher can cancel this reservation"})
-    }
-    
-    await persistentReservationInstance.cancelReservation(req.body.id)
+      for (var date of reservation.dates_requested) {
+        if (date.getTime() > now.getTime()) {
+          return res.send({ message: "cannot cancel after dates requested" });
+        }
+      }
+      if (userID != reservation.host_id && userID != reservation.stasher_id) {
+        return res
+          .status(401)
+          .send({
+            message: "only host or stasher can cancel this reservation",
+          });
+      }
 
-  } catch(e) {
-    throw(e);
+      await persistentReservationInstance.cancelReservation(req.body.id);
+    } catch (e) {
+      throw e;
+    }
   }
-
 }

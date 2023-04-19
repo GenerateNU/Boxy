@@ -141,6 +141,7 @@ export default function ListingCreate({}: any) {
   // }
 
   async function createListing() {
+    console.log(name);
     const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
       headers: {
@@ -163,9 +164,9 @@ export default function ListingCreate({}: any) {
           "Party_Free",
         ],
         space_type: "Closet",
-        address: address,
-        city: city,
-        zip_code: zipCode,
+        address: address || "123 test ave",
+        city: city || "boston",
+        zip_code: zipCode || "12345",
         state: "CA",
         space_available: [1, 2, 3],
         longitude: defaultCoordindates.longitude,

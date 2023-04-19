@@ -35,6 +35,7 @@ model listings {
   longitude       Decimal        @db.Decimal
   latitude        Decimal        @db.Decimal
   reservations    reservations[]
+  stripe_id       String
 }
 
 model reservations {
@@ -49,6 +50,7 @@ model reservations {
   listing         listings   @relation(fields: [listing_id], references: [listing_id])
   cancelled       Boolean?   @default(false)
   cancelled_on    DateTime?  @default(now())
+  stripe_id       String
 }
 
 model users {

@@ -1,20 +1,20 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { AiOutlineLeft } from "react-icons/ai";
 import DateForm from "@/components/Reservation/DateForm";
 import ReservationOverview from "@/components/Reservation/ReservationOverview";
 import DateRangeSelector from "../../../components/General/DateRangeSelector";
-import dayjs, { Dayjs } from "dayjs";
-import time from "console";
+import PaymentForm from "@/components/Reservation/PaymentForm";
+import router from "next/router";
 
-export default function ListingReservationPage(props: any) {
-  const listing_info = props.listing;
-  const router = useRouter();
+export default function ListingReservationPage({ listing }: any) {
+  const listing_info = listing.message;
   const [currentForm, setCurrentForm] = useState(0);
   const [dateEdit, setDateEdit] = useState(false);
   const reservation_forms = [
     <DateForm listing={listing_info} setDateEdit={setDateEdit} />,
+    <div />,
+    <PaymentForm />,
   ];
 
   async function confirmReservation() {
@@ -35,12 +35,14 @@ export default function ListingReservationPage(props: any) {
     res.status == 200 && router.push("http://localhost:3000/host/dashboard");
   }
 
-  useEffect(() => {
-    console.log(props.listing);
-  }, [props.listing]);
+  // useEffect(() => {
+  //   console.log(props.listing);
+  // }, [props.listing]);
 
   const reservation_overview = {
+    id: 1,
     total: "$350",
+    price: 35000,
     address: listing_info?.address,
     city: listing_info?.city,
     state: listing_info?.state,
@@ -66,6 +68,10 @@ export default function ListingReservationPage(props: any) {
     );
   };
 
+  if (currentForm === 2) {
+    return <PaymentForm reservation={reservation_overview} />;
+  }
+
   return (
     <>
       <div
@@ -89,9 +95,9 @@ export default function ListingReservationPage(props: any) {
                 aria-hidden="true"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -134,19 +140,13 @@ export default function ListingReservationPage(props: any) {
               reservation_overview,
               currentForm,
               setCurrentForm,
-              confirmReservation
+              () => {}
             )}
           </div>
         </div>
       </div>
     </>
   );
-
-  function sendReservationRequest() {
-    // make call to endpoint then redirect to my reservations
-
-    router.push("http://localhost:3000/stasher/dashboard");
-  }
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
