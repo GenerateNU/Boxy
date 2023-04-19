@@ -1,5 +1,5 @@
 import { useState } from "react";
-export default function DatesForm() {
+export default function DatesForm(props: any) {
   const [dateState, useDateState] = useState("start");
 
   const date_button = (name: string, state: string) => {
@@ -34,7 +34,7 @@ export default function DatesForm() {
           {date_button("End", "end")}
         </div>
         {create_input("MM / DD / YY", "date")}
-        {create_input("___ : ___", "time")}
+        {/* {create_input("___ : ___", "time")} */}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ export type ViewResponse = {
   "my reservation requests"?: number[];
   "my accepted reservations"?: number[];
   "my approved reservations"?: number[];
-  "my reservations"?: ReservationResponse[]
+  "my reservations"?: ReservationResponse[];
 };
 
 export type ReservationResponse = {
@@ -14,9 +14,8 @@ export type ReservationResponse = {
   requested_on?: Date;
   dates_requested?: Date[];
   reservation_name?: String;
-  host_name?: String
-  address?: String
-
+  host_name?: String;
+  address?: String;
 };
 
 export default class Reservations {
@@ -119,17 +118,26 @@ export default class Reservations {
           stasher_id: userID,
         },
       });
-      const reservation_list: Array<ReservationResponse> = new Array()
+      const reservation_list: Array<ReservationResponse> = new Array();
 
-      reservationResponse.forEach(async function (reservation) {
-        let curListing: listings = await listingDataTable.getListing(reservation.listing_id)
-        let curDetails:ReservationResponse = {reservation_id: reservation.reservation_id, listing_id:curListing.listing_id, dates_requested: reservation.dates_requested, reservation_name: curListing.address } 
-        reservation_list.push(curDetails)
-      })
-
-      let response: ViewResponse = {
-        "my reservations": reservation_list
+      for (const reservation of reservationResponse) {
+        let curListing: listings = await listingDataTable.getListing(
+          reservation.listing_id
+        );
+        let curDetails: ReservationResponse = {
+          reservation_id: reservation.reservation_id,
+          listing_id: curListing.listing_id,
+          dates_requested: reservation.dates_requested,
+          reservation_name: curListing.address,
+        };
+        reservation_list.push(curDetails);
       }
+
+      let response = {
+        "my reservations": reservation_list,
+      };
+
+      console.log(response);
 
       return response;
     } catch (e) {

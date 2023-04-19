@@ -54,6 +54,10 @@ export default function ListingCreate({}: any) {
     signIn();
   }
 
+  // function setDateRange(start, end) {
+  //   console.log(start, end);
+  // }
+
   async function createListing() {
     const res = await fetch("http://localhost:3000/api/listings", {
       method: "POST",
