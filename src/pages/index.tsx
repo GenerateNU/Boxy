@@ -6,6 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import { Coordinate, defaultCoordindates } from "./_app";
 import Workflow from "@/components/LandingPage/Workflow";
 import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
+import FAQ from "@/components/FAQ";
 
 type LocationSuggestion = {
   place_id: string;
@@ -149,6 +150,7 @@ export default function LandingPage(props: any) {
           <></>
         )}
       </div>
+      <FAQ />
     </div>
   );
 }

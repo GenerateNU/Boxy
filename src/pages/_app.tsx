@@ -13,12 +13,14 @@ export const defaultCoordindates = {
   latitude: -71.088257,
   longitude: 42.340075,
 };
+import Footer from "@/components/Footer";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <NavBar />
       <Component {...pageProps} />
+      {/* <Footer /> */}
     </SessionProvider>
   );
 }
