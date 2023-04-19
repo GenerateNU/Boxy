@@ -1,3 +1,5 @@
+import BoxyLogo from "./BoxyLogo";
+
 export default function Footer() {
   return (
     <footer className="relative z-10 mt-2 bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20 border-t border-gray-300">
@@ -5,16 +7,7 @@ export default function Footer() {
         <div className="-mx-4 flex flex-wrap justify-between">
           <div className="w-full px-4 sm:w-2/3 lg:w-3/12 text-center">
             <div className="mb-10 w-full">
-              <a
-                href="javascript:void(0)"
-                className="mb-6 inline-block max-w-[160px]"
-              >
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/0498/a546/1a1af678fa4c0952f4ff443bc9238662?Expires=1682294400&Signature=MqMd2QahA15OPZmy1U~xXB4VMzYfSQ2lwK8hxmlPx6MWszh6IQmTOH~v9DKtE~fv8Wml4aURAEJzrduLsQN92e-HaxNtCzeXzM2CpuplUAQL5E2ptsu3k3u6Z-9GUhzU3YnteSudV5TqKBOJhGNGRfJhbZMVqJ1PN9fGoBHmrNXSyLz40mMLglHkV9ZOF5qCdZ-JJDER7u6aM~H3kYDD1n1JHCW5p4g7AXarHevHjIBK33mqr4tOp2qFtyWg5RDgDtO0jP~N7eLZhAT94vyDw4GY2~W3Tnidt0a3EIUVNWxx3r7MfQe9JXqn8p9jhsFCZPE9b6vjS4ZCxAXvlfSqkA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-                  alt="logo"
-                  className="max-w-full"
-                />
-              </a>
+              <BoxyLogo className="resize"></BoxyLogo>
             </div>
           </div>
           <div className="w-full px-4 sm:w-1/2 lg:w-2/12">

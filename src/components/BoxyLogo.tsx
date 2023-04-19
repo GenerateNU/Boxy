@@ -1,15 +1,18 @@
-export default function BoxyLogo() {
+export interface BoxyLogoProps {
+  className?: string;
+}
+
+export default function BoxyLogo({ className }: BoxyLogoProps) {
   const handleClick = () => {
     window.location.href = "http://localhost:3000/";
   };
   return (
     <button
       onClick={handleClick}
-      className="text-center font-Inter font-semibold text-xl text-[#097275]"
+      className={`text-center font-Inter font-semibold text-xl text-[#097275] ${className}`}
     >
       <svg
-        width="76"
-        height="24"
+        className="w-full h-full"
         viewBox="0 0 76 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

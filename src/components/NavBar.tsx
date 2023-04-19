@@ -43,7 +43,7 @@ export default function NavBar() {
     <div>
       <nav className="container fixed min-w-full h-16 border-b-2 border-gray bg-white shadow-md z-10">
         <div className="flex justify-between items-center container mx-auto h-full ">
-          <BoxyLogo />
+          <BoxyLogo className="w-24 h-8" />
 
           <div className="flex items-center gap-10 text-[#C4C4C4]">
             {nav_bar_button(
