@@ -6,6 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import { Coordinate, defaultCoordindates } from "./_app";
 import Workflow from "@/components/LandingPage/Workflow";
 import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
+import FAQ from "@/components/FAQ";
 
 type LocationSuggestion = {
   place_id: string;
@@ -16,7 +17,8 @@ type LocationSuggestion = {
 
 export default function LandingPage(props: any) {
   const session = useSession();
-  const [coordinates, setCoordinates] = useState<Coordinate>(defaultCoordindates);
+  const [coordinates, setCoordinates] =
+    useState<Coordinate>(defaultCoordindates);
 
   function service(image: string, title: string, text: string) {
     return (
@@ -58,9 +60,16 @@ export default function LandingPage(props: any) {
   }, [inView]);
 
   function getSearchResultsUrl(): string {
+    // return `/listings/browse?latitude=${encodeURIComponent(
+    //   coordinates.latitude
+    // )}&longitude=${encodeURIComponent(coordinates.longitude)}&proximity=15`;
+
+    // TODO: unhardcode lat and lon once integrated with reliable maps API
     return `/listings/browse?latitude=${encodeURIComponent(
-      coordinates.latitude
-    )}&longitude=${encodeURIComponent(coordinates.longitude)}&proximity=15`;
+      defaultCoordindates.latitude
+    )}&longitude=${encodeURIComponent(
+      defaultCoordindates.longitude
+    )}&proximity=15`;
   }
 
   return (
@@ -149,6 +158,7 @@ export default function LandingPage(props: any) {
           <></>
         )}
       </div>
+      <FAQ />
     </div>
   );
 }

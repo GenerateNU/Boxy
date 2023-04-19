@@ -1,6 +1,6 @@
+import FAQ from "@/components/FAQ";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { amenity } from "@prisma/client";
 
 import {
   FaBug,
@@ -185,7 +185,9 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     </ul>
                   </div>
                   <div className="flex flex-col border-b border-gray-300 p-2">
-                    <h2 className="text-xl font-semibold mb-4">Questions</h2>
+                    <h2 className="text-xl font-semibold mb-4">
+                      Frequently Asked Questions
+                    </h2>
                     <div className="grid grid-cols-1 gap-4">
                       <div className="border border-gray-300 rounded-md p-4">
                         <div>
