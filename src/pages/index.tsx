@@ -2,7 +2,10 @@ import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import arrowIcon from "../assets/BoxyArrowIcon.png";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { Coordinate, defaultCoordindates } from "./_app";
+import Workflow from "@/components/LandingPage/Workflow";
+import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
 import FAQ from "@/components/FAQ";
 
 type LocationSuggestion = {
@@ -13,65 +16,9 @@ type LocationSuggestion = {
 };
 
 export default function LandingPage(props: any) {
-  const [locationInput, setLocationInput] = useState("");
-  const suggestions = useLocationSuggestions(locationInput);
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: string;
-    lon: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (selectedLocation) {
-      const lat = parseInt(selectedLocation.lat);
-      const lon = parseInt(selectedLocation.lon);
-      props.setLocation([lat, lon]);
-    }
-  }, [selectedLocation]);
-
-  function useLocationSuggestions(query: string): LocationSuggestion[] {
-    const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
-
-    useEffect(() => {
-      if (!query) {
-        setSuggestions([]);
-        return;
-      }
-
-      const fetchSuggestions = async () => {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&countrycodes=us&limit=5`
-        );
-        const data = await response.json();
-        setSuggestions(data);
-      };
-
-      fetchSuggestions();
-    }, [query]);
-
-    return suggestions;
-  }
-
-  function workflow(image: string, text: string, arrow: boolean) {
-    return (
-      <div className="flex align-top">
-        <div className="ml-5 mr-5">
-          <img
-            className="w-[12.5vw] mb-5 object-fill rounded-full"
-            src={image}
-          />
-          <h3 className="text-[15px] w-[12.5vw] text-center">{text}</h3>
-        </div>
-        {arrow ? (
-          <img
-            className="w-[6.25vw] h-3 mt-[6.25vw] object-contain"
-            src={arrowIcon.src}
-          />
-        ) : (
-          <></>
-        )}
-      </div>
-    );
-  }
+  const session = useSession();
+  const [coordinates, setCoordinates] =
+    useState<Coordinate>(defaultCoordindates);
 
   function service(image: string, title: string, text: string) {
     return (
@@ -96,7 +43,6 @@ export default function LandingPage(props: any) {
   const [loaded, setLoad] = useState(false);
 
   useEffect(() => {
-    console.log(inView);
     if (inView) {
       setLoad(true);
       animation.start({
@@ -114,13 +60,16 @@ export default function LandingPage(props: any) {
   }, [inView]);
 
   function getSearchResultsUrl(): string {
-    if (selectedLocation) {
-      return `/listings/browse?lat=${encodeURIComponent(
-        selectedLocation.lat
-      )}&long=${encodeURIComponent(selectedLocation.lon)}`;
-    } else {
-      return `/listings/browse`;
-    }
+    // return `/listings/browse?latitude=${encodeURIComponent(
+    //   coordinates.latitude
+    // )}&longitude=${encodeURIComponent(coordinates.longitude)}&proximity=15`;
+
+    // TODO: unhardcode lat and lon once integrated with reliable maps API
+    return `/listings/browse?latitude=${encodeURIComponent(
+      defaultCoordindates.latitude
+    )}&longitude=${encodeURIComponent(
+      defaultCoordindates.longitude
+    )}&proximity=15`;
   }
 
   return (
@@ -135,32 +84,9 @@ export default function LandingPage(props: any) {
             Boxy makes it easy to find convenient, local storage.
           </h3>
           <div className="flex pt-5 h-[80px]">
-            <div className="relative">
-              <input
-                id="search_input"
-                className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
-                placeholder="Enter a location"
-                value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
-              />
-              <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
-                {suggestions.map((suggestion) => (
-                  <li
-                    key={suggestion.place_id}
-                    className="px-2 py-1 cursor-pointer hover:bg-gray-200"
-                    onClick={() => {
-                      setLocationInput(suggestion.display_name);
-                      setSelectedLocation({
-                        lat: suggestion.lat,
-                        lon: suggestion.lon,
-                      });
-                    }}
-                  >
-                    {suggestion.display_name}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <LocationSearchBar
+              setCoordinates={setCoordinates}
+            ></LocationSearchBar>
             <a href={getSearchResultsUrl()}>
               {button("Find Storage", "11vw", "20vw")}
             </a>
@@ -180,26 +106,26 @@ export default function LandingPage(props: any) {
       >
         <h2 className="text-[25px] mb-10">How it Works</h2>
         <div className="flex">
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Request a storage reservation through Boxy.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Get approval from your host to confirm the reservation.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Bring your belongings to the storage location on your drop-off day.",
-            true
-          )}
-          {workflow(
-            "https://i.imgur.com/ivuYU3E.jpg",
-            "Pick up your belongings on your pick-up day. Storage successful!",
-            false
-          )}
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Request a storage reservation through Boxy."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Get approval from your host to confirm the reservation."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Bring your belongings to the storage location on your drop-off day."
+            arrow={true}
+          ></Workflow>
+          <Workflow
+            image="https://i.imgur.com/ivuYU3E.jpg"
+            text="Pick up your belongings on your pick-up day. Storage successful!"
+            arrow={false}
+          ></Workflow>
         </div>
       </div>
       <div
@@ -224,9 +150,13 @@ export default function LandingPage(props: any) {
             "Register as a host to turn your empty spaces into passive income. Boxy enables you to rent out these spaces for others to stash in."
           )}
         </div>
-        <div onClick={signIn} href={"/user/register"}>
-          {button("Sign up now", "11vw", "20vw")}
-        </div>
+        {session.status === "unauthenticated" ? (
+          <div onClick={signIn} href={"/user/register"}>
+            {button("Sign up now", "11vw", "20vw")}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <FAQ />
     </div>

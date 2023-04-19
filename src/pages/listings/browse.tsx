@@ -1,12 +1,19 @@
+import { LocationSearchBar } from "@/components/Browse/LocationSearchBar";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Query } from "pg";
-import { stringify } from "querystring";
 import { useEffect, useState } from "react";
+import { Coordinate, defaultCoordindates } from "../_app";
+
+type LocationSuggestion = {
+  place_id: string;
+  display_name: string;
+  lat: string;
+  lon: string;
+};
 
 export default function BrowseListingsPage({ listings }: any) {
-  const query = new URLSearchParams();
   const router = useRouter();
+  const [locationInput, setLocationInput] = useState<Coordinate>();
 
   const imageList = [
     "https://s3-alpha-sig.figma.com/img/a037/cefe/ef1adc938dd648a6e10a3b69ebda558c?Expires=1682294400&Signature=n8vZKRIS0oK1on8lL8TAuSqokhRVesKk9Bag0ewfssNszBRdffILCcaCuYnhu1u2CJYE6Y3ifXO2BguDUYho9o45wvU3w1xUMBEhD2Er9xX~--kgNENzHSnv3WxEdeN~KT3v8AQtJJjqv0ymiXmLiNeUpaxSh-zXJWKU6P8dy0hz3~RzI74bq0jd~pIa8wkKM8FXn6IkW5Q-7O6TRJ0dbj-1jPfWXePaAXgy5sDWBxxwq6tcq914oDebYbEz978-ZacVMdz5EkpiB-k~UUlX8Wjgg3gQzn7rcvxk9NZ87bjmJWAMWy4t6BlvBo-q7Lx5UWJk6AXdLEPuyTYaTK799g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
@@ -20,23 +27,6 @@ export default function BrowseListingsPage({ listings }: any) {
     "https://s3-alpha-sig.figma.com/img/717d/484d/9a7355ad6463d747b4a28f23536478da?Expires=1682294400&Signature=e02W6N30umLSnFlozSjSaEFnbYwc2Nagh0c387PtFEmJ9N0Oza1rySEyrPo2Bd4UrKS4DN8EeCTwki7pIPb9xD4MVaRDEjN5ekWkYEyDQpqgkoH-SsUe7HhuZltyUNOSQVil2Ah9Q~TXPMgJE7ba5SWmSbgqFu3G2g4IK1xhfixH5cCVQCkSOJiaMD4ss2aPshhUpJxpzjMTZ42NqfjlUWHH2W8pXoP33jWqxcDEb~1vibyHgtHDQ8q7spB8ToL0hZkS12u3NAxm1wmD8BOaLCFH~sErHhacsF1JKX08-v8X24DQXUQ-MLY3LtMynPUNq-12Z9gcF5xQ7rb7AnM--g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "https://s3-alpha-sig.figma.com/img/9a82/bf2a/87de4ef11b79efd3dfa2cb550ed9b850?Expires=1682294400&Signature=pOOdhCf7AJi94w66q1z36OCxSf4Capzhctop0p5-sTzQ9JrWtRvm2HxXKuZzuJoTny195CSuPANVM~G5~uPt5-H6VrRcapO9OsUCgbEnREhJeWpJX~ArPKI9sTbi2kooNxLB2o3TNnZidz2bjEofj5zc836nQDMu-m4Tt5LQSljE2BsPtY1~wETEd0cYU1tk1Y-ifTXNiYFI30phHfiFzUsaeNekFilXfwgYMjcHr4d17k-2SV52DWZco3EEXpo1JE7W3iwDDXoD14IwTYmd7cnAjgXSmfPE~xg6BA-guLeDeudQP3mpHVaKh2qOG46WaXFni9-olmc3XcAzeF8cXA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "https://s3-alpha-sig.figma.com/img/00ed/2cf7/2916ac63a0fe60254212769faf18a7e4?Expires=1682294400&Signature=AO2tXst59dM7joQaKz77fFb5wiMAX4vb~Qaqddv~Sb2FRoDQjEaY1h24wXw2hCPQsTMKqlGvpFcJyh0cnDojFfw7o81H9ESopm3mqGxpde6OByfbedkVqBdBhb7h-~7IZvptWZNIiFmMxF004sxBUnaPsD4KBQQx9StcSI5XATsJlB2~daB746376MHX5obpTXDWPc7yeQbU2DnZB3XJ5RxAKpeqWm-DeR~~z9azMFtSW~iwIB2LPSpMyQjftpO0dG04pPJJqyVsLY3IClcg-DDetsPvBT-ct5FKGpyvr-0iqr6~Ev1-5J~TpOVx0MfKA5BPBFJAA0m9gZdCecPB8Q__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
-    // "",
   ];
 
   const getRandomImage = () => {
@@ -46,20 +36,26 @@ export default function BrowseListingsPage({ listings }: any) {
   const randomImage = getRandomImage();
 
   const setQueryValues: Function = () => {
-    query.set(
-      "location",
-      (document.getElementById("location") as HTMLInputElement).value
-    );
-    query.set(
-      "proximity",
-      (document.getElementById("proximity") as HTMLInputElement).value
-    );
-    query.set(
-      "price",
-      (document.getElementById("price") as HTMLInputElement).value
-    );
+    if (locationInput?.latitude) {
+      router.query["latitude"] = locationInput.latitude.toString();
+    }
 
-    router.push("http://localhost:3000/listings/browse" + "?" + query);
+    if (locationInput?.longitude) {
+      router.query["longitude"] = locationInput.longitude.toString();
+    }
+
+    router.query["proximity"] = (
+      document.getElementById("proximity") as HTMLInputElement
+    ).value;
+
+    router.query["price"] = (
+      document.getElementById("price") as HTMLInputElement
+    ).value;
+
+    router.push({
+      pathname: router.pathname,
+      query: router.query,
+    });
   };
 
   const showCalendar: Function = () => {
@@ -75,7 +71,8 @@ export default function BrowseListingsPage({ listings }: any) {
     name: string,
     cost: string,
     location: string,
-    imageList: string[]
+    imageList: string[],
+    location_details: string
   ) => {
     const getRandomImage = () => {
       const randomIndex = Math.floor(Math.random() * imageList.length);
@@ -109,24 +106,22 @@ export default function BrowseListingsPage({ listings }: any) {
               </span>
             </div>
           </div>
-          <span className="text-sm text-black dark:text-black">{location}</span>
+          <span className="text-sm text-black dark:text-black">
+            {location_details}
+          </span>
         </div>
       </div>
     );
   };
 
   <Link href="/results" />;
+
   return (
     <div className="flex flex-col pt-16">
       <div className="container mx-auto pt-[5vh]">
         <div className="flex flex-row mb-4">
           <div className="flex justify-start w-full">
-            <input
-              type="text"
-              className="w-[50vw] rounded-lg border border-gray-400 p-2 text-black"
-              placeholder="Search by Location"
-              id="location"
-            />
+            <LocationSearchBar setCoordinates={() => {}}></LocationSearchBar>
           </div>
           <div className="flex justify-end w-[20vw]">
             <input
@@ -156,7 +151,7 @@ export default function BrowseListingsPage({ listings }: any) {
             </button>
             <button
               className="ml-2 rounded-lg bg-white p-2 text-black hover:bg-gray-600 hover:text-white border border-black"
-              onClick={() => setQueryValues()}
+              onClick={setQueryValues}
             >
               Filter
             </button>
@@ -173,7 +168,8 @@ export default function BrowseListingsPage({ listings }: any) {
                   listing.name,
                   listing.price,
                   listing.proximity,
-                  imageList
+                  imageList,
+                  listing.location_details
                 );
               }
             })}
@@ -190,19 +186,23 @@ export default function BrowseListingsPage({ listings }: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  // + new URLSearchParams(JSON.stringify(query)
-  if (context.query) {
-    return {
-      props: {
-        listings: await (
-          await fetch(
-            "http://localhost:3000/api/listings" +
-              "?" +
-              new URLSearchParams(context.query) +
-              "&longitude=42.340075&latitude=-71.088257"
-          )
-        ).json(),
-      },
-    };
+  if (!context.query.longitude) {
+    context.query.longitude = defaultCoordindates.longitude;
   }
+
+  if (!context.query.latitude) {
+    context.query.latitude = defaultCoordindates.latitude;
+  }
+
+  return {
+    props: {
+      listings: await (
+        await fetch(
+          "http://localhost:3000/api/listings" +
+            "?" +
+            new URLSearchParams(context.query)
+        )
+      ).json(),
+    },
+  };
 }

@@ -29,21 +29,23 @@ export default async function handler(
 }
 
 async function getStasherReservations(
-    req: NextApiRequest,
-    res: NextApiResponse<ViewResponse | Message>,
-    session: Session
-  ) {
-    if (!session) {
-      return res.status(401).send({ message: "user is not authenticated." });
-    }
-  
-    try {
-      // Decode token from request header
-      const email = session.user?.email
-      const userID = Utils.getUserId(email);
-      const response = await persistentReservationInstance.getStasherReservations(userID);
-      return res.status(200).send(response);
-    } catch (error) {
-      return res.status(403).send({ message: String(error) });
-    }
+  req: NextApiRequest,
+  res: NextApiResponse<ViewResponse | Message>,
+  session: Session
+) {
+  if (!session) {
+    return res.status(401).send({ message: "user is not authenticated." });
   }
+
+  try {
+    // Decode token from request header
+    const email = session.user?.email;
+    const userID = Utils.getUserId(email);
+    const response = await persistentReservationInstance.getStasherReservations(
+      userID
+    );
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(403).send({ message: String(error) });
+  }
+}

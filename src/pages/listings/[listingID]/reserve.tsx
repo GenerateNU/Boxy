@@ -27,7 +27,7 @@ export default function ListingReservationPage({ listing }: any) {
       body: JSON.stringify({
         host_id: 1,
         stasher_id: 1,
-        listing_id: 4,
+        listing_id: 1,
         dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
       }),
     });

@@ -63,6 +63,16 @@ export default class Users {
     return userDetails;
   }
 
+  public async getUserGivenId(user_id: number) {
+    const res = await this.usersDB.findUnique({
+      where: {
+        user_id: user_id,
+      },
+    });
+
+    return res;
+  }
+
   public async updateUser(body: any, headers: any) {
     try {
       this.validateInputData(body);
@@ -128,12 +138,10 @@ export default class Users {
   }
 
   async delete(headers: any) {
-    console.log(headers);
     try {
       this.validateTokenHeader(headers);
 
       const tokenPayload: any = jwt.decode(headers["login_token"]);
-      console.log(tokenPayload);
       await prisma.users.delete({
         where: {
           username: tokenPayload.sub,
