@@ -62,15 +62,12 @@ export default function StasherDashboard() {
         {reservations ? (
           reservations.map((reservation) => {
             return (
-              <li>
-                {reservation.datesRequested +
-                  " | " +
-                  reservation.name +
-                  " | " +
-                  reservation.hostName +
-                  " | " +
-                  reservation.address}
-              </li>
+              <div>
+                <li>{reservation.datesRequested.toString()}</li>
+                <li>{reservation.name}</li>
+                <li>{reservation.hostName}</li>
+                <li>{reservation.address}</li>
+              </div>
             );
           })
         ) : (
