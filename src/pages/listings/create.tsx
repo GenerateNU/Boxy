@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createContext, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import AddressForm from "@/components/ListingForms/AddressForm";
 import DatesForm from "@/components/ListingForms/DatesForm";
@@ -9,41 +9,123 @@ import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
 import { defaultCoordindates } from "../_app";
 
+export const ListingContext = createContext<any>(null);
+
 export default function ListingCreate({}: any) {
   const { data, status } = useSession();
+  const amenityList = [
+    "Pest Controlled",
+    "Fire Alarm System",
+    "Smoke Free",
+    "Pet Free",
+    "Access to Elevator",
+    "Ground Floor",
+    "Climate Controlled",
+    "Private Storage",
+    "Party Free",
+    "Other",
+  ];
+
+  const spaceTypeList = [
+    "Basement",
+    "Closet",
+    "Common Living Space",
+    "Bedroom",
+    "Cabinet",
+    "Unoccupied Room",
+    "Other",
+  ];
+
+  const itemsList = [
+    "Boxes Only",
+    "Furniture Only",
+    "Boxes and Furnitures",
+    "Other",
+  ];
 
   // address form states
   const [address, setAddress] = useState("");
+  const [apartment, setApartment] = useState("");
   const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [latLong, setLatLong] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
-  const [datesAvailable, setDatesAvailable] = useState();
-  const [price, setPrice] = useState();
-  const [spaceType, setSpaceType] = useState("");
-  const [listingDetails, setListingDetails] = useState({});
-  const [amenities, setAmenities] = useState();
-  const [items, setItems] = useState();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  // time of day (AM/PM)
+  const [startTOD, setStartTOD] = useState("");
+  const [endTOD, setEndTOD] = useState("");
+
+  // amenities, spacetype, items are represented by array of booleans
+  // true means that the index in the corresponding list is selected
+  const [amenities, setAmenities] = useState(
+    amenityList.map((_: any) => false)
+  );
+  const [spaceType, setSpaceType] = useState(
+    spaceTypeList.map((_: any) => false)
+  );
+  const [items, setItems] = useState(itemsList.map((_: any) => false));
+  const [description, setDescription] = useState("");
 
   const [currentForm, setCurrentForm] = useState(0);
 
   const forms = [
     <AddressForm
       setAddress={setAddress}
+      setAparment={setApartment}
       setCity={setCity}
+      setState={setState}
       setName={setName}
       setZipCode={setZipCode}
+      setPrice={setPrice}
+      setLatLong={setLatLong}
       address={address}
+      apartment={apartment}
       city={city}
+      state={state}
       zipCode={zipCode}
       name={name}
+      price={price}
     />,
-    <DatesForm />,
-    <AmenitiesForm />,
-    <SpaceTypeForm />,
-    <ItemsForm />,
+    <DatesForm
+      startDate={startDate}
+      startTime={startTime}
+      startTOD={startTOD}
+      endDate={endDate}
+      endTime={endTime}
+      endTOD={endTOD}
+      setStartDate={setStartDate}
+      setStartTime={setStartTime}
+      setStartTOD={setStartTOD}
+      setEndDate={setEndDate}
+      setEndTime={setEndTime}
+      setEndTOD={setEndTOD}
+    />,
+    <AmenitiesForm setAmenities={setAmenities} amenities={amenities} />,
+    <SpaceTypeForm setSpaceType={setSpaceType} spaceType={spaceType} />,
+    <ItemsForm
+      description={description}
+      setDescription={setDescription}
+      setItems={setItems}
+      items={items}
+    />,
     <SubmitForm
-      fields={[address, datesAvailable, amenities, spaceType, items]}
+      fields={[
+        name,
+        `${address} ${apartment ? apartment + " " : ""}${city}, ${state} ${zipCode}`,
+        `from ${startDate} to ${endDate}`,
+        amenityList.filter((_: string, i: number) => amenities[i]).join(", "),
+        spaceTypeList.filter((_: string, i: number) => spaceType[i]).join(", "),
+        itemsList.filter((_: string, i: number) => items[i]).join(", "),
+      ]}
       changeForm={setCurrentForm}
     />,
   ];
@@ -66,9 +148,9 @@ export default function ListingCreate({}: any) {
       },
       body: JSON.stringify({
         name: name,
-        dates_available: [new Date("2023-04-01"), new Date("2023-04-02")],
+        dates_available: [new Date(startDate), new Date(endDate)],
         price: 1,
-        description: "This is a description for the place",
+        description: description,
         amenities: [
           "Pest_Controlled",
           "Fire_Alarm_System",
@@ -91,61 +173,29 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && router.push("http://localhost:3000/host/dashboard");
+    res.status == 200 && router.push("/listings/confirmation");
   }
 
+  const validateAddress = () =>
+    address && apartment && city && zipCode && name && price;
+
+  const validations = [validateAddress];
+
   return (
-    <div className="container flex flex-col items-center min-w-full h-screen pt-14">
-      {forms[currentForm]}
-      <div className="absolute bottom-0 pb-10 w-[80%] ">
-        <div className="flex justify-between">
-          <div>
-            {currentForm !== 0 ? (
-              <button
-                className="border border-solid border-black h-[5vh] w-[8vw] mb-7 right-2 rounded-full text-black"
-                onClick={() =>
-                  setCurrentForm(
-                    currentForm !== 0 ? currentForm - 1 : currentForm
-                  )
-                }
-              >
-                Back
-              </button>
-            ) : (
-              <div />
-            )}
-          </div>
-          <div>
-            {currentForm === 5 ? (
-              <button
-                className="bg-[#7C7C7C] hover:bg-[#097275] transition:color h-[40px] w-[8vw] mb-7 ml-auto right-2 rounded-full text-white"
-                onClick={createListing}
-              >
-                Submit
-              </button>
-            ) : (
-              <button
-                className="bg-[#097275] h-[40px] w-[8vw] mb-7 right-2 rounded-full text-white"
-                onClick={() =>
-                  setCurrentForm(
-                    currentForm !== 5 ? currentForm + 1 : currentForm
-                  )
-                }
-              >
-                Next
-              </button>
-            )}
-          </div>
-        </div>
-        <div
-          id="progress-bar"
-          className="h-[6px] bg-bxBoxLight grid grid-cols-6"
-        >
-          {forms.slice(0, currentForm + 1).map((_, i) => {
-            return <div className="bg-[#B3B3B3]" key={i} />;
-          })}
-        </div>
+    <ListingContext.Provider
+      value={{
+        amenityList,
+        spaceTypeList,
+        itemsList,
+        forms,
+        currentForm,
+        setCurrentForm,
+        createListing,
+      }}
+    >
+      <div className="container flex flex-col items-center min-w-full h-screen">
+        {forms[currentForm]}
       </div>
-    </div>
+    </ListingContext.Provider>
   );
 }
