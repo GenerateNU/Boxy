@@ -1,5 +1,6 @@
 import { PrismaClient, listings, amenity, spacetype } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
+import persistentReservationInstance from "lib/reservationInstance";
 
 export type ListingResponse = {
   listing_id: number;
@@ -51,6 +52,10 @@ export default class ListingsDataTable {
 
   async deleteListing(data: any) {
     try {
+      persistentReservationInstance.deleteReservationsBelongToListing(
+        data.listing_id
+      );
+
       await this.listingsDB.delete({
         where: data,
       });

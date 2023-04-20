@@ -36,6 +36,7 @@ export default function HostDashboard() {
     string | Date | Date[] | undefined | null
   >(null);
   const { data, status } = useSession();
+  const [refresh, setRefresh] = useState(true);
 
   if (status === "unauthenticated") {
     signIn();
@@ -105,6 +106,19 @@ export default function HostDashboard() {
     getReservations(); // triggering refresh
   }
 
+  async function deleteListing(listing_id: String) {
+    const res = await fetch("/api/listings/" + listing_id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status !== 200) {
+      alert("error deleting listing");
+    }
+  }
+
   const renderListingElements = (listings: Listing[]) => {
     if (listings == null || listings.length == 0) {
       return <h1>You have no listings!</h1>;
@@ -112,7 +126,20 @@ export default function HostDashboard() {
       return (
         listings &&
         listings.map((listing: Listing) => {
-          return <Listing listing={listing} />;
+          return (
+            <Listing
+              listing={listing}
+              deleteListing={async () => {
+                await deleteListing(listing.listing_id);
+
+                // refereshing elements
+                await getAllListings();
+                await renderListingElements(allListings);
+                await getReservations();
+                await renderReservationElements(reservations);
+              }}
+            />
+          );
         })
       );
     }

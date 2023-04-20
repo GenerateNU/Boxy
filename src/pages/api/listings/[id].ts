@@ -11,7 +11,6 @@ type Message = {
   message: string;
 };
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
@@ -44,7 +43,9 @@ async function getListingDetails(
 ) {
   let listing;
   try {
-    const response = await listingDataTable.getListing(Number(req.url?.split("/").at(-1)));
+    const response = await listingDataTable.getListing(
+      Number(req.url?.split("/").at(-1))
+    );
     return res.status(200).send(response);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
@@ -73,7 +74,9 @@ async function deleteListing(
 ) {
   try {
     await authorize(req, session);
-    await listingDataTable.deleteListing(req.body);
+    await listingDataTable.deleteListing({
+      listing_id: parseInt(req.query.id),
+    });
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }

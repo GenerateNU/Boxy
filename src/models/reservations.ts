@@ -46,6 +46,14 @@ export default class Reservations {
     }
   }
 
+  async deleteReservationsBelongToListing(listing_id: any) {
+    await this.reservationsDB.deleteMany({
+      where: {
+        listing_id: parseInt(listing_id),
+      },
+    });
+  }
+
   async updateReservation(data: any) {
     try {
       this.validateInputData(data);

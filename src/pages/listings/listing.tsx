@@ -1,8 +1,7 @@
 import { AiOutlineRight } from "react-icons/ai";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function Listing({ listing }: any) {
+export default function Listing({ listing, deleteListing }: any) {
   const link = "/listings/" + listing.listing_id;
 
   return (
@@ -18,7 +17,22 @@ export default function Listing({ listing }: any) {
           <div className="w-[25%] rounded-lg flex bg-bxBrand items-center justify-center center mr-5">
             <h3 className="pr-2 pt-2 pb-2 pl-2 text-white">Listed</h3>
           </div>
-          <AiOutlineRight style={{ fontSize: "20px", color: "#B5B5B5" }} />
+          <button
+            onClick={(evt) => {
+              evt.preventDefault();
+              deleteListing();
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width={"24"}
+              height={"24"}
+            >
+              <path fill="none" d="M0 0h24v24H0V0z" />
+              <path d="M19 5h-3.5l-1-1h-5l-1 1H5v2h14zM8 18v-8h2v8H8zm6 0v-8h2v8h-2z" />
+            </svg>
+          </button>
         </div>
       </div>
     </Link>
