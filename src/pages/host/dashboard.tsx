@@ -122,7 +122,7 @@ export default function HostDashboard() {
       return (
         reservations &&
         reservations.map((reservation: any) => {
-          return <Reservation reservation={reservation} header={reservation.hostName} sub={reservation.address} />
+          return <Reservation reservation={reservation} header={reservation.hostName} sub={reservation.name} />
         })
       );
     }
