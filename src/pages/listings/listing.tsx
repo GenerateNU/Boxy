@@ -11,7 +11,7 @@ export default function Listing({ listing }: any) {
         <div className="h-full flex items-center pl-10">
           <div>
             <h2>{<b>{listing.name}</b>}</h2>
-            <h2>{listing.address}</h2>
+            <h2>{`${listing.address}, ${listing.city}, ${listing.state}, ${listing.zip_code}`}</h2>
           </div>
         </div>
         <div className="h-full flex items-center justify-end pr-7">

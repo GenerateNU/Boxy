@@ -17,6 +17,7 @@ type Listing = {
   name: string;
   price: string;
   proximity: string;
+  zip_code: string;
 };
 
 type ReservationDetails = {
