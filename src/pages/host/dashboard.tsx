@@ -121,7 +121,7 @@ export default function HostDashboard() {
     reservations: ReservationDetails[] | undefined
   ) => {
     if (reservations == undefined || reservations.length == 0) {
-      return <h1>You have no reservations!</h1>;
+      return <h1>You have no reservation requests!</h1>;
     } else {
       return (
         reservations &&
