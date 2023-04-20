@@ -1,17 +1,20 @@
 
 export default function ReservationOverview(
+  totalPrice: number,
+  dateRange: string[],
   reservation: any,
   currentForm: number,
   setCurrentForm: Function,
   confirmReservation: Function,
   buttonLabel?: string,
 ) {
+
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="border-[#B5B5B5] border-[0.75px] rounded-md p-[26px]">
+      <div className="border-[#B5B5B5] border-[0.75px] rounded-md p-[26px] w-[25vw]">
         <div className="w-[100%] flex place-content-between mb-3">
           <h2 className="text-[25px]">Total</h2>
-          <h2 className="text-[25px]">{reservation.total}</h2>
+          <h2 className="text-[25px]">{"$" + totalPrice}</h2>
         </div>
         <hr className="w-[100%] h-[0.75px] bg-[#B5B5B5] border-0" />
         <div className="w-[100%] flex place-content-between mb-3 mt-3">
@@ -28,7 +31,7 @@ export default function ReservationOverview(
         <hr className="w-[100%] h-[0.75px] bg-[#B5B5B5] border-0" />
         <div className="w-[100%] flex place-content-between mb-3 mt-3">
           <h4 className="text-[10px] md:text-[15px]">Dates</h4>
-          <h4 className="text-[10px] md:text-[15px]">Jan 1 - Aug 1 2023</h4>
+          <h4 className="text-[10px] md:text-[15px]">{dateRange && Array.isArray(dateRange) ? dateRange[0] + ' - ' + dateRange[1] : 'N/A - N/A'}</h4>
         </div>
         {reservation.protection != null ? (
           <>
@@ -53,7 +56,7 @@ export default function ReservationOverview(
         ) : (
           <></>
         )}
-        {reservation.images != null && reservation.images.length != 0 ? (
+        {reservation.images != null && reservation.images.length != 0 && reservation.images[0] != '' ? (
           <>
             <h4 className="text-[10px] md:text-[15px] mb-3">Item Images</h4>
             <div className="grid grid-cols-3 gap-2">

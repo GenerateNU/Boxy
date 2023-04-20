@@ -1,4 +1,5 @@
 import FAQ from "@/components/FAQ";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
@@ -23,9 +24,9 @@ export default function ListingDetailsPage({ listing, host }: any) {
 
   const [isGalleryModalOpen, setIsGalleryModalOpen] = React.useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = React.useState(false);
-  const [dropOffDate, setDropOffDate] = useState("");
-  const [pickUpDate, setPickUpDate] = useState("");
-  const [accessDate, setAccessDate] = useState("");
+  const [dropOffDate, setDropOffDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [pickUpDate, setPickUpDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [accessDate, setAccessDate] = useState(dayjs().format('YYYY-MM-DD'));
 
   const toggleGalleryModal = () => {
     setIsGalleryModalOpen(!isGalleryModalOpen);
@@ -46,6 +47,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
     ["Private_Storage", <FaBox size={24} />],
     ["Party_Free", <FaGlassCheers size={24} />],
   ]);
+
+  const datesAvailable: string[] = [listing.dates_available[0], listing.dates_available[listing.dates_available.length - 1]]
 
   function formatAmenityName(name: string) {
     return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -309,6 +312,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
                           <input
                             id="dropOffDate"
                             type="date"
+                            min={dayjs().format('YYYY-MM-DD')}
+                            max={dayjs(datesAvailable[1]).format('YYYY-MM-DD')}
                             value={dropOffDate}
                             onChange={(e) => setDropOffDate(e.target.value)}
                             className="bg-gray-100"
@@ -330,6 +335,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
                             id="pickUpDate"
                             type="date"
                             value={pickUpDate}
+                            min={dayjs(dropOffDate).format('YYYY-MM-DD')}
+                            max={dayjs(datesAvailable[1]).format('YYYY-MM-DD')}
                             onChange={(e) => setPickUpDate(e.target.value)}
                             className="bg-gray-100"
                           />
@@ -350,6 +357,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
                             id="accessDate"
                             type="date"
                             value={accessDate}
+                            min={dayjs(dropOffDate).format('YYYY-MM-DD')}
+                            max={dayjs(pickUpDate).format('YYYY-MM-DD')}
                             onChange={(e) => setAccessDate(e.target.value)}
                             className="bg-gray-100"
                           />
