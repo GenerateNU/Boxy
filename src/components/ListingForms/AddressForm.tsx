@@ -107,7 +107,7 @@ export default function AddressForm({
       latitude: locationDetails.lat || defaultCoordindates.latitude,
       longitude: locationDetails.lon || defaultCoordindates.longitude,
     });
-  }
+  };
 
   return (
     <FormLayout image={Navigation} validate={validate}>
@@ -118,6 +118,7 @@ export default function AddressForm({
         <div className="flex pt-5 h-[80px]">
           <LocationSearchBar
             setLocationDetails={setLocationDetails}
+            address={true}
           ></LocationSearchBar>
         </div>
         {/* {placeHolders.map((field, i) => {

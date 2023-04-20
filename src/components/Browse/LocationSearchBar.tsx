@@ -19,6 +19,7 @@ export function LocationSearchBar(props: any) {
       <LocationAutocomplete
         setCoordinates={props.setCoordinates}
         setLocationDetails={props.setLocationDetails}
+        address={props.address}
       ></LocationAutocomplete>
       <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
         {locationSearchSuggestions.map((suggestion) => (
