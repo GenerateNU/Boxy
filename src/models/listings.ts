@@ -10,6 +10,10 @@ export type ListingResponse = {
   price?: Decimal;
   dates_available?: Date[];
   location_details: String;
+  address?: String;
+  city?: String;
+  state?: String;
+  zip_code?: String;
 };
 
 export type ViewResponse = {
@@ -144,6 +148,10 @@ export default class ListingsDataTable {
           name: true,
           longitude: true,
           latitude: true,
+          address: true,
+          city: true,
+          state: true,
+          zip_code: true,
         },
       });
       // let response: ListingResponse[] = [];
@@ -176,7 +184,7 @@ export default class ListingsDataTable {
           delete listing.longitude;
           delete listing.latitude;
 
-          const locationDetails = await this.getLocationDetails(lat, lon);
+          const locationDetails = `${listing.address}, ${listing.city}, ${listing.state}, ${listing.zip_code}`;
 
           return Object.assign({}, listing, {
             proximity: dist,
@@ -199,16 +207,16 @@ export default class ListingsDataTable {
     }
   }
 
-  async getLocationDetails(lat: any, lon: any) {
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${process.env.OPEN_CAGE_DATA_API_KEY}&pretty=1&no_annotations=1`;
+  // async getLocationDetails(lat: any, lon: any) {
+  //   const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${process.env.OPEN_CAGE_DATA_API_KEY}&pretty=1&no_annotations=1`;
 
-    return fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        return data.results[0].formatted;
-      })
-      .catch((error) => console.error(error));
-  }
+  //   return fetch(url)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       return data.results[0].formatted;
+  //     })
+  //     .catch((error) => console.error(error));
+  // }
 
   async getHostListings(userID: any) {
     try {
