@@ -25,7 +25,7 @@ export default function LandingPage(props: any) {
   const [coordinates, setCoordinates] =
     useState<Coordinate>(defaultCoordindates);
   const [locationInput, setLocationInput] = useState("");
-  const suggestions = useLocationSuggestions(locationInput);
+  // const suggestions = useLocationSuggestions(locationInput);
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: string;
     lon: string;
@@ -39,32 +39,32 @@ export default function LandingPage(props: any) {
     }
   }, [selectedLocation]);
 
-  function useLocationSuggestions(query: string): LocationSuggestion[] {
-    const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
+  // function useLocationSuggestions(query: string): LocationSuggestion[] {
+  //   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
 
-    useEffect(() => {
-      if (!query) {
-        setSuggestions([]);
-        return;
-      }
+  //   useEffect(() => {
+  //     if (!query) {
+  //       setSuggestions([]);
+  //       return;
+  //     }
 
-      const fetchSuggestions = async () => {
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&countrycodes=us&limit=5`
-          );
-          const data = await response.json();
-          setSuggestions(data);
-        } catch {
-          return;
-        }
-      };
+  //     const fetchSuggestions = async () => {
+  //       try {
+  //         const response = await fetch(
+  //           `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&countrycodes=us&limit=5`
+  //         );
+  //         const data = await response.json();
+  //         setSuggestions(data);
+  //       } catch {
+  //         return;
+  //       }
+  //     };
 
-      fetchSuggestions();
-    }, [query]);
+  //     fetchSuggestions();
+  //   }, [query]);
 
-    return suggestions;
-  }
+  //   return suggestions;
+  // }
 
   function workflow(image: string, text: string, arrow: boolean) {
     return (

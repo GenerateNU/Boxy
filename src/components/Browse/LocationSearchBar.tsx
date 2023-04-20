@@ -17,7 +17,9 @@ export function LocationSearchBar(props: { setCoordinates: any }) {
   async function getLocationSuggestions(locationSearchInput: string) {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${locationSearchInput}&addressdetails=1&countrycodes=us&limit=5`
-    );
+    ).catch((err) => {
+      console.log(err);
+    });
     const data = await response.json();
 
     setLocationSearchSuggestions(data);
@@ -46,7 +48,7 @@ export function LocationSearchBar(props: { setCoordinates: any }) {
                 longitude: parseInt(suggestion.lon),
               });
               setLocationSearchInput(suggestion.display_name);
-              setLocationSearchSuggestions([])
+              setLocationSearchSuggestions([]);
             }}
           >
             {suggestion.display_name}
