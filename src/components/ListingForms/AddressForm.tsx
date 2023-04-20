@@ -58,8 +58,7 @@ export default function AddressForm({
   const validate = () => {
     const newErrors = [...errors];
 
-    const addressPattern = /^\d+\s[A-z]+\s[A-z]+/;
-
+    const addressPattern = /^\d+\s[A-z0-9]+\s[A-z]+/;
     addressPattern.test(address)
       ? (newErrors[0] = false)
       : (newErrors[0] = true);
@@ -99,7 +98,7 @@ export default function AddressForm({
     }
   }, [...values, name, price]);
 
-  function setLocationDetails(locationDetails: any) {
+  const setLocationDetails = (locationDetails: any) => {
     setAddress(locationDetails.address || "1234 Huntington Ave.");
     setZipCode(locationDetails.zipCode || "02115");
     setCity(locationDetails.city || "Boston");
