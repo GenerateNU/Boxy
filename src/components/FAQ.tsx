@@ -9,7 +9,7 @@ type FAQItem = {
 
 const headers = [
   "General Questions",
-  "Stashering with Boxy",
+  "Stashing with Boxy",
   "Hosting with Boxy",
   "Moving Help",
   "Cancellations and Refunds",
