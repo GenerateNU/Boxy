@@ -29,7 +29,15 @@ export default function AddressForm({
   ];
   const setters = [setAddress, setAparment, setCity, setState, setZipCode];
   const values = [address, apartment, city, state, zipCode];
-  const [errors, setErrors] = useState([false, false, false, false, false, false, false]);
+  const [errors, setErrors] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
 
   const getAddressPosition = async (address: any) => {
     try {
@@ -47,15 +55,31 @@ export default function AddressForm({
   // returns true if the inputs are ok
   const validate = () => {
     const newErrors = [...errors];
-    address ? newErrors[0] = false : newErrors[0] = true;
-    city ? newErrors[2] = false : newErrors[2] = true;
-    state ? newErrors[3] = false : newErrors[3] = true;
-    zipCode.length === 5 ? newErrors[4] = false : newErrors[4] = true;
-    name ? newErrors[5] = false : newErrors[5] = true;
-    price ? newErrors[6] = false : newErrors[6] = true;
+
+    const addressPattern = /^\d+\s[A-z]+\s[A-z]+/;
+
+    addressPattern.test(address)
+      ? (newErrors[0] = false)
+      : (newErrors[0] = true);
+
+    city ? (newErrors[2] = false) : (newErrors[2] = true);
+
+    const statePattern = /^[a-zA-Z]{2}$/;
+    statePattern.test(state) ? (newErrors[3] = false) : (newErrors[3] = true);
+
+    const zipCodePattern = /^\d{5}(?:[-\s]\d{4})?$/;
+    zipCodePattern.test(zipCode)
+      ? (newErrors[4] = false)
+      : (newErrors[4] = true);
+
+    name ? (newErrors[5] = false) : (newErrors[5] = true);
+
+    const pricePattern = /^-?\d+$/;
+    pricePattern.test(price) ? (newErrors[6] = false) : (newErrors[6] = true);
+
     setErrors(newErrors);
     return !newErrors.includes(true);
-  }
+  };
 
   useEffect(() => {
     const updateAddressPosition = async () => {
@@ -82,28 +106,40 @@ export default function AddressForm({
           return (
             <input
               onChange={(event) => setters[i](event.target.value)}
-              className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${errors[i] ? "border-2 border-red-500" : ""}`}
+              className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${
+                errors[i] ? "border-2 border-red-500" : ""
+              }`}
               placeholder={field}
               key={i}
               value={values[i]}
-              onFocus={() => setErrors([false, false, false, false, false, false, false])}
+              onFocus={() =>
+                setErrors([false, false, false, false, false, false, false])
+              }
             />
           );
         })}
         <h3 className="pt-5 pb-5">Enter a name and price for this Listing.</h3>
         <input
           onChange={(event) => setName(event.target.value)}
-          className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${errors[5] ? "border-2 border-red-500" : ""}`}
+          className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${
+            errors[5] ? "border-2 border-red-500" : ""
+          }`}
           placeholder="Name"
           value={name}
-          onFocus={() => setErrors([false, false, false, false, false, false, false])}
+          onFocus={() =>
+            setErrors([false, false, false, false, false, false, false])
+          }
         />
         <input
           onChange={(event) => setPrice(event.target.value)}
-          className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${errors[6] ? "border-2 border-red-500" : ""}`}
+          className={`h-[60px] pl-5 bg-bxBoxLight rounded-lg mb-3 ${
+            errors[6] ? "border-2 border-red-500" : ""
+          }`}
           placeholder="Price (USD)"
           value={price}
-          onFocus={() => setErrors([false, false, false, false, false, false, false])}
+          onFocus={() =>
+            setErrors([false, false, false, false, false, false, false])
+          }
         />
       </div>
     </FormLayout>
