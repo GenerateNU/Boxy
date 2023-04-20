@@ -187,11 +187,6 @@ export default function BrowseListingsPage({ listings }: any) {
           </div>
         </div>
       </section>
-      <div className="flex justify-center">
-        <button className="w-[20vw] ml-2 rounded-full bg-gray-500 p-2 text-white hover:bg-gray-600 hover:text-white">
-          Show More
-        </button>
-      </div>
     </div>
   );
 }
