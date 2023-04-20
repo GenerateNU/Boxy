@@ -8,7 +8,6 @@ import ItemsForm from "@/components/ListingForms/ItemsForm";
 import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
 import { defaultCoordindates } from "../_app";
-import dayjs from "dayjs";
 
 export const ListingContext = createContext<any>(null);
 

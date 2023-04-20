@@ -7,12 +7,16 @@ import { AiOutlineLeft } from "react-icons/ai";
 import ReservationOverview from "./ReservationOverview";
 import { useSession } from "next-auth/react";
 
-export default function PaymentForm({ reservation, totalPrice, dateRange, setCurrentForm }: any) {
+export default function PaymentForm({
+  reservation,
+  totalPrice,
+  dateRange,
+  setCurrentForm,
+}: any) {
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState("");
   const [paymentId, setPaymentId] = useState("");
-  const session = useSession()
 
   useEffect(() => {
     setStripePromise(
@@ -43,7 +47,13 @@ export default function PaymentForm({ reservation, totalPrice, dateRange, setCur
       {clientSecret && (
         <div>
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm reservationInfo={reservation} paymentId={paymentId} totalPrice={totalPrice} dateRange={dateRange} setCurrentForm={setCurrentForm} />
+            <CheckoutForm
+              reservationInfo={reservation}
+              paymentId={paymentId}
+              totalPrice={totalPrice}
+              dateRange={dateRange}
+              setCurrentForm={setCurrentForm}
+            />
           </Elements>
         </div>
       )}
@@ -51,11 +61,34 @@ export default function PaymentForm({ reservation, totalPrice, dateRange, setCur
   );
 }
 
-function CheckoutForm({ reservationInfo, paymentId, totalPrice, dateRange, setCurrentForm }: any) {
+function CheckoutForm({
+  reservationInfo,
+  paymentId,
+  totalPrice,
+  dateRange,
+  setCurrentForm,
+}: any) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+
+  function createDateRange(startDate: any, endDate: any) {
+    let dateList = [];
+    let curDate = new Date(startDate);
+    let lastDate = new Date(endDate);
+
+    while (curDate.toDateString() != lastDate.toDateString()) {
+      let dateCopy = new Date(curDate.toDateString());
+      dateList.push(dateCopy);
+      let date = curDate.getDate() + 1;
+      curDate.setDate(date);
+    }
+
+    return dateList;
+  }
+
+  console.log(dateRange);
 
   const handleSubmit = async () => {
     if (!stripe || !elements) {
@@ -70,12 +103,11 @@ function CheckoutForm({ reservationInfo, paymentId, totalPrice, dateRange, setCu
       headers: {
         "Content-Type": "application/json",
       },
+
       // hard coded values for now
       body: JSON.stringify({
-        host_id: reservationInfo.host_id,
-        stasher_id: 1,
-        listing_id: 1,
-        dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
+        listing_id: reservationInfo.listing_id,
+        dates_requested: createDateRange(dateRange[0], dateRange[1]),
         stripe_id: paymentId,
       }),
     });
@@ -103,7 +135,12 @@ function CheckoutForm({ reservationInfo, paymentId, totalPrice, dateRange, setCu
       <div className="container flex flex-col min-w-[80vw] pt-16 items-center opacity-100 h-[90vh]">
         <div className="flex w-[80vw] items-center mt-7 mb-7">
           <AiOutlineLeft style={{ fontSize: "10px", color: "" }} />
-          <button onClick={() => setCurrentForm(1)} className="text-[15px] ml-2">Back</button>
+          <button
+            onClick={() => setCurrentForm(1)}
+            className="text-[15px] ml-2"
+          >
+            Back
+          </button>
         </div>
         <div className="flex place-content-between w-[80vw]">
           <div className="flex-col w-[60%]">
