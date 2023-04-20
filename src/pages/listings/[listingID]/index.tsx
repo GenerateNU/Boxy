@@ -24,9 +24,9 @@ export default function ListingDetailsPage({ listing, host }: any) {
 
   const [isGalleryModalOpen, setIsGalleryModalOpen] = React.useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = React.useState(false);
-  const [dropOffDate, setDropOffDate] = useState(dayjs().format('YYYY-MM-DD'));
-  const [pickUpDate, setPickUpDate] = useState(dayjs().format('YYYY-MM-DD'));
-  const [accessDate, setAccessDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [dropOffDate, setDropOffDate] = useState(dayjs().format("YYYY-MM-DD"));
+  const [pickUpDate, setPickUpDate] = useState(dayjs().format("YYYY-MM-DD"));
+  // const [accessDate, setAccessDate] = useState(dayjs().format('YYYY-MM-DD'));
 
   const toggleGalleryModal = () => {
     setIsGalleryModalOpen(!isGalleryModalOpen);
@@ -48,7 +48,10 @@ export default function ListingDetailsPage({ listing, host }: any) {
     ["Party_Free", <FaGlassCheers size={24} />],
   ]);
 
-  const datesAvailable: string[] = [listing.dates_available[0], listing.dates_available[listing.dates_available.length - 1]]
+  const datesAvailable: string[] = [
+    listing.dates_available[0],
+    listing.dates_available[listing.dates_available.length - 1],
+  ];
 
   function formatAmenityName(name: string) {
     return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -297,7 +300,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     <h2 className="text-xl font-semibold mb-4">
                       Price: ${listing.price}
                     </h2>
-                    <div className="grid grid-cols-2 grid-rows-2 gap-2 text-[12px]">
+                    <div className="grid grid-cols-2 grid-rows-1 gap-2 text-[12px]">
                       <div>
                         <label htmlFor="dropOffDate">Drop off Date:</label>
                         <div className="flex items-center justify-between rounded-md border bg-gray-100 p-2">
@@ -312,8 +315,8 @@ export default function ListingDetailsPage({ listing, host }: any) {
                           <input
                             id="dropOffDate"
                             type="date"
-                            min={dayjs().format('YYYY-MM-DD')}
-                            max={dayjs(datesAvailable[1]).format('YYYY-MM-DD')}
+                            min={dayjs().format("YYYY-MM-DD")}
+                            max={dayjs(datesAvailable[1]).format("YYYY-MM-DD")}
                             value={dropOffDate}
                             onChange={(e) => setDropOffDate(e.target.value)}
                             className="bg-gray-100"
@@ -335,14 +338,14 @@ export default function ListingDetailsPage({ listing, host }: any) {
                             id="pickUpDate"
                             type="date"
                             value={pickUpDate}
-                            min={dayjs(dropOffDate).format('YYYY-MM-DD')}
-                            max={dayjs(datesAvailable[1]).format('YYYY-MM-DD')}
+                            min={dayjs(dropOffDate).format("YYYY-MM-DD")}
+                            max={dayjs(datesAvailable[1]).format("YYYY-MM-DD")}
                             onChange={(e) => setPickUpDate(e.target.value)}
                             className="bg-gray-100"
                           />
                         </div>
                       </div>
-                      <div>
+                      {/* <div>
                         <label htmlFor="accessDate">Access Dates:</label>
                         <div className="flex items-center justify-between rounded-md border bg-gray-100 p-2">
                           <span
@@ -363,7 +366,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                             className="bg-gray-100"
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                     <p className="mt-4 text-xs">Total: $200</p>
                   </div>
@@ -373,7 +376,7 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     onClick={() =>
                       router.push({
                         pathname: `./${listingID}/reserve`,
-                        query: { dropOffDate, pickUpDate, accessDate, listingID },
+                        query: { dropOffDate, pickUpDate, listingID },
                       })
                     }
                   >
