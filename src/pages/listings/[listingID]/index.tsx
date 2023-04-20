@@ -243,11 +243,10 @@ export default function ListingDetailsPage({ listing, host }: any) {
                         alt="Host profile"
                         className="h-16 w-16 rounded-full object-cover"
                       />
-                      <p className="ml-2">Hosted by John Doe</p>
+                      <p className="ml-2">Hosted by {host.name}</p>
                     </div>
 
                     <div className="flex items-center">
-                      <p className="font-semibold">{host.name}</p>
                       <button
                         className="hover:bg-gray-300 border border-stone-800 w-full m-8 p-4 rounded-full text-black"
                         onClick={toggleContactModal}
@@ -267,7 +266,6 @@ export default function ListingDetailsPage({ listing, host }: any) {
                           Email:{" johnDoe@gmail.com"}
                           <a href={`mailto:${host.email}`}>{host.email}</a>
                         </p>
-                        <p>Phone: 631-899-2304{host.phone_number}</p>
                         <button
                           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                           onClick={toggleContactModal}

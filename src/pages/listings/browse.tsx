@@ -141,7 +141,7 @@ export default function BrowseListingsPage({ listings }: any) {
               placeholder="Price"
               id="price"
             />
-            <button
+            {/* <button
               className="ml-2 rounded-lg bg-white p-2 text-black hover:bg-gray-600 hover:text-white border border-black"
               onClick={() => showCalendar()}
             >
@@ -153,7 +153,7 @@ export default function BrowseListingsPage({ listings }: any) {
               onClick={() => showAmenities()}
             >
               Amenities
-            </button>
+            </button> */}
             <button
               className="ml-2 rounded-lg bg-white p-2 text-black hover:bg-gray-600 hover:text-white border border-black"
               onClick={setQueryValues}
