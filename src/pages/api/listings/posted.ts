@@ -38,7 +38,7 @@ async function getHostListings(
   try {
     // Decode token from request header
     const email = session.user?.email;
-    const userID = Utils.getUserId(email);
+    const userID = await Utils.getUserId(email);
     const response = await listingDataTable.getHostListings(userID);
     return res.status(200).send(response);
   } catch (error) {

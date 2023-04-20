@@ -2,7 +2,7 @@ import { PrismaClient, listings, reservations, user } from "@prisma/client";
 import listingDataTable from "lib/listingInstance";
 import persistentUserInstance from "lib/userInstance";
 import userInstance from "lib/userInstance";
-import { User } from "next-auth";
+import { Session, User } from "next-auth";
 
 export type ViewResponse = {
   "my reservation requests"?: any[];
@@ -25,8 +25,14 @@ export type ReservationResponse = {
 export default class Reservations {
   constructor(private readonly reservationsDB: PrismaClient["reservations"]) {}
 
-  async create(data: any) {
+  async create(data: any, session: Session) {
     try {
+      const listing = await listingDataTable.getListing(data.listing_id);
+      const userSignedIn = await userInstance.getUser(session.user?.email);
+
+      data.stasher_id = userSignedIn.user_id;
+      data.host_id = listing.host_id;
+
       // setting required attributes
       this.setDefaultAttributes(data);
 
@@ -99,11 +105,13 @@ export default class Reservations {
           cancelled: false,
         },
       });
-      
-      let reservation_list = []
+
+      let reservation_list = [];
 
       for (const reservation of reservationResponse) {
-        let curListing = await listingDataTable.getListing(reservation.listing_id)
+        let curListing = await listingDataTable.getListing(
+          reservation.listing_id
+        );
         let user = await userInstance.getUserGivenId(reservation.stasher_id);
 
         let curDetails: ReservationResponse = {

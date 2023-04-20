@@ -6,7 +6,7 @@ import { PaymentElement } from "@stripe/react-stripe-js";
 import { AiOutlineLeft } from "react-icons/ai";
 import ReservationOverview from "./ReservationOverview";
 
-export default function PaymentForm({ reservation }: any) {
+export default function PaymentForm({ reservation, listing }: any) {
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState("");
@@ -41,7 +41,11 @@ export default function PaymentForm({ reservation }: any) {
       {clientSecret && (
         <div>
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm reservationInfo={reservation} paymentId={paymentId} />
+            <CheckoutForm
+              reservationInfo={reservation}
+              paymentId={paymentId}
+              listing={listing}
+            />
           </Elements>
         </div>
       )}
@@ -49,7 +53,7 @@ export default function PaymentForm({ reservation }: any) {
   );
 }
 
-function CheckoutForm({ reservationInfo, paymentId }: any) {
+function CheckoutForm({ reservationInfo, paymentId, listing }: any) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState("");
@@ -70,9 +74,7 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
       },
       // hard coded values for now
       body: JSON.stringify({
-        host_id: 1,
-        stasher_id: 1,
-        listing_id: 1,
+        listing_id: listing.listing_id,
         dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
         stripe_id: paymentId,
       }),

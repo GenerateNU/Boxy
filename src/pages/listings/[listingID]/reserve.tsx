@@ -14,7 +14,7 @@ export default function ListingReservationPage({ listing }: any) {
   const reservation_forms = [
     <DateForm listing={listing_info} setDateEdit={setDateEdit} />,
     <div />,
-    <PaymentForm />,
+    <PaymentForm listing={listing} />,
   ];
 
   async function confirmReservation() {
@@ -69,7 +69,7 @@ export default function ListingReservationPage({ listing }: any) {
   };
 
   if (currentForm === 2) {
-    return <PaymentForm reservation={reservation_overview} />;
+    return <PaymentForm reservation={reservation_overview} listing={listing} />;
   }
 
   return (

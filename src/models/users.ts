@@ -49,7 +49,12 @@ export default class Users {
       },
     });
 
-    const userDetails = { verified: false, exists: false, is_admin: false };
+    const userDetails = {
+      verified: false,
+      exists: false,
+      is_admin: false,
+      user_id: 1,
+    };
 
     // user doesn't exist in db
     if (!res) {
@@ -59,6 +64,7 @@ export default class Users {
     userDetails["verified"] = res["verified"];
     userDetails["exists"] = true;
     userDetails["is_admin"] = res["is_admin"];
+    userDetails["user_id"] = res["user_id"];
 
     return userDetails;
   }

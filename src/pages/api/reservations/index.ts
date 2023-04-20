@@ -3,6 +3,7 @@ import { reservations } from "@prisma/client";
 import { getServerSession, Session } from "next-auth";
 import persistentReservationInstance from "lib/reservationInstance";
 import Utils from "@/utils";
+import { authOptions } from "../auth/[...nextauth]";
 
 type Message = {
   message: string;
@@ -19,8 +20,10 @@ export default async function handler(
     DELETE: cancelReservation,
   };
 
+  const session = await getServerSession(req, res, authOptions);
+
   if (req.method) {
-    return supportedRequestMethods[req.method](req, res);
+    return supportedRequestMethods[req.method](req, res, session);
   }
 
   return res.status(405).send({ message: "request method not supported" });
@@ -28,17 +31,19 @@ export default async function handler(
 
 async function getReservationsGivenFilters(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   throw new Error("not implemented");
 }
 
 async function createReservation(
   req: NextApiRequest,
-  res: NextApiResponse<Message>
+  res: NextApiResponse<Message>,
+  session: Session
 ) {
   try {
-    await persistentReservationInstance.create(req.body);
+    await persistentReservationInstance.create(req.body, session);
   } catch (error) {
     return res.status(403).send({ message: String(error) });
   }
