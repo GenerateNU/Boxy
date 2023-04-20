@@ -8,17 +8,36 @@ import PaymentForm from "@/components/Reservation/PaymentForm";
 import router, { Router, useRouter } from "next/router";
 import { Stripe } from "@stripe/stripe-js";
 import ItemInformationForm from "@/components/Reservation/ItemInformationForm";
+import { signIn, useSession } from "next-auth/react";
 
 export default function ListingReservationPage({ listing }: any) {
-  const router = useRouter()
+  const router = useRouter();
   const [currentForm, setCurrentForm] = useState(0);
   const [dateEdit, setDateEdit] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(3500); 
+  const [totalPrice, setTotalPrice] = useState(3500);
   const [handleSubmit, setHandleSubmit] = useState();
 
-  const dropOffDate: string = router.query.dropOffDate ? new Date(router.query.dropOffDate.toString()).toLocaleString('default', {month: 'long', day: '2-digit'}) : ''
-  const pickUpDate: string = router.query.pickUpDate ? new Date(router.query.pickUpDate.toString()).toLocaleString('default', {month: 'long', day: '2-digit'}) : ''
-  const [dateRange, updateDateRange] = useState<Array<string>>([dropOffDate, pickUpDate])
+  const dropOffDate: string = router.query.dropOffDate
+    ? new Date(router.query.dropOffDate.toString()).toLocaleString("default", {
+        month: "long",
+        day: "2-digit",
+      })
+    : "";
+  const pickUpDate: string = router.query.pickUpDate
+    ? new Date(router.query.pickUpDate.toString()).toLocaleString("default", {
+        month: "long",
+        day: "2-digit",
+      })
+    : "";
+  const [dateRange, updateDateRange] = useState<Array<string>>([
+    dropOffDate,
+    pickUpDate,
+  ]);
+  const session = useSession();
+
+  if (session.status == "unauthenticated") {
+    signIn();
+  }
 
   const reservation_overview = {
     listing_id: listing.listing_id,
@@ -29,13 +48,28 @@ export default function ListingReservationPage({ listing }: any) {
     state: listing?.state,
     protection: null,
     items: null,
-    images: ['']
+    images: [""],
   };
 
   const reservation_forms = [
-    <DateForm listing={listing} setDateEdit={setDateEdit} dateRange={dateRange} setTotalPrice={setTotalPrice}/>,
-    <ItemInformationForm listing={listing} setDateEdit={setDateEdit} dateRange={dateRange} setTotalPrice={setTotalPrice}/>,
-    <PaymentForm reservation={reservation_overview} totalPrice={totalPrice} dateRange={dateRange} setCurrentForm={setCurrentForm}/>,
+    <DateForm
+      listing={listing}
+      setDateEdit={setDateEdit}
+      dateRange={dateRange}
+      setTotalPrice={setTotalPrice}
+    />,
+    <ItemInformationForm
+      listing={listing}
+      setDateEdit={setDateEdit}
+      dateRange={dateRange}
+      setTotalPrice={setTotalPrice}
+    />,
+    <PaymentForm
+      reservation={reservation_overview}
+      totalPrice={totalPrice}
+      dateRange={dateRange}
+      setCurrentForm={setCurrentForm}
+    />,
   ];
 
   async function confirmReservation() {
@@ -58,12 +92,11 @@ export default function ListingReservationPage({ listing }: any) {
 
   function backButtonHandler() {
     if (currentForm == 0) {
-      router.push('http://localhost:3000/listings/' + listing.listing_id)
-      return
-    }
-    else {
-      setCurrentForm(currentForm - 1)
-      return
+      router.push("http://localhost:3000/listings/" + listing.listing_id);
+      return;
+    } else {
+      setCurrentForm(currentForm - 1);
+      return;
     }
   }
 
@@ -110,51 +143,62 @@ export default function ListingReservationPage({ listing }: any) {
               </svg>
             </button>
           </div>
-          {listing?.dates_available &&
-          listing.dates_available.length !== 0 ? (
-            DateRangeSelector(listing?.dates_available, updateDateRange, setDateEdit)
+          {listing?.dates_available && listing.dates_available.length !== 0 ? (
+            DateRangeSelector(
+              listing?.dates_available,
+              updateDateRange,
+              setDateEdit
+            )
           ) : (
             <></>
           )}
         </div>
       </div>
-      {currentForm != 2 ?
-      <div
-        className={`container flex flex-col min-w-full pt-16 items-center h-[90vh] ${
-          dateEdit ? "opacity-50" : "opacity-100"
-        }`}
-      >
-        <div className="flex w-[80vw] items-center mt-7 mb-7">
-          <AiOutlineLeft style={{ fontSize: "10px", color: "" }} />
-          <button onClick={() => backButtonHandler()} className="text-[15px] ml-2">Back</button>
-        </div>
-        <div className="flex place-content-between w-[80vw]">
-          <div className="flex-col w-[60%]">
-            <div className="flex mb-5">
-              {reservation_header(0, "Reservation Dates")}
-              <h2 className="text-[20px] md:text-[32px] text-[#B5B5B5]">
-                {"\xa0/\xa0"}
-              </h2>
-              {reservation_header(1, "Item Information")}
-              <h2 className="text-[20px] md:text-[32px] text-[#B5B5B5]">
-                {"\xa0/\xa0"}
-              </h2>
-              {reservation_header(2, "Payment")}
+      {currentForm != 2 ? (
+        <div
+          className={`container flex flex-col min-w-full pt-16 items-center h-[90vh] ${
+            dateEdit ? "opacity-50" : "opacity-100"
+          }`}
+        >
+          <div className="flex w-[80vw] items-center mt-7 mb-7">
+            <AiOutlineLeft style={{ fontSize: "10px", color: "" }} />
+            <button
+              onClick={() => backButtonHandler()}
+              className="text-[15px] ml-2"
+            >
+              Back
+            </button>
+          </div>
+          <div className="flex place-content-between w-[80vw]">
+            <div className="flex-col w-[60%]">
+              <div className="flex mb-5">
+                {reservation_header(0, "Reservation Dates")}
+                <h2 className="text-[20px] md:text-[32px] text-[#B5B5B5]">
+                  {"\xa0/\xa0"}
+                </h2>
+                {reservation_header(1, "Item Information")}
+                <h2 className="text-[20px] md:text-[32px] text-[#B5B5B5]">
+                  {"\xa0/\xa0"}
+                </h2>
+                {reservation_header(2, "Payment")}
+              </div>
+              {reservation_forms[currentForm]}
             </div>
-            {reservation_forms[currentForm]}
-          </div>
-          <div id="">
-            {ReservationOverview(
-              totalPrice,
-              dateRange,
-              reservation_overview,
-              currentForm,
-              setCurrentForm,
-              () => {}
-            )}
+            <div id="">
+              {ReservationOverview(
+                totalPrice,
+                dateRange,
+                reservation_overview,
+                currentForm,
+                setCurrentForm,
+                () => {}
+              )}
+            </div>
           </div>
         </div>
-      </div> : reservation_forms[2]}
+      ) : (
+        reservation_forms[2]
+      )}
     </>
   );
 }

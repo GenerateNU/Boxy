@@ -41,18 +41,18 @@ export default function AddressForm({
     false,
   ]);
 
-  const getAddressPosition = async (address: any) => {
-    try {
-      const response = await axios.get(
-        `https://nominatim.openstreetmap.org/search?q=${address}&format=json&limit=1`
-      );
-      const { lat, lon } = response.data[0];
-      return { latitude: lat, longitude: lon };
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
+  // const getAddressPosition = async (address: any) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://nominatim.openstreetmap.org/search?q=${address}&format=json&limit=1`
+  //     );
+  //     const { lat, lon } = response.data[0];
+  //     return { latitude: lat, longitude: lon };
+  //   } catch (error) {
+  //     console.error(error);
+  //     return null;
+  //   }
+  // };
 
   // returns true if the inputs are ok
   const validate = () => {
@@ -83,15 +83,15 @@ export default function AddressForm({
     return !newErrors.includes(true);
   };
 
-  useEffect(() => {
-    const updateAddressPosition = async () => {
-      const position = await getAddressPosition(address);
-      if (position) {
-        setLatLong(position);
-      }
-    };
-    updateAddressPosition();
-  }, [address]);
+  // useEffect(() => {
+  //   const updateAddressPosition = async () => {
+  //     const position = await getAddressPosition(address);
+  //     if (position) {
+  //       setLatLong(position);
+  //     }
+  //   };
+  //   updateAddressPosition();
+  // }, [address]);
 
   useEffect(() => {
     if (errors.includes(true)) {
