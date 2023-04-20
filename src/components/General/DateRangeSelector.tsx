@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar } from 'primereact/calendar'
 import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
 
@@ -7,7 +7,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons
 
-export default function DateRangeSelector(dates_available: string[]) {
+export default function DateRangeSelector(dates_available: string[], updateDateRange: Function, setDateEdit: Function) {
     /**
      * The below variables are temporary as we prep to move date selection to a calendar: 
      */
@@ -86,6 +86,14 @@ export default function DateRangeSelector(dates_available: string[]) {
         return dateRange
     }
 
+    function submitNewDates() {
+        if (dateRange && Array.isArray(dateRange) && dateRange[1]) {
+            setDateEdit(false)
+            updateDateRange([dateRange[0].toLocaleString('default', {month: 'long', day: '2-digit'}), dateRange[1].toLocaleString('default', {month: 'long', day: '2-digit'})])
+            return
+        }
+    }
+
     return (
         <div>
             <div className='flex justify-center mb-5 mt-5'>
@@ -103,10 +111,10 @@ export default function DateRangeSelector(dates_available: string[]) {
                 </div>
             </div>
             <div className='flex justify-center mb-5'>
-                <Calendar className='w-[475px]' inline selectionMode='range' disabledDates={locDateGaps()} viewDate={firstAvailable} value={identifyValidRange()} onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy' minDate={firstAvailable} maxDate={lastAvailable}/>
+                <Calendar className='w-[475px]' inline selectionMode='range' disabledDates={locDateGaps()} viewDate={firstAvailable} value={identifyValidRange()} onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy' minDate={new Date()} maxDate={lastAvailable}/>
             </div>
             <div className='flex justify-center'>  
-                <button className={`h-[60px] w-[15vw] ml-5 bg-bxBrand text-white rounded-3xl hover:bg-bxBrandLight transition ease-in duration-75`}>
+                <button onClick={() => submitNewDates()} disabled={dateRange && Array.isArray(dateRange) && dateRange[1] ? false: true} className={`h-[60px] w-[15vw] ml-5 ${!(dateRange && Array.isArray(dateRange) && dateRange[1]) ? 'bg-bxPrimary' : 'bg-bxBrand hover:bg-bxBrandLight transition ease-in duration-75'} text-white rounded-3xl`}>
                     Submit
                 </button>
             </div>

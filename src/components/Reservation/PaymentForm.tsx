@@ -5,12 +5,14 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { AiOutlineLeft } from "react-icons/ai";
 import ReservationOverview from "./ReservationOverview";
+import { useSession } from "next-auth/react";
 
-export default function PaymentForm({ reservation }: any) {
+export default function PaymentForm({ reservation, totalPrice, dateRange, setCurrentForm }: any) {
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState("");
   const [paymentId, setPaymentId] = useState("");
+  const session = useSession()
 
   useEffect(() => {
     setStripePromise(
@@ -41,7 +43,7 @@ export default function PaymentForm({ reservation }: any) {
       {clientSecret && (
         <div>
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm reservationInfo={reservation} paymentId={paymentId} />
+            <CheckoutForm reservationInfo={reservation} paymentId={paymentId} totalPrice={totalPrice} dateRange={dateRange} setCurrentForm={setCurrentForm} />
           </Elements>
         </div>
       )}
@@ -49,7 +51,7 @@ export default function PaymentForm({ reservation }: any) {
   );
 }
 
-function CheckoutForm({ reservationInfo, paymentId }: any) {
+function CheckoutForm({ reservationInfo, paymentId, totalPrice, dateRange, setCurrentForm }: any) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState("");
@@ -70,7 +72,7 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
       },
       // hard coded values for now
       body: JSON.stringify({
-        host_id: 1,
+        host_id: reservationInfo.host_id,
         stasher_id: 1,
         listing_id: 1,
         dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
@@ -98,10 +100,10 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
 
   return (
     <>
-      <div className="container flex flex-col min-w-[80vw] pt-16 justify-center items-center opacity-100">
+      <div className="container flex flex-col min-w-[80vw] pt-16 items-center opacity-100 h-[90vh]">
         <div className="flex w-[80vw] items-center mt-7 mb-7">
           <AiOutlineLeft style={{ fontSize: "10px", color: "" }} />
-          <button className="text-[15px] ml-2">Back</button>
+          <button onClick={() => setCurrentForm(1)} className="text-[15px] ml-2">Back</button>
         </div>
         <div className="flex place-content-between w-[80vw]">
           <div className="flex-col w-[60%]">
@@ -126,6 +128,8 @@ function CheckoutForm({ reservationInfo, paymentId }: any) {
           </div>
           <div>
             {ReservationOverview(
+              totalPrice,
+              dateRange,
               reservationInfo,
               2,
               () => {},

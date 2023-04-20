@@ -178,7 +178,7 @@ export default function HostDashboard() {
         {renderCurrentForm()}
       </div>
       <div className='w-[40vw] flex justify-center pt-16'>
-        <Calendar className='w-[350px] pt-[7vh] pb-20' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
+        <Calendar className='w-[420px] pt-[7vh] h-[550px]' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
       </div>
     </div>
   );
