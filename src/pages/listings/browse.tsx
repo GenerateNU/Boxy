@@ -70,7 +70,7 @@ export default function BrowseListingsPage({ listings }: any) {
     id: string,
     name: string,
     cost: string,
-    location: string,
+    proximity: string,
     imageList: string[],
     location_details: string
   ) => {
@@ -108,6 +108,9 @@ export default function BrowseListingsPage({ listings }: any) {
           </div>
           <span className="text-sm text-black dark:text-black">
             {location_details}
+          </span>
+          <span className="text-sm text-black dark:text-black">
+            {parseFloat(proximity).toFixed(2) + " miles away"}
           </span>
         </div>
       </div>
