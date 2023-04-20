@@ -134,7 +134,7 @@ export default function DatesForm({
             type="date"
             onFocus={() => setErrors({ start: "", end: "" })}
           />
-          <input
+          {/* <input
             className="bg-[#E9E9E9] hover:bg-[#E2E2E2] h-12 mt-2 rounded-lg mr-2 px-3"
             placeholder="__:__"
             value={startTime}
@@ -167,7 +167,7 @@ export default function DatesForm({
             setOptions={setEndTOD}
             placeholder="AM"
             onFocus={() => setErrors({ start: "", end: "" })}
-          />
+          /> */}
         </div>
         <div className="text-red-500">{errors.start}</div>
         <div className="text-red-500">{errors.end}</div>
