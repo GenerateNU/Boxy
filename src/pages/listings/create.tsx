@@ -8,6 +8,7 @@ import ItemsForm from "@/components/ListingForms/ItemsForm";
 import SubmitForm from "@/components/ListingForms/SubmitForm";
 import { useRouter } from "next/router";
 import { defaultCoordindates } from "../_app";
+import dayjs from "dayjs";
 
 export const ListingContext = createContext<any>(null);
 
@@ -138,6 +139,21 @@ export default function ListingCreate({}: any) {
     signIn();
   }
 
+  function createDateRange() {
+    let dateList = []
+    let curDate = new Date(startDate)
+    let lastDate = new Date(endDate)
+
+    while (curDate.toDateString() != lastDate.toDateString()) {
+      let dateCopy = new Date(curDate.toDateString())
+      dateList.push(dateCopy)
+      let date = curDate.getDate() + 1
+      curDate.setDate(date)
+    }
+
+    return dateList
+  }
+
   // function setDateRange(start, end) {
   //   console.log(start, end);
   // }
@@ -151,7 +167,7 @@ export default function ListingCreate({}: any) {
       },
       body: JSON.stringify({
         name: name,
-        dates_available: [new Date(startDate), new Date(endDate)],
+        dates_available: createDateRange(),
         price: 1,
         description: description,
         amenities: [

@@ -5,16 +5,37 @@ import DateForm from "@/components/Reservation/DateForm";
 import ReservationOverview from "@/components/Reservation/ReservationOverview";
 import DateRangeSelector from "../../../components/General/DateRangeSelector";
 import PaymentForm from "@/components/Reservation/PaymentForm";
-import router from "next/router";
+import router, { Router, useRouter } from "next/router";
+import { Stripe } from "@stripe/stripe-js";
+import ItemInformationForm from "@/components/Reservation/ItemInformationForm";
 
 export default function ListingReservationPage({ listing }: any) {
-  const listing_info = listing.message;
+  const router = useRouter()
   const [currentForm, setCurrentForm] = useState(0);
   const [dateEdit, setDateEdit] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(3500); 
+  const [handleSubmit, setHandleSubmit] = useState();
+
+  const dropOffDate: string = router.query.dropOffDate ? new Date(router.query.dropOffDate.toString()).toLocaleString('default', {month: 'long', day: '2-digit'}) : ''
+  const pickUpDate: string = router.query.pickUpDate ? new Date(router.query.pickUpDate.toString()).toLocaleString('default', {month: 'long', day: '2-digit'}) : ''
+  const [dateRange, updateDateRange] = useState<Array<string>>([dropOffDate, pickUpDate])
+
+  const reservation_overview = {
+    listing_id: listing.listing_id,
+    host_id: listing.host_id,
+    price: 3500,
+    address: listing?.address,
+    city: listing?.city,
+    state: listing?.state,
+    protection: null,
+    items: null,
+    images: ['']
+  };
+
   const reservation_forms = [
-    <DateForm listing={listing_info} setDateEdit={setDateEdit} />,
-    <div />,
-    <PaymentForm listing={listing} />,
+    <DateForm listing={listing} setDateEdit={setDateEdit} dateRange={dateRange} setTotalPrice={setTotalPrice}/>,
+    <ItemInformationForm listing={listing} setDateEdit={setDateEdit} dateRange={dateRange} setTotalPrice={setTotalPrice}/>,
+    <PaymentForm reservation={reservation_overview} totalPrice={totalPrice} dateRange={dateRange} setCurrentForm={setCurrentForm}/>,
   ];
 
   async function confirmReservation() {
@@ -27,7 +48,7 @@ export default function ListingReservationPage({ listing }: any) {
       body: JSON.stringify({
         host_id: 1,
         stasher_id: 1,
-        listing_id: listing_info.listing_id,
+        listing_id: listing.listing_id,
         dates_requested: [new Date("2023-04-01"), new Date("2023-04-02")],
       }),
     });
@@ -35,26 +56,16 @@ export default function ListingReservationPage({ listing }: any) {
     res.status == 200 && router.push("http://localhost:3000/host/dashboard");
   }
 
-  // useEffect(() => {
-  //   console.log(props.listing);
-  // }, [props.listing]);
-
-  const reservation_overview = {
-    id: 1,
-    total: "$350",
-    price: 35000,
-    address: listing_info?.address,
-    city: listing_info?.city,
-    state: listing_info?.state,
-    protection: null,
-    items: null,
-    images: [
-      "https://media.istockphoto.com/id/1277536141/photo/boxes-on-cart-in-storage-unit.jpg?s=612x612&w=0&k=20&c=xdX1e3fB70BgTJAjE_hgcLE1Iv5FgIwl1JR8pLfaXTE=",
-      "https://media.istockphoto.com/id/1299083810/photo/parcels-on-conveyor-belt-in-a-warehouse.jpg?b=1&s=170667a&w=0&k=20&c=gcKD93K_UvTRyb1zZ0OFAWOWjF9pvCpuxwjmk0k1kAQ=",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyKa0hZUeV-eaojVFwCHjyddlhBu4uTMLYVpfzDw1F&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKL4qtOMiGrsXZWG1RmH-CnqnuhN5V70PULnSYpGOF&s",
-    ],
-  };
+  function backButtonHandler() {
+    if (currentForm == 0) {
+      router.push('http://localhost:3000/listings/' + listing.listing_id)
+      return
+    }
+    else {
+      setCurrentForm(currentForm - 1)
+      return
+    }
+  }
 
   const reservation_header = (index: number, text: string) => {
     return (
@@ -67,11 +78,6 @@ export default function ListingReservationPage({ listing }: any) {
       </h2>
     );
   };
-
-  if (currentForm === 2) {
-    return <PaymentForm reservation={reservation_overview} listing={listing} />;
-  }
-
   return (
     <>
       <div
@@ -85,6 +91,7 @@ export default function ListingReservationPage({ listing }: any) {
             <button
               type="button"
               className="bg-white rounded-md p-2 inline-flex items-center justify-center text-black hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-bxBrandLight"
+              onClick={() => setDateEdit(false)}
             >
               <svg
                 className="h-8 w-8"
@@ -103,22 +110,23 @@ export default function ListingReservationPage({ listing }: any) {
               </svg>
             </button>
           </div>
-          {listing_info?.dates_available &&
-          listing_info.dates_available.length !== 0 ? (
-            DateRangeSelector(listing_info?.dates_available)
+          {listing?.dates_available &&
+          listing.dates_available.length !== 0 ? (
+            DateRangeSelector(listing?.dates_available, updateDateRange, setDateEdit)
           ) : (
             <></>
           )}
         </div>
       </div>
+      {currentForm != 2 ?
       <div
-        className={`container flex flex-col min-w-[80vw] pt-16 justify-center items-center ${
+        className={`container flex flex-col min-w-full pt-16 items-center h-[90vh] ${
           dateEdit ? "opacity-50" : "opacity-100"
         }`}
       >
         <div className="flex w-[80vw] items-center mt-7 mb-7">
           <AiOutlineLeft style={{ fontSize: "10px", color: "" }} />
-          <button className="text-[15px] ml-2">Back</button>
+          <button onClick={() => backButtonHandler()} className="text-[15px] ml-2">Back</button>
         </div>
         <div className="flex place-content-between w-[80vw]">
           <div className="flex-col w-[60%]">
@@ -137,6 +145,8 @@ export default function ListingReservationPage({ listing }: any) {
           </div>
           <div id="">
             {ReservationOverview(
+              totalPrice,
+              dateRange,
               reservation_overview,
               currentForm,
               setCurrentForm,
@@ -144,7 +154,7 @@ export default function ListingReservationPage({ listing }: any) {
             )}
           </div>
         </div>
-      </div>
+      </div> : reservation_forms[2]}
     </>
   );
 }
