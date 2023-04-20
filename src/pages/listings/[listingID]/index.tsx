@@ -371,12 +371,12 @@ export default function ListingDetailsPage({ listing, host }: any) {
 
                   <button
                     className="bg-[#097275] hover:bg-[#0a3739] transition:color h-[40px] w-full mb-7 ml-auto right-2 rounded-full text-white mt-1"
-                    onClick={() =>
+                    onClick={() => {
                       router.push({
                         pathname: `./${listingID}/reserve`,
                         query: { dropOffDate, pickUpDate, listingID },
-                      })
-                    }
+                      });
+                    }}
                   >
                     Reserve
                   </button>

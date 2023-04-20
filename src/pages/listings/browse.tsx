@@ -160,6 +160,12 @@ export default function BrowseListingsPage({ listings }: any) {
             >
               Filter
             </button>
+            <button
+              className="ml-2 rounded-lg bg-white p-2 text-black hover:bg-gray-600 hover:text-white border border-black"
+              onClick={() => router.push(router.pathname)}
+            >
+              Reset
+            </button>
           </div>
         </div>
       </div>
