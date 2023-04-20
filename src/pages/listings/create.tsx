@@ -120,7 +120,9 @@ export default function ListingCreate({}: any) {
     <SubmitForm
       fields={[
         name,
-        `${address} ${apartment ? apartment + " " : ""}${city}, ${state} ${zipCode}`,
+        `${address} ${
+          apartment ? apartment + " " : ""
+        }${city}, ${state} ${zipCode}`,
         `from ${startDate} to ${endDate}`,
         amenityList.filter((_: string, i: number) => amenities[i]).join(", "),
         spaceTypeList.filter((_: string, i: number) => spaceType[i]).join(", "),
@@ -174,7 +176,12 @@ export default function ListingCreate({}: any) {
       }),
     });
 
-    res.status == 200 && router.push("/listings/confirmation");
+    if (res.status == 200) {
+      router.push("/listings/confirmation");
+    } else {
+      const err = await res.json();
+      alert(err.message);
+    }
   }
 
   const validateAddress = () =>
