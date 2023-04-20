@@ -156,19 +156,14 @@ export default function ListingDetailsPage({ listing, host }: any) {
                     </p>
                   </div>
                   <div className="flex flex-col border-b border-gray-300 p-2">
-                    <p>{listing.description}</p>
-                    <p>Description</p>
-                  </div>
-                  <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">
                       Approximate Space Size: {listing.space_available[0]} x{" "}
                       {listing.space_available[1]} ft
                     </h2>
 
                     <p>
-                      Listing details and description go here. You can add more
-                      content related to the listing, such as reviews, owner
-                      information, etc.
+                      {listing.description ||
+                        "Listing details and description go here. You can add more content related to the listing, such as reviews, owner information, etc."}
                     </p>
                   </div>
                   <div className="flex flex-col border-b border-gray-300 p-2">
