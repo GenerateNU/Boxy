@@ -24,6 +24,7 @@ type ReservationDetails = {
   name: string;
   stasherName: string;
   address: string;
+  reservation_id: string;
 };
 
 export default function HostDashboard() {
@@ -74,6 +75,7 @@ export default function HostDashboard() {
       name: string;
       stasherName: string;
       address: string;
+      reservation_id: string;
     }[] = [];
 
     all_res?.forEach((reservation: { [x: string]: any }) =>
@@ -82,6 +84,7 @@ export default function HostDashboard() {
         name: reservation["name"],
         stasherName: reservation["stasher_name"],
         address: reservation["address"],
+        reservation_id: reservation["reservation_id"],
       })
     );
 
@@ -128,6 +131,9 @@ export default function HostDashboard() {
               reservation={reservation}
               header={reservation.stasherName}
               sub={reservation.name}
+              cancelReservation={() =>
+                cancelReservation(reservation.reservation_id)
+              }
             />
           );
         })
@@ -184,8 +190,14 @@ export default function HostDashboard() {
         </div>
         {renderCurrentForm()}
       </div>
-      <div className='w-[40vw] flex justify-center pt-16'>
-        <Calendar className='w-[420px] pt-[7vh] h-[550px]' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
+      <div className="w-[40vw] flex justify-center pt-16">
+        <Calendar
+          className="w-[420px] pt-[7vh] h-[550px]"
+          inline
+          selectionMode="range"
+          onChange={(event) => setDateRange(event.value)}
+          dateFormat="M dd, yy"
+        />
       </div>
     </div>
   );

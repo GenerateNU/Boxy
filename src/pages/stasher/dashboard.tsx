@@ -4,10 +4,10 @@ import { Calendar } from "primereact/calendar";
 import { useEffect, useState } from "react";
 import { AiOutlineRight } from "react-icons/ai";
 import Reservation from "@/components/Reservation/Reservation";
-import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
-import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
-import "primereact/resources/primereact.min.css";                  //core css
-import "primeicons/primeicons.css";                                //icons
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
 
 type ReservationDetails = {
   datesRequested: Array<Date>;
@@ -18,10 +18,13 @@ type ReservationDetails = {
 
 export default function StasherDashboard() {
   const { data, status } = useSession();
-  const [reservations, setReservations] = useState<Array<ReservationDetails>>([]);
-  const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
-  const [tabState, setTabState] = useState('Upcoming')
-
+  const [reservations, setReservations] = useState<Array<ReservationDetails>>(
+    []
+  );
+  const [dateRange, setDateRange] = useState<
+    string | Date | Date[] | undefined | null
+  >(null);
+  const [tabState, setTabState] = useState("Upcoming");
 
   if (status === "unauthenticated") {
     signIn();
@@ -64,14 +67,22 @@ export default function StasherDashboard() {
     setReservations(reservations);
   }
 
-  const renderReservationElements = (reservations: ReservationDetails[] | undefined) => {
+  const renderReservationElements = (
+    reservations: ReservationDetails[] | undefined
+  ) => {
     if (reservations == undefined || reservations.length == 0) {
       return <h1>You have no reservations!</h1>;
     } else {
       return (
         reservations &&
         reservations.map((reservation: any) => {
-          return <Reservation reservation={reservation} header={reservation.name} sub={reservation.address} />
+          return (
+            <Reservation
+              reservation={reservation}
+              header={reservation.name}
+              sub={reservation.address}
+            />
+          );
         })
       );
     }
@@ -95,9 +106,9 @@ export default function StasherDashboard() {
   };
 
   return (
-      <div className="container flex min-w-full pt-16">
+    <div className="container flex min-w-full pt-16">
       <div className="w-[60vw] flex-col pt-[5vh] ml-20">
-        <h1 className='text-[40px] mb-5'>Reservations</h1>
+        <h1 className="text-[40px] mb-5">Reservations</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
           {listing_tab("Upcoming")}
           {listing_tab("Ongoing")}
@@ -106,8 +117,14 @@ export default function StasherDashboard() {
         </div>
         {renderReservationElements(reservations)}
       </div>
-      <div className='w-[40vw] flex justify-center pt-16'>
-        <Calendar className='w-[420px] pt-[7vh] h-[550px]' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
+      <div className="w-[40vw] flex justify-center pt-16">
+        <Calendar
+          className="w-[420px] pt-[7vh] h-[550px]"
+          inline
+          selectionMode="range"
+          onChange={(event) => setDateRange(event.value)}
+          dateFormat="M dd, yy"
+        />
       </div>
     </div>
   );
