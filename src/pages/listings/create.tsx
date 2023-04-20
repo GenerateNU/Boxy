@@ -152,9 +152,10 @@ export default function ListingCreate({}: any) {
       body: JSON.stringify({
         name: name,
         dates_available: [new Date(startDate), new Date(endDate)],
-        price: 1,
+        price: price,
         description: description,
         amenities: [
+          // TODO unharcode
           "Pest_Controlled",
           "Fire_Alarm_System",
           "Smoke_Free",
@@ -165,14 +166,14 @@ export default function ListingCreate({}: any) {
           "Private_Storage",
           "Party_Free",
         ],
-        space_type: "Closet",
+        space_type: "Closet", // TODO: unharcode
         address: address || "123 test ave",
         city: city || "boston",
         zip_code: zipCode || "12345",
-        state: "CA",
-        space_available: [1, 2, 3],
-        longitude: defaultCoordindates.longitude,
-        latitude: defaultCoordindates.latitude,
+        state: state || "CA",
+        space_available: [1, 2, 3], // TODO: unharcode
+        longitude: latLong.longitude || defaultCoordindates.longitude,
+        latitude: latLong.latitude || defaultCoordindates.latitude,
       }),
     });
 

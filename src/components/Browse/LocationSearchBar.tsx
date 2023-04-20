@@ -8,7 +8,7 @@ type LocationSuggestion = {
   lon: string;
 };
 
-export function LocationSearchBar(props: { setCoordinates: any }) {
+export function LocationSearchBar(props: any) {
   const [locationSearchSuggestions, setLocationSearchSuggestions] = useState<
     LocationSuggestion[]
   >([]);
@@ -18,6 +18,7 @@ export function LocationSearchBar(props: { setCoordinates: any }) {
     <div className="relative">
       <LocationAutocomplete
         setCoordinates={props.setCoordinates}
+        setLocationDetails={props.setLocationDetails}
       ></LocationAutocomplete>
       <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
         {locationSearchSuggestions.map((suggestion) => (

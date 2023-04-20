@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "@/assets/Navigation.svg";
 import FormLayout from "./FormLayout";
+import { LocationSearchBar } from "../Browse/LocationSearchBar";
+import { defaultCoordindates } from "@/pages/_app";
 
 export default function AddressForm({
   setAddress,
@@ -97,12 +99,29 @@ export default function AddressForm({
     }
   }, [...values, name, price]);
 
+  function setLocationDetails(locationDetails: any) {
+    setAddress(locationDetails.address || "1234 Huntington Ave.");
+    setZipCode(locationDetails.zipCode || "02115");
+    setCity(locationDetails.city || "Boston");
+    setState(locationDetails.state || "MA");
+    setLatLong({
+      latitude: locationDetails.lat || defaultCoordindates.latitude,
+      longitude: locationDetails.lon || defaultCoordindates.longitude,
+    });
+  }
+
   return (
     <FormLayout image={Navigation} validate={validate}>
       <div className="flex flex-col w-[90%]">
         <h1 className="text-3xl pb-2">Address</h1>
         <h3 className="pb-5">Please provide the Storage Host full address.</h3>
-        {placeHolders.map((field, i) => {
+
+        <div className="flex pt-5 h-[80px]">
+          <LocationSearchBar
+            setLocationDetails={setLocationDetails}
+          ></LocationSearchBar>
+        </div>
+        {/* {placeHolders.map((field, i) => {
           return (
             <input
               onChange={(event) => setters[i](event.target.value)}
@@ -117,7 +136,7 @@ export default function AddressForm({
               }
             />
           );
-        })}
+        })} */}
         <h3 className="pt-5 pb-5">Enter a name and price for this Listing.</h3>
         <input
           onChange={(event) => setName(event.target.value)}
