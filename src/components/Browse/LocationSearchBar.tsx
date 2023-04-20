@@ -1,5 +1,5 @@
-import { Coordinate } from "@/pages/_app";
 import { useState } from "react";
+import { LocationAutocomplete } from "../LocationAutocomplete";
 
 type LocationSuggestion = {
   place_id: string;
@@ -14,29 +14,11 @@ export function LocationSearchBar(props: { setCoordinates: any }) {
   >([]);
   const [locationSearchInput, setLocationSearchInput] = useState("");
 
-  async function getLocationSuggestions(locationSearchInput: string) {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${locationSearchInput}&addressdetails=1&countrycodes=us&limit=5`
-    ).catch((err) => {
-      console.log(err);
-    });
-    const data = await response.json();
-
-    setLocationSearchSuggestions(data);
-  }
-
   return (
     <div className="relative">
-      <input
-        id="search_input"
-        className="h-[100%] w-[60vw] md:w-[70vw] lg:w-[33vw] pl-5 border-[2px] border-[#B5B5B5] rounded-lg"
-        placeholder="Enter a location"
-        value={locationSearchInput}
-        onChange={(event) => {
-          setLocationSearchInput(event.currentTarget.value);
-          getLocationSuggestions(event.currentTarget.value);
-        }}
-      />
+      <LocationAutocomplete
+        setCoordinates={props.setCoordinates}
+      ></LocationAutocomplete>
       <ul className="suggestions-dropdown absolute z-10 bg-white border border-gray-300 mt-1 rounded-md w-full">
         {locationSearchSuggestions.map((suggestion) => (
           <li

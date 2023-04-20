@@ -134,9 +134,9 @@ export default function LandingPage(props: any) {
 
     // TODO: unhardcode lat and lon once integrated with reliable maps API
     return `/listings/browse?latitude=${encodeURIComponent(
-      defaultCoordindates.latitude
+      coordinates.latitude || defaultCoordindates.latitude
     )}&longitude=${encodeURIComponent(
-      defaultCoordindates.longitude
+      coordinates.longitude || defaultCoordindates.longitude
     )}&proximity=15`;
   }
 
