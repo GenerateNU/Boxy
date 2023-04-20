@@ -147,12 +147,13 @@ export default function ListingDetailsPage({ listing, host }: any) {
               <div className="grid grid-cols-3 grid-rows-1 gap-4">
                 <div className="flex flex-col p-4 gap-1 col-span-2">
                   <div className="flex flex-col border-b border-gray-300 p-2">
-                    <h2 className="text-xl font-semibold mb-4">
-                      {listing.space_available[0]} x{" "}
-                      {listing.space_available[1]} ft {listing.space_type}
+                    <h2 className="text-xl mb-4">
+                      <b>{listing.name}</b> | {listing.address}, {listing.city},{" "}
+                      {listing.state}, {listing.zip_code}
                     </h2>
                     <p>
-                      {listing.city}, {listing.state}
+                      {listing.description ||
+                        "Listing details and description go here. You can add more content related to the listing, such as reviews, owner information, etc."}
                     </p>
                   </div>
                   <div className="flex flex-col border-b border-gray-300 p-2">
@@ -160,11 +161,6 @@ export default function ListingDetailsPage({ listing, host }: any) {
                       Approximate Space Size: {listing.space_available[0]} x{" "}
                       {listing.space_available[1]} ft
                     </h2>
-
-                    <p>
-                      {listing.description ||
-                        "Listing details and description go here. You can add more content related to the listing, such as reviews, owner information, etc."}
-                    </p>
                   </div>
                   <div className="flex flex-col border-b border-gray-300 p-2">
                     <h2 className="text-xl font-semibold mb-4">Amentities</h2>
