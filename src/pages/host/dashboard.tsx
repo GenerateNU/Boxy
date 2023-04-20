@@ -6,11 +6,11 @@ import Listing from "../listings/listing";
 import { signIn, useSession } from "next-auth/react";
 import { sign } from "crypto";
 import Reservation from "@/components/Reservation/Reservation";
-import { Calendar } from 'primereact/calendar'
-import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
-import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
-import "primereact/resources/primereact.min.css";                  //core css
-import "primeicons/primeicons.css";                                //icons
+import { Calendar } from "primereact/calendar";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
 
 type Listing = {
   listing_id: string;
@@ -22,15 +22,17 @@ type Listing = {
 type ReservationDetails = {
   datesRequested: Array<Date>;
   name: string;
-  hostName: string;
+  stasherName: string;
   address: string;
 };
 
 export default function HostDashboard() {
   const [tabState, setTabState] = useState("Listings");
   const [allListings, setAllListings] = useState<Array<Listing>>([]);
-  const [reservations, setReservations] = useState<Array<ReservationDetails>>()
-  const [dateRange, setDateRange] = useState<string | Date | Date[] | undefined | null>(null)
+  const [reservations, setReservations] = useState<Array<ReservationDetails>>();
+  const [dateRange, setDateRange] = useState<
+    string | Date | Date[] | undefined | null
+  >(null);
   const { data, status } = useSession();
 
   if (status === "unauthenticated") {
@@ -70,7 +72,7 @@ export default function HostDashboard() {
     const reservations: {
       datesRequested: any;
       name: string;
-      hostName: string;
+      stasherName: string;
       address: string;
     }[] = [];
 
@@ -78,14 +80,13 @@ export default function HostDashboard() {
       reservations.push({
         datesRequested: reservation["dates_requested"],
         name: reservation["name"],
-        hostName: reservation["stasher_name"],
+        stasherName: reservation["stasher_name"],
         address: reservation["address"],
       })
     );
 
-      setReservations(reservations);
-    }
-
+    setReservations(reservations);
+  }
 
   async function cancelReservation(reservation_id: any) {
     const all_res = await (
@@ -100,8 +101,6 @@ export default function HostDashboard() {
     getReservations(); // triggering refresh
   }
 
-
-
   const renderListingElements = (listings: Listing[]) => {
     if (listings == null || listings.length == 0) {
       return <h1>You have no listings!</h1>;
@@ -115,21 +114,29 @@ export default function HostDashboard() {
     }
   };
 
-  const renderReservationElements = (reservations: ReservationDetails[] | undefined) => {
+  const renderReservationElements = (
+    reservations: ReservationDetails[] | undefined
+  ) => {
     if (reservations == undefined || reservations.length == 0) {
       return <h1>You have no reservations!</h1>;
     } else {
       return (
         reservations &&
         reservations.map((reservation: any) => {
-          return <Reservation reservation={reservation} header={reservation.hostName} sub={reservation.name} />
+          return (
+            <Reservation
+              reservation={reservation}
+              header={reservation.stasherName}
+              sub={reservation.name}
+            />
+          );
         })
       );
     }
   };
 
-  const all_listings = renderListingElements(allListings)
-  const all_reservations = renderReservationElements(reservations)
+  const all_listings = renderListingElements(allListings);
+  const all_reservations = renderReservationElements(reservations);
 
   function renderCurrentForm() {
     switch (tabState) {
@@ -162,7 +169,7 @@ export default function HostDashboard() {
   return (
     <div className="container flex min-w-full pt-16">
       <div className="w-[60vw] flex-col pt-[5vh] ml-20">
-        <h1 className='text-[40px] mb-5'>{tabState}</h1>
+        <h1 className="text-[40px] mb-5">{tabState}</h1>
         <div className="grid grid-cols-6 w-[100%] h-[7vh] mb-5">
           {listing_tab("Listings", "Listings")}
           {listing_tab("Reservations", "Reservations")}
@@ -177,8 +184,14 @@ export default function HostDashboard() {
         </div>
         {renderCurrentForm()}
       </div>
-      <div className='w-[40vw] flex justify-center pt-16'>
-        <Calendar className='w-[350px] pt-[7vh] pb-20' inline selectionMode='range' onChange={(event) => setDateRange(event.value)} dateFormat='M dd, yy'/>
+      <div className="w-[40vw] flex justify-center pt-16">
+        <Calendar
+          className="w-[350px] pt-[7vh] pb-20"
+          inline
+          selectionMode="range"
+          onChange={(event) => setDateRange(event.value)}
+          dateFormat="M dd, yy"
+        />
       </div>
     </div>
   );
